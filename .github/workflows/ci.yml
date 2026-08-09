@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, test]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-source-branch:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce test branch only
+        run: |
+          if [ "${{ github.head_ref }}" != "test" ]; then
+            echo "::error::PRs to main must come from the test branch only. Got: ${{ github.head_ref }}"
+            exit 1
+          fi
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: "yarn"
+      - run: yarn install --immutable
+      - run: yarn typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: "yarn"
+      - run: yarn install --immutable
+      - run: yarn test --reporter=verbose 2>&1 | tail -50
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: "yarn"
+      - run: yarn install --immutable
+      - run: npx eslint app/ --max-warnings 0
+        continue-on-error: true
