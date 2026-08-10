@@ -1,3 +1,4 @@
 {
-  "framework": "react-router"
+  "framework": "react-router",
+  "installCommand": "corepack enable && yarn install"
 }
