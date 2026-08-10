@@ -1,87 +1,178 @@
-# Welcome to React Router!
+# BCC007Portal
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A full-stack payment contribution management platform built with **React Router** (framework mode), **MongoDB**, and **Better Auth**. BCC007Portal manages member accounts, dues & payments, peer-to-peer transfers, events, tickets, group announcements, member analytics, and AI-powered assistance.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+[![CI](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml)
+
+## Tech Stack
+
+| Layer      | Technology                                                    |
+| ---------- | ------------------------------------------------------------- |
+| Framework  | React Router v8 (SSR, file-based routing)                     |
+| Database   | MongoDB + Mongoose                                            |
+| Auth       | Better Auth (email/password, RBAC)                            |
+| Styling    | Tailwind CSS v4 + shadcn/ui (base-ui)                         |
+| Data       | TanStack Query (server state) + TanStack Table                |
+| Cache      | Upstash Redis (caching, rate limiting)                        |
+| Queues     | QStash + Upstash Workflow (scheduled jobs, async tasks)       |
+| Payments   | Paystack (dues, subscriptions, transfers)                     |
+| Media      | Cloudinary (avatars, uploads)                                 |
+| Forms      | React Hook Form + Zod validation                              |
+| AI         | OpenCode Zen API (chat assistant)                             |
+| Logging    | Pino                                                        |
+| Monitoring | Sentry                                                        |
+| Testing    | Vitest (unit/integration) + Playwright (e2e)                  |
+| CI/CD      | GitHub Actions → Vercel                                       |
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- **Auth & onboarding** — email/password registration & login, email verification, password reset, and a first-run onboarding flow (avatar via Cloudinary, bank details via Paystack).
+- **Payments** — monthly dues, levy plans, subscriptions, and full payment history/reports with Paystack webhook handling.
+- **Transfers** — peer-to-peer bank transfers with OTP verification, idempotency, and audit logging.
+- **Events** — event creation/interest/RSVP with maps, plus birthdays & member analytics.
+- **Tickets** — support tickets with assignment and permission-gated workflows.
+- **AI Assistant** — a floating chat widget backed by an SSE-streaming tool-calling agent with permission-scoped tools.
+- **Global search** — Cmd/Ctrl+K command palette with permission-scoped results.
+- **System status** — public `/health` page and `/api/health` JSON endpoint.
+- **RBAC** — role- and permission-based access control across every action.
 
 ## Getting Started
 
+### Prerequisites
+
+- **Node.js ≥ 22.22.0** (CI uses Node 24)
+- **Yarn** (v4, via Corepack)
+
 ### Installation
 
-Install the dependencies:
+```bash
+yarn install
+```
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in the values:
 
 ```bash
-npm install
+cp .env.example .env
 ```
+
+Required variables include `DATABASE_URL`/`DATABASE_NAME`, `BETTER_AUTH_SECRET`/`BETTER_AUTH_URL`, `CLIENT_URL`, `QSTASH_TOKEN`, `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`, `PAYSTACK_SECRET_KEY`, and Cloudinary credentials. See `.env.example` for the full list (including optional AI/Sentry keys).
 
 ### Development
 
 Start the development server with HMR:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Your application will be available at `http://localhost:5700`.
+
+### QStash Local Development
+
+Run the QStash CLI (for local workflow testing) in a separate terminal:
+
+```bash
+yarn qstash
+```
+
+## Testing
+
+The repo ships a Vitest unit + integration suite (431 tests across 33 files) and a Playwright e2e smoke gate. Tests run against an in-memory MongoDB and mock external services (QStash, Redis, Cloudinary, Paystack) — no real `.env` required.
+
+```bash
+# Unit + integration tests (in-memory MongoDB)
+yarn test
+
+# Watch mode
+yarn test:watch
+
+# Coverage report
+yarn test:coverage
+
+# End-to-end smoke tests (Playwright + hermetic dev server on :5701)
+yarn test:e2e
+
+# Type checking
+yarn typecheck
+```
 
 ## Building for Production
 
-Create a production build:
-
 ```bash
-npm run build
+yarn build
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+The build output goes to `build/`:
 
 ```
 ├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
+├── yarn.lock
 ├── build/
 │   ├── client/    # Static assets
 │   └── server/    # Server-side code
 ```
 
-## Styling
+Run the production server:
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+```bash
+yarn start
+```
 
----
+## Scheduled Jobs
 
-Built with ❤️ using React Router.
+Recurring QStash workflows keep statuses, transfers, subscriptions, and dashboards fresh:
+
+```bash
+yarn schedule:event-status
+yarn schedule:transfer-sync
+yarn schedule:subscription-sync
+yarn schedule:birthday-reminders
+yarn schedule:dashboard-refresh
+```
+
+## Project Structure
+
+```
+app/
+├── .server/
+│   ├── actions/        # Server actions (business logic)
+│   ├── ai/             # LLM client, tool registry, agent loop
+│   ├── config/         # Database, keys, logger, redis, upstash
+│   ├── models/         # Mongoose models
+│   ├── services/       # Audit log, auth, email, notification, paystack
+│   ├── utils/          # Cache, cloudinary, health, rate-limit
+│   └── workflows/      # QStash async workflows
+├── components/         # UI primitives, navigation, providers
+├── features/           # Feature-scoped components
+├── hooks/              # Shared hooks
+├── lib/                # RBAC, schemas, utils, storage
+├── middleware/         # Auth middleware (session, permissions)
+├── queries/            # Server query modules (React Query)
+└── routes/             # File-based routes (layouts, auth, dashboard, API)
+```
+
+## Deployment
+
+### CI/CD
+
+The repository uses a two-branch workflow enforced by branch protection:
+
+- All changes land on the **`test`** branch.
+- A pull request is opened from `test` → `main`.
+- CI (`ci.yml`) runs **typecheck**, **test**, and **e2e** — all must pass before merge.
+- `main` is protected: direct pushes, force-pushes, and deletions are blocked.
+
+### Vercel
+
+Deploy with `--prebuilt` after running `yarn build` in CI (see the CI skill docs in this repo). The containerized/DIY app server is also production-ready:
+
+```bash
+docker build -t bc007portal .
+docker run -p 3000:3000 bc007portal
+```
+
+## License
+
+Private project — all rights reserved.
