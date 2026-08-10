@@ -61,16 +61,24 @@ describe("NotificationService", () => {
     expect(await NotificationService.getUnreadCount(userId)).toBe(2);
   });
 
-  it("returns paginated notifications newest first", async () => {
+  it("returns paginated unread notifications newest first", async () => {
     await Notification.create({ userId, type: "account_login", title: "first", message: "m" });
     await Notification.create({ userId, type: "account_login", title: "second", message: "m" });
     await Notification.create({ userId, type: "account_login", title: "third", message: "m" });
+    await Notification.create({
+      userId,
+      type: "account_login",
+      title: "old-read",
+      message: "m",
+      read: true,
+    });
 
     const page = await NotificationService.getNotifications(userId, 1, 2);
     expect(page.notifications).toHaveLength(2);
     expect(page.meta.total).toBe(3);
     expect(page.meta.hasMore).toBe(true);
     expect(page.notifications[0].title).toBe("third");
+    expect(page.notifications.map((n) => n.title)).not.toContain("old-read");
   });
 
   it("marks a single notification as read", async () => {

@@ -88,7 +88,7 @@ export class NotificationService {
   }
 
   /**
-   * Get paginated notifications for a user.
+   * Get paginated unread notifications for a user.
    */
   static async getNotifications(
     userId: string,
@@ -96,8 +96,9 @@ export class NotificationService {
     limit: number = 20,
   ) {
     try {
-      const total = await Notification.countDocuments({ userId });
-      const notifications = await Notification.find({ userId })
+      const filter = { userId, read: false };
+      const total = await Notification.countDocuments(filter);
+      const notifications = await Notification.find(filter)
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
