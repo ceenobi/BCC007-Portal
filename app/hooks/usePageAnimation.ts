@@ -5,6 +5,10 @@ interface UseWaveAnimationOptions {
   rootMargin?: string;
   staggerDelay?: number;
   duration?: number;
+  /** Start as visible (no opacity-0 on first paint). Use for above-the-fold
+   *  content so LCP elements render immediately instead of waiting for the
+   *  IntersectionObserver + transition delay. */
+  startVisible?: boolean;
 }
 
 export const useWaveAnimation = (options: UseWaveAnimationOptions = {}) => {
@@ -12,10 +16,11 @@ export const useWaveAnimation = (options: UseWaveAnimationOptions = {}) => {
     threshold = 0.1,
     rootMargin = '-40px',
     staggerDelay = 80,
-    duration = 450
+    duration = 450,
+    startVisible = false,
   } = options;
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(startVisible);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

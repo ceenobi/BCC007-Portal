@@ -9,6 +9,7 @@ import {
     ScrollRestoration,
     useMatches,
 } from "react-router";
+import { Suspense, lazy } from "react";
 
 import {
     HydrationBoundary,
@@ -34,20 +35,14 @@ import ProgressBar from "./components/provider/progress-bar";
 import { ThemeProvider } from "./components/provider/theme";
 import ToastProvider from "./components/provider/toast";
 import { Button } from "./components/ui/button";
-import { AiAssistant } from "./components/ai/ai-assistant";
+
+const AiAssistant = lazy(() =>
+  import("./components/ai/ai-assistant").then((m) => ({ default: m.AiAssistant })),
+);
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "preconnect",
-    href: "https://fontsource.org",
-    crossOrigin: "anonymous",
-  },
+  // Fonts are self-hosted via @fontsource (same-origin), so no third-party
+  // preconnects are needed. Preload the font CSS to kick off parsing early.
   {
     rel: "preload",
     as: "style",
@@ -65,10 +60,6 @@ export const links: Route.LinksFunction = () => [
   {
     rel: "stylesheet",
     href: fontCssUrlInter,
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
   {
     rel: "icon",
@@ -139,7 +130,9 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <HydrationBoundary state={dehydratedState}>
           <Outlet />
-          <AiAssistant />
+          <Suspense fallback={null}>
+            <AiAssistant />
+          </Suspense>
         </HydrationBoundary>
       </QueryClientProvider>
     </>
