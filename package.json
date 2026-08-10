@@ -30,6 +30,7 @@
     "@react-router/node": "^8",
     "@react-router/serve": "^8",
     "@remixicon/react": "^4.9.0",
+    "@sentry/react-router": "^10.70.0",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-table": "^8.21.3",
     "@upstash/ratelimit": "^2.0.8",

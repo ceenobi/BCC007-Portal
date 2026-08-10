@@ -10,6 +10,7 @@ import {
     useMatches,
 } from "react-router";
 import { Suspense, lazy } from "react";
+import * as Sentry from "@sentry/react-router";
 
 import {
     HydrationBoundary,
@@ -156,6 +157,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     if (import.meta.env.DEV) {
       stack = error.stack;
     }
+    Sentry.captureException(error);
   }
 
   return (
