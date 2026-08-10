@@ -375,6 +375,7 @@ export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
   if (!cookie) {
     logger.warn({ url: url.pathname }, "No Cookie header found in request");
+    return null;
   }
   try {
     const sessionData = await auth.api.getSession({
