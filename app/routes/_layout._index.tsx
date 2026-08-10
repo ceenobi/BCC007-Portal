@@ -344,21 +344,31 @@ export default function HomeRoute() {
                   we strengthen our bonds, host programs that bring us together,
                   and build meaningful opportunities for a brighter future.
                 </p>
-                <a
-                  href="https://www.instagram.com/bcc007set/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button
-                    variant="outline"
-                    className="bg-transparent text-white/80 border border-white/20 p-2.5 hover:bg-white/80"
-                  >
-                    Follow our community <RiInstagramLine />
-                  </Button>
-                </a>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div ref={about.containerRef} className="relative py-20">
+        <div className="max-w-6xl mx-auto px-4 space-y-4 relative z-10 text-center">
+          <h1 className="text-mainBlack dark:text-white text-3xl sm:text-4xl sm:leading-none font-medium w-full">
+            Join the community
+          </h1>
+          <p className="text-mainGray dark:text-muted-foreground text-base font-normal leading-snug text-balance">
+            Discover what our community has been up to lately.
+          </p>
+          <a
+            href="https://www.instagram.com/bcc007set/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
+              className="text-mainBlack dark:text-white p-2.5 hover:bg-white/80"
+            >
+              Follow our community <RiInstagramLine />
+            </Button>
+          </a>
         </div>
       </div>
     </>

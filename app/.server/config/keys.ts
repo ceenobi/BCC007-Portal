@@ -50,6 +50,21 @@ function getEnvVar(): Record<string, string> {
       if (key === "BETTER_AUTH_URL") value = "http://localhost:3000";
       if (key === "DATABASE_URL") value = "mongodb://localhost:27017/dummy";
       if (key === "CLIENT_URL") value = "http://localhost:3000";
+      if (key === "QSTASH_TOKEN") value = "dummy-token-for-build-only";
+      if (key === "QSTASH_URL") value = "https://qstash.upstash.io";
+      if (key === "UPSTASH_REDIS_REST_URL") value = "https://dummy.redis.upstash.io";
+      if (key === "UPSTASH_REDIS_REST_TOKEN") value = "dummy-token-for-build-only";
+      if (key === "PAYSTACK_SECRET_KEY") value = "dummy-paystack-key-for-build-only";
+      if (key === "EMAIL_HOST") value = "smtp.dummy.com";
+      if (key === "EMAIL_PORT") value = "587";
+      if (key === "EMAIL_USER") value = "dummy@bcc007.com";
+      if (key === "EMAIL_PASSWORD") value = "dummy-password";
+      if (key === "DATABASE_NAME") value = "dummy";
+      if (key === "CLOUDINARY_CLOUD_NAME") value = "dummy";
+      if (key === "CLOUDINARY_API_KEY") value = "dummy";
+      if (key === "CLOUDINARY_SECRET_KEY") value = "dummy";
+      if (key === "CLOUDINARY_UPLOAD_PRESET") value = "dummy";
+      if (key === "OPENCODE_ZEN_API_KEY") value = "dummy-key";
 
       if (value) {
         process.env[key] = value;

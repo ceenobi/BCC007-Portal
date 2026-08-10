@@ -14,15 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
-import { transferStatus} from "~/lib/constants";
+import { transferStatus } from "~/lib/constants";
 
 const initialFilters = (searchParams: URLSearchParams) => ({
   transferStatus: searchParams.get("transferStatus") || "",
@@ -55,9 +48,7 @@ export default function Filter() {
     ? `${formatDate(filters.startDate)}${filters.startDate && filters.endDate ? " – " : ""}${formatDate(filters.endDate)}`
     : "Date range";
   const hasActiveFilters = Boolean(
-    filters.transferStatus ||
-    filters.startDate ||
-    filters.endDate,
+    filters.transferStatus || filters.startDate || filters.endDate,
   );
 
   const handleFilterChange = (
