@@ -55,6 +55,7 @@ export default function HomeRoute() {
     threshold: 0,
     rootMargin: "0px",
     staggerDelay: 100,
+    startVisible: true,
   });
   const features = useWaveAnimation({ threshold: 0.15, staggerDelay: 100 });
   const servicesAnim = useWaveAnimation({ threshold: 0.1, staggerDelay: 120 });
@@ -174,6 +175,8 @@ export default function HomeRoute() {
                   src="/Tasks complete.svg"
                   alt="todo"
                   className="w-full h-80"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -201,6 +204,8 @@ export default function HomeRoute() {
                     src="/Secure-login.svg"
                     alt="secure-login"
                     className="w-full h-50"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -223,6 +228,8 @@ export default function HomeRoute() {
                     src="/Empty-wallet.svg"
                     alt="wallet"
                     className="w-full h-50"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -250,7 +257,8 @@ export default function HomeRoute() {
               alt="dashboard"
               containerClassName="border border-b-none rounded-t-2xl w-full h-full"
               className="border border-b-none rounded-t-2xl"
-              quality="original"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -317,7 +325,8 @@ export default function HomeRoute() {
                 alt="bcc007_group"
                 containerClassName="rounded-xl w-full h-full"
                 className="rounded-xl"
-                quality="original"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div

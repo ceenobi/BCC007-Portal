@@ -175,7 +175,7 @@ function Event({
               height={350}
               alt={event.title}
               containerClassName="w-full h-[350px]"
-              quality="original"
+              decoding="async"
             />
           )}
           <div className="border-t border-b p-4 space-y-4 hover:shadow">
