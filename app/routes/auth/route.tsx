@@ -17,9 +17,12 @@ export default function AuthLayout() {
         <div className="relative z-5 flex justify-center items-center h-full">
           <div className="w-full max-w-100 xl:max-w-150 mx-auto">
             <h1 className="text-2xl xl:text-4xl font-normal">
-              Being a member of BCC007 involves commitment to upholding the
-              values and as well as active paticipation of all statutory
-              obligations expected
+              "Being a member of{" "}
+              <span className="text-mainBlue dark:text-lightBlue font-bold">
+                BCC007
+              </span>{" "}
+              involves commitment to upholding the values and as well as active
+              paticipation of all statutory obligations expected."
             </h1>
           </div>
         </div>
