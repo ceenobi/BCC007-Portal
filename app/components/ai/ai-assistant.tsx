@@ -15,6 +15,7 @@ import {
   useAiChat,
   type AiSuggestion,
 } from "~/components/ai/chat-context";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 
 const BRAND_ACCENT = "bg-mainBlue text-white";
@@ -119,6 +120,13 @@ function ChatWidget() {
                 Ask me anything about your account, payments or events.
               </p>
             </div>
+            <Badge
+              variant="secondary"
+              title="This feature is in beta"
+              className="rounded-full"
+            >
+              Beta
+            </Badge>
             <Button
               type="button"
               variant="ghost"
