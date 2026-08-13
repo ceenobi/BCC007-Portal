@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   RiCloseLine,
+  RiEditLine,
   RiErrorWarningLine,
   RiImageAddLine,
   RiLoader2Line,
@@ -13,40 +14,23 @@ import z from "zod";
 import ActionBtn from "~/components/ui/action-btn";
 import { Button } from "~/components/ui/button";
 import { FormBox } from "~/components/ui/form-box";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
-import { updateEventSchema } from "~/lib/schema";
-import { cn } from "~/lib/utils";
-import type { EventData, UpdateEventSchemaType } from "~/types";
+import { updateAnnouncementSchema } from "~/lib/schema";
+import type { AnnouncementData, UpdateAnnouncementSchemaType } from "~/types";
 
-const eventTypeOptions = [
-  { id: "party", name: "Party" },
-  { id: "meeting", name: "Meeting" },
-  { id: "birthday", name: "Birthday" },
-  { id: "other", name: "Other" },
+const statusOptions = [
+  { id: "draft", name: "Draft" },
+  { id: "published", name: "Published" },
+  { id: "archived", name: "Archived" },
 ];
 
-type MemberOption = {
-  _id: string;
-  name: string;
-};
-
-function formatDateInput(date: Date) {
-  const d = new Date(date);
-  const month = `${d.getMonth() + 1}`.padStart(2, "0");
-  const day = `${d.getDate()}`.padStart(2, "0");
-  return `${d.getFullYear()}-${month}-${day}`;
-}
-
-export default function EditEvent({
-  event,
-  members,
+export default function EditAnnouncement({
+  announcement,
 }: {
-  event: EventData;
-  members: MemberOption[];
+  announcement: AnnouncementData;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
@@ -55,11 +39,11 @@ export default function EditEvent({
     isUploading,
     handleFileChange,
     imageInputRef,
-  } = useEventImageUpload();
+  } = useEventImageUpload("announcements");
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state === "submitting";
 
-  const originalImageId = event.featuredImageId ?? null;
+  const originalImageId = announcement.featuredImageId ?? null;
   const stagedNewUploadIdRef = useRef<string | null>(null);
 
   const cleanupStagedUpload = () => {
@@ -79,15 +63,10 @@ export default function EditEvent({
   };
 
   const defaultValues = {
-    title: event.title,
-    detail: event.detail,
-    location: event.location,
-    date: formatDateInput(event.date),
-    time: event.time,
-    eventType: event.eventType,
-    organizer: event.organizer?._id ? String(event.organizer._id) : "",
-    latitude: event.latitude ?? undefined,
-    longitude: event.longitude ?? undefined,
+    title: announcement.title,
+    content: announcement.content,
+    status: announcement.status,
+    isPinned: announcement.isPinned,
   };
 
   const {
@@ -96,17 +75,17 @@ export default function EditEvent({
     control,
     reset,
     formState: { errors },
-  } = useForm<z.input<typeof updateEventSchema>, any, UpdateEventSchemaType>({
-    resolver: zodResolver(updateEventSchema),
+  } = useForm<z.input<typeof updateAnnouncementSchema>, any, UpdateAnnouncementSchemaType>({
+    resolver: zodResolver(updateAnnouncementSchema),
     mode: "onChange",
     defaultValues,
   });
 
   useEffect(() => {
-    if (event.featuredImage) {
+    if (announcement.featuredImage) {
       setFeaturedImage({
-        image: event.featuredImage,
-        imagePublicId: event.featuredImageId ?? "",
+        image: announcement.featuredImage,
+        imagePublicId: announcement.featuredImageId ?? "",
       });
     } else {
       setFeaturedImage(null);
@@ -114,7 +93,7 @@ export default function EditEvent({
     stagedNewUploadIdRef.current = null;
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event._id]);
+  }, [announcement._id]);
 
   useEffect(() => {
     if (
@@ -126,10 +105,13 @@ export default function EditEvent({
   }, [featuredImage, originalImageId]);
 
   const actionData = fetcher.data as
-    { success?: boolean; message?: string } | undefined;
+    | { success?: boolean; message?: string }
+    | undefined;
 
   const rootError = errors.root as
-    { message?: string } | Array<{ message?: string }> | undefined;
+    | { message?: string }
+    | Array<{ message?: string }>
+    | undefined;
   const rootErrorMessage =
     (Array.isArray(rootError) ? rootError[0]?.message : rootError?.message) ??
     (errors as Record<string, { message?: string } | undefined>)[""]?.message;
@@ -137,22 +119,23 @@ export default function EditEvent({
   useEffect(() => {
     if (actionData?.success) {
       stagedNewUploadIdRef.current = null;
-      toast.success(actionData.message || "Event updated successfully");
+      toast.success(actionData.message || "Announcement updated successfully");
       setIsOpen(false);
     } else if (actionData && !actionData.success) {
       toast.error(actionData.message || "Something went wrong");
     }
   }, [actionData]);
 
-  const onFormSubmit = (data: UpdateEventSchemaType) => {
+  const onFormSubmit = (data: UpdateAnnouncementSchemaType) => {
     const payload: Record<string, unknown> = {
-      intent: "update-event",
+      intent: "update-announcement",
+      announcementId: announcement._id,
       ...data,
     };
-    const originalImage = event.featuredImage
+    const originalImage = announcement.featuredImage
       ? {
-          image: event.featuredImage,
-          imagePublicId: event.featuredImageId ?? "",
+          image: announcement.featuredImage,
+          imagePublicId: announcement.featuredImageId ?? "",
         }
       : null;
     const imageChanged =
@@ -161,55 +144,36 @@ export default function EditEvent({
       payload.featuredImage = featuredImage?.image ?? "";
       payload.featuredImageId = featuredImage?.imagePublicId ?? "";
     }
-    const latitude = data.latitude as unknown;
-    const longitude = data.longitude as unknown;
-    if (
-      latitude === undefined ||
-      latitude === "" ||
-      Number.isNaN(Number(latitude))
-    ) {
-      delete payload.latitude;
-    }
-    if (
-      longitude === undefined ||
-      longitude === "" ||
-      Number.isNaN(Number(longitude))
-    ) {
-      delete payload.longitude;
-    }
     fetcher.submit(payload as any, {
       method: "post",
       encType: "application/json",
-      action: `/dashboard/events/${event._id}`,
+      action: "/dashboard/announcements",
     });
   };
-
-  const memberOptions = members.map((member) => ({
-    id: member._id,
-    name: member.name,
-  }));
 
   return (
     <>
       <Button
         size="sm"
-        className="tracking-tight btn"
+        variant="outline"
         onClick={() => setIsOpen(true)}
+        aria-label={`Edit announcement: ${announcement.title}`}
+        className="gap-1"
       >
-        Edit Event
+        <RiEditLine className="size-4" />
       </Button>
       <Modal
         isOpen={isOpen}
         setIsOpen={handleOpenChange}
-        title={`Edit Event - ${event.title}`}
-        description="Edit the event details"
+        title={`Edit Announcement - ${announcement.title}`}
+        description="Edit the announcement details"
       >
         <Separator />
         <div className="px-2 max-h-[60vh] overflow-y-auto">
           <form
             onSubmit={handleSubmit(onFormSubmit)}
             className="mt-6 space-y-4"
-            id="edit-event-form"
+            id="edit-announcement-form"
           >
             {rootErrorMessage && (
               <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -220,109 +184,49 @@ export default function EditEvent({
             <FormBox
               label="Title"
               type="text"
-              placeholder="Event title"
+              placeholder="Announcement title"
               id="title"
               register={register}
               errors={errors.title}
               name="title"
             />
             <FormBox
-              label="Detail"
+              label="Content"
               type="textarea"
-              placeholder="Describe the event"
-              id="detail"
+              placeholder="Write your announcement"
+              id="content"
               register={register}
-              errors={errors.detail}
-              name="detail"
-              classname="[&_textarea]:min-h-28"
+              errors={errors.content}
+              name="content"
+              classname="[&_textarea]:min-h-32"
             />
             <FormBox
-              label="Location"
-              type="text"
-              placeholder="Event location"
-              id="location"
-              register={register}
-              errors={errors.location}
-              name="location"
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="date">Date</Label>
-                <Input
-                  type="date"
-                  id="date"
-                  className={cn("h-10", errors.date && "border-destructive")}
-                  {...register("date")}
-                />
-                {errors.date?.message && (
-                  <p className="text-xs text-destructive">
-                    {String(errors.date.message)}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="time">Time</Label>
-                <Input
-                  type="time"
-                  id="time"
-                  className={cn("h-10", errors.time && "border-destructive")}
-                  {...register("time")}
-                />
-                {errors.time?.message && (
-                  <p className="text-xs text-destructive">
-                    {String(errors.time.message)}
-                  </p>
-                )}
-              </div>
-            </div>
-            <FormBox
-              label="Event Type"
+              label="Status"
               type="radio"
-              placeholder="Select event type"
-              id="eventType"
+              placeholder="Select status"
+              id="status"
               register={register}
-              errors={errors.eventType}
-              name="eventType"
+              errors={errors.status}
+              name="status"
               control={control}
-              options={eventTypeOptions}
+              options={statusOptions}
             />
-            <FormBox
-              label="Organizer"
-              type="select"
-              placeholder="Select organizer"
-              id="organizer"
-              register={register}
-              errors={errors.organizer}
-              name="organizer"
-              control={control}
-              options={memberOptions}
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="latitude">Latitude</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  id="latitude"
-                  placeholder="Optional"
-                  className="h-10"
-                  {...register("latitude")}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="longitude">Longitude</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  id="longitude"
-                  placeholder="Optional"
-                  className="h-10"
-                  {...register("longitude")}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="isPinned" className="text-xs">Pinned</Label>
+              <FormBox
+                label="Pinned"
+                type="switch"
+                placeholder="Pin this announcement"
+                id="isPinned"
+                register={register}
+                errors={errors.isPinned}
+                name="isPinned"
+                control={control}
+                inputType="switch"
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="featured-image">Featured Image</Label>
+              <Label htmlFor="featured-image" className="text-xs">Featured Image</Label>
               <input
                 ref={imageInputRef}
                 type="file"
@@ -334,7 +238,7 @@ export default function EditEvent({
                 <div className="relative overflow-hidden rounded-md border border-border">
                   <img
                     src={featuredImage.image}
-                    alt="Event featured preview"
+                    alt="Announcement featured preview"
                     className="h-40 w-full object-cover"
                   />
                   <button
@@ -387,7 +291,7 @@ export default function EditEvent({
             Cancel
           </Button>
           <ActionBtn
-            form="edit-event-form"
+            form="edit-announcement-form"
             text="Save Changes"
             type="submit"
             size="sm"

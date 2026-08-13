@@ -4,7 +4,14 @@ export interface IAuditLog extends Document {
   userId: mongoose.Types.ObjectId;
   userName: string;
   action: string;
-  category: "auth" | "payment" | "settings" | "security" | "support";
+  category:
+    | "auth"
+    | "payment"
+    | "settings"
+    | "security"
+    | "support"
+    | "events"
+    | "announcements";
   details: Record<string, any>;
   status: "success" | "failure";
   description: string;
@@ -21,7 +28,15 @@ const AuditLogSchema = new Schema<IAuditLog>(
     action: { type: String, required: true },
     category: {
       type: String,
-      enum: ["auth", "payment", "settings", "security", "support", "events"],
+      enum: [
+        "auth",
+        "payment",
+        "settings",
+        "security",
+        "support",
+        "events",
+        "announcements",
+      ],
       required: true,
     },
     description: { type: String },

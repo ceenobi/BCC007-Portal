@@ -1,6 +1,7 @@
 import type { DashboardData } from "~/queries/dashboard";
 import BalanceCard from "./balance-card";
 import DashboardTrend from "./dashboard-trend";
+import LatestAnnouncement from "./latest-announcement";
 import QuickActions from "./quick-actions";
 import RecentActivity from "./recent-activity";
 import RevenueStatsCards from "./revenue-stats-cards";
@@ -39,6 +40,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
       <div className="grid gap-4 lg:grid-cols-12">
         <UpcomingEvents events={data.upcomingEvents} className="lg:col-span-7" />
         <div className="space-y-4 lg:col-span-5">
+          <LatestAnnouncement announcement={data.latestAnnouncement} />
           <RecentActivity logs={data.recentActivity} />
           <UpcomingBirthdays birthdays={data.upcomingBirthdays} />
         </div>

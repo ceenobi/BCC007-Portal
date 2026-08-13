@@ -249,6 +249,15 @@ export const eventCreatedTemplate = (name: string, event: any) =>
     `Your event "${event.title}" has been successfully created.<br/><br/> You can now view and manage your event on the platform.`,
   );
 
+export const announcementTemplate = (name: string, announcement: any) =>
+  baseLayout(
+    "New Announcement",
+    name,
+    `${announcement.title}<br/><br/>${announcement.content.replace(/\n/g, "<br/>")}`,
+    "/dashboard/announcements",
+    "View Announcement",
+  );
+
 export const paymentConfirmationTemplate = (
   name: string,
   data: {

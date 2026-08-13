@@ -5,12 +5,14 @@ import {
   RiCashLine,
   RiDashboardLine,
   RiGroupLine,
+  RiMegaphoneLine,
   RiRefundLine,
   RiSettings3Line,
   RiSparkling2Line,
   RiTeamLine,
 } from "@remixicon/react";
 import type {
+  AnnouncementData,
   AuditLogData,
   EventData,
   PaymentData,
@@ -203,6 +205,7 @@ export const permissions = {
   MANAGE_MEMBERS: [roles.admin, roles.super_admin],
   MANAGE_PAYMENTS: [roles.admin, roles.super_admin],
   MANAGE_EVENTS: [roles.admin, roles.super_admin],
+  MANAGE_ANNOUNCEMENTS: [roles.admin, roles.super_admin],
   VIEW_REPORTS: [roles.admin, roles.super_admin],
   MANAGE_SETTINGS: [roles.super_admin, roles.admin, roles.member],
   MANAGE_SESSIONS: [roles.super_admin],
@@ -230,6 +233,12 @@ export const eventTypes = [
   { id: "meeting", name: "Meeting" },
   { id: "birthday", name: "Birthday" },
   { id: "other", name: "Other" },
+] as const;
+
+export const announcementStatus = [
+  { value: "draft", label: "Draft" },
+  { value: "published", label: "Published" },
+  { value: "archived", label: "Archived" },
 ] as const;
 
 export const paymentStatus = [
@@ -275,6 +284,11 @@ export const sideBarLinks: SidebarLinkGroup[] = [
         name: "Events",
         href: "/dashboard/events",
         icon: RiCalendarEventLine,
+      },
+      {
+        name: "Announcements",
+        href: "/dashboard/announcements",
+        icon: RiMegaphoneLine,
       },
     ],
   },
@@ -399,6 +413,29 @@ export const statusConfig: Record<
   },
 };
 
+export const announcementStatusConfig: Record<
+  AnnouncementData["status"],
+  { label: string; className: string; dotClassName: string }
+> = {
+  draft: {
+    label: "Draft",
+    className:
+      "border-transparent bg-gray-500/10 text-gray-600 dark:text-gray-400",
+    dotClassName: "bg-gray-500",
+  },
+  published: {
+    label: "Published",
+    className:
+      "border-transparent bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    dotClassName: "bg-emerald-500",
+  },
+  archived: {
+    label: "Archived",
+    className: "border-transparent bg-destructive/10 text-destructive",
+    dotClassName: "bg-destructive",
+  },
+};
+
 export const transferStatusConfig: Record<
   TransferData["status"],
   { label: string; className: string; dotClassName: string }
@@ -481,6 +518,16 @@ export const auditCategoryConfig: Record<
     className:
       "border-transparent bg-purple-500/10 text-purple-600 dark:text-purple-400",
   },
+  events: {
+    label: "Events",
+    className:
+      "border-transparent bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  },
+  announcements: {
+    label: "Announcements",
+    className:
+      "border-transparent bg-pink-500/10 text-pink-600 dark:text-pink-400",
+  },
 };
 
 export const auditStatusConfig: Record<
@@ -535,6 +582,8 @@ export const auditlogCategories = [
   { label: "Support", value: "support" },
   { label: "Security", value: "security" },
   { label: "Settings", value: "settings" },
+  { label: "Events", value: "events" },
+  { label: "Announcements", value: "announcements" },
 ];
 
 export const ticketPriority = [

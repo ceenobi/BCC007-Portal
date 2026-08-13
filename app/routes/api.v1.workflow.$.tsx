@@ -18,6 +18,8 @@ export const action = async (args: any) => {
     await import("~/.server/workflows/status.workflow");
   const { runBirthdayRemindersWorkflow } =
     await import("~/.server/workflows/birthday.workflow");
+  const { announcementCreatedWorkflow } =
+    await import("~/.server/workflows/announcement.workflow");
   const { runDashboardRefreshWorkflow } =
     await import("~/.server/workflows/dashboard.workflow");
   const { sendPaymentConfirmationWorkflow } =
@@ -47,6 +49,7 @@ export const action = async (args: any) => {
       "run-status-updates": createWorkflow(runStatusUpdatesWorkflow),
       "run-birthday-reminders": createWorkflow(runBirthdayRemindersWorkflow),
       "birthday-reminder": createWorkflow(sendBirthdayReminderWorkflow),
+      "announcement-created": createWorkflow(announcementCreatedWorkflow),
       "run-dashboard-refresh": createWorkflow(runDashboardRefreshWorkflow),
       "payment-confirmation": createWorkflow(sendPaymentConfirmationWorkflow),
       "run-subscription-sync": createWorkflow(runSubscriptionSyncWorkflow),
