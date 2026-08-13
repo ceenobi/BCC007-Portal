@@ -6,6 +6,9 @@ export const tryCatchWrapper = async <T>(
     return await operation();
   } catch (error: any) {
     import.meta.env.DEV && console.error(error, "Wrapper caught error");
+
+    if (error instanceof Response) throw error;
+
     return Response.json(
       {
         success: false,

@@ -23,7 +23,8 @@ export interface INotification extends Document {
     | "account_deleted"
     | "payment_received"
     | "security_alert"
-    | "birthday_reminder";
+    | "birthday_reminder"
+    | "announcement";
   title: string;
   message: string;
   metadata: Record<string, any>;
@@ -67,6 +68,7 @@ const NotificationSchema = new Schema<INotification>(
         "event_cancelled",
         "event_interest",
         "birthday_reminder",
+        "announcement",
       ],
     },
     title: { type: String, required: true },

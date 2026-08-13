@@ -5,12 +5,14 @@ import { sendBirthdayReminderSchema } from "~/lib/schema";
 import { tryCatchWrapper } from "~/lib/tryCatchWrapper";
 import { env } from "../config/keys";
 import logger from "../config/logger";
+import Announcement from "../models/announcement";
 import Notification from "../models/notification";
 import Ticket from "../models/ticket";
 import User from "../models/user";
 import { AuditLogService } from "../services/auditlog-service";
 import { auth } from "../services/better-auth";
 import { checkRateLimit } from "../utils/rate-limit";
+import { fetchWithCache } from "../utils/cache";
 import { workflowClient } from "../workflows/client";
 import { fetchAllAuditLogs, fetchUserAuditLogs } from "./audit-logs";
 import { getUpcomingEvents } from "./event-data";
@@ -121,7 +123,7 @@ export async function getDashboardData(request: Request) {
     const isSupportAdmin = hasPermission(role, "MANAGE_TICKETS");
     const isAdmin = role === "admin" || role === "super_admin";
 
-    const [userPayments1m, userPaymentsAll, groupPayments1m, groupPaymentsAll, upcomingEvents, balance, orgTickets, membersCount, activityLogs, birthdays] =
+    const [userPayments1m, userPaymentsAll, groupPayments1m, groupPaymentsAll, upcomingEvents, balance, orgTickets, membersCount, activityLogs, birthdays, latestAnnouncement] =
       await Promise.all([
         getUserPaymentReports({
           request,
@@ -177,6 +179,12 @@ export async function getDashboardData(request: Request) {
               unwrap<any>(res),
             ),
         getUpcomingBirthdays(),
+        fetchWithCache("dashboard:latest-announcement", 300, async () =>
+          Announcement.findOne({ status: "published" })
+            .sort({ publishedAt: -1, createdAt: -1 })
+            .select("title content status isPinned featuredImage featuredImageId publishedAt createdAt")
+            .lean(),
+        ),
       ]);
 
     // Member's own support snapshot (avoids exposing org-wide ticket data to
@@ -222,6 +230,7 @@ export async function getDashboardData(request: Request) {
       membersCount: isMemberAdmin ? membersCount : null,
       recentActivity: activityLogs?.logs ?? [],
       upcomingBirthdays: birthdays ?? [],
+      latestAnnouncement: latestAnnouncement ?? null,
     };
 
     return Response.json({

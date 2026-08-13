@@ -1,5 +1,5 @@
 import { getDashboardData } from "~/.server/actions/dashboard";
-import type { AuditLogData, EventData, TicketData } from "~/types";
+import type { AnnouncementData, AuditLogData, EventData, TicketData } from "~/types";
 import type { PaymentReportData } from "./payments";
 
 export type UpcomingBirthday = {
@@ -45,6 +45,7 @@ export type DashboardData = {
   membersCount: number | null;
   recentActivity: AuditLogData[];
   upcomingBirthdays: UpcomingBirthday[];
+  latestAnnouncement: AnnouncementData | null;
 };
 
 export const getDashboardQuery = (request: Request) => ({

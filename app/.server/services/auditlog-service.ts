@@ -5,7 +5,14 @@ import { NotificationService } from "./notification.service";
 
 interface RecordOptions {
   action: string;
-  category: "auth" | "payment" | "settings" | "security" | "support" | "events";
+  category:
+    | "auth"
+    | "payment"
+    | "settings"
+    | "security"
+    | "support"
+    | "events"
+    | "announcements";
   description?: string;
   details?: Record<string, any>;
   status?: "success" | "failure";

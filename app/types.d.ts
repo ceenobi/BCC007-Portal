@@ -2,6 +2,7 @@ import type z from "zod";
 import type { roles } from "./lib/constants";
 import type {
   cancelSubscriptionSchema,
+  createAnnouncementSchema,
   createBankAccountSchema,
   createEventSchema,
   createTransferSchema,
@@ -16,6 +17,7 @@ import type {
   signUpSchema,
   updateProfileSchema,
   updateEventSchema,
+  updateAnnouncementSchema,
   updateUserAvatarSchema,
   uploadSchema,
   UploadSignatureSchema,
@@ -68,6 +70,12 @@ export type CreateBankAccountSchemaType = z.infer<
 >;
 export type CreateEventSchemaType = z.infer<typeof createEventSchema>;
 export type UpdateEventSchemaType = z.infer<typeof updateEventSchema>;
+export type CreateAnnouncementSchemaType = z.infer<
+  typeof createAnnouncementSchema
+>;
+export type UpdateAnnouncementSchemaType = z.infer<
+  typeof updateAnnouncementSchema
+>;
 export type ResolveBankAccountSchemaType = z.infer<
   typeof resolveBankAccountSchema
 >;
@@ -112,6 +120,20 @@ export type EventData = {
   organizer: SessionData;
   featuredImage?: string;
   featuredImageId?: string | undefined;
+};
+
+export type AnnouncementData = {
+  _id: string;
+  title: string;
+  content: string;
+  author: SessionData;
+  status: "draft" | "published" | "archived";
+  isPinned: boolean;
+  featuredImage?: string;
+  featuredImageId?: string | undefined;
+  publishedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type PaymentData = {
@@ -181,7 +203,14 @@ export type AuditLogData = {
   userId: string;
   userName: string;
   action: string;
-  category: "auth" | "payment" | "settings" | "security" | "support";
+  category:
+    | "auth"
+    | "payment"
+    | "settings"
+    | "security"
+    | "support"
+    | "events"
+    | "announcements";
   details: Record<string, any>;
   status: "success" | "failure";
   description?: string;

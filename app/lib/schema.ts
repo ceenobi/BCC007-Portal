@@ -263,6 +263,34 @@ export const updateEventSchema = z.object(eventFields).refine(
   },
 );
 
+const announcementFields = {
+  title: z.string().min(3, {
+    message: "Title must be at least 3 characters long",
+  }),
+  content: z
+    .string()
+    .min(3, {
+      message: "Content must be at least 3 characters long",
+    })
+    .max(2000, {
+      message: "Content must be at most 2000 characters long",
+    }),
+  isPinned: z.boolean().optional(),
+  featuredImage: z.string().optional(),
+  featuredImageId: z.string().optional(),
+} satisfies z.ZodRawShape;
+
+export const createAnnouncementSchema = z.object({
+  ...announcementFields,
+  status: z.enum(["draft", "published"]).optional(),
+  idempotencyKey: z.string().optional(),
+});
+
+export const updateAnnouncementSchema = z.object({
+  ...announcementFields,
+  status: z.enum(["draft", "published", "archived"]).optional(),
+});
+
 export const initializePaymentSchema = z
   .object({
     amount: z.coerce.number().min(2000, "Minimum payment amount is 2000 Naira"),

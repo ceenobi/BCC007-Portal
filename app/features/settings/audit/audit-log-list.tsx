@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import {
+  RiCalendar2Line,
   RiLifebuoyLine,
   RiLockPasswordLine,
+  RiMegaphoneLine,
   RiMoneyDollarCircleLine,
   RiShieldCheckLine,
   RiSettings3Line,
@@ -28,6 +30,8 @@ const categoryIcons: Record<
   settings: RiSettings3Line,
   security: RiShieldCheckLine,
   support: RiLifebuoyLine,
+  events: RiCalendar2Line,
+  announcements: RiMegaphoneLine,
 };
 
 function CategoryBadge({ category }: { category: AuditLogData["category"] }) {

@@ -17,6 +17,7 @@ import {
   ticketResolvedTemplate,
   deleteAccountRequestTemplate,
   birthdayReminderTemplate,
+  announcementTemplate,
 } from "../utils/email-templates";
 
 const emailService = {
@@ -256,6 +257,20 @@ const emailService = {
     await sendEmail({
       email: user.email,
       subject: `Happy Birthday, ${user.name}!`,
+      message: htmlBody,
+    });
+  },
+  sendAnnouncementEmail: async ({
+    user,
+    announcement,
+  }: {
+    user: User;
+    announcement: any;
+  }) => {
+    const htmlBody = announcementTemplate(user.name, announcement);
+    await sendEmail({
+      email: user.email,
+      subject: `New Announcement: ${announcement.title}`,
       message: htmlBody,
     });
   },

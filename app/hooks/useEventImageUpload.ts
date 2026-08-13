@@ -6,7 +6,7 @@ export type FeaturedImage = {
   imagePublicId: string;
 };
 
-export function useEventImageUpload() {
+export function useEventImageUpload(folder: string = "events") {
   const [featuredImage, setFeaturedImage] = useState<FeaturedImage | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -17,7 +17,7 @@ export function useEventImageUpload() {
       const sigRes = await fetch("/api/upload-signature", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ folder: "events" }),
+        body: JSON.stringify({ folder }),
       });
       const sig = await sigRes.json();
       if (!sig.success) {
