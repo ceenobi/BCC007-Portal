@@ -149,6 +149,7 @@ function EventCard({ event, index }: { event: EventData; index: number }) {
             >
               <RiGroupLine className="size-3.5" aria-hidden="true" />
               {interestedCount}
+              {event.capacity ? `/${event.capacity}` : ""}
             </span>
           </div>
         </CardContent>

@@ -14,6 +14,8 @@ import {
   deleteEvent,
   getEvent,
   getEvents,
+  toggleEventCheckIn,
+  toggleEventInterest,
   updateEvent,
 } from "~/.server/actions/event-data";
 import { auth } from "~/.server/services/better-auth";
@@ -93,6 +95,8 @@ const makeEvent = (
     eventType?: string;
     status?: string;
     interestedMembers?: string[];
+    checkedInMembers?: string[];
+    capacity?: number;
     featuredImageId?: string;
     featuredImage?: string;
   } = {},
@@ -107,6 +111,8 @@ const makeEvent = (
     status: opts.status ?? "upcoming",
     organizer: organizerId,
     ...(opts.interestedMembers ? { interestedMembers: opts.interestedMembers } : {}),
+    ...(opts.checkedInMembers ? { checkedInMembers: opts.checkedInMembers } : {}),
+    ...(opts.capacity ? { capacity: opts.capacity } : {}),
     ...(opts.featuredImageId ? { featuredImageId: opts.featuredImageId } : {}),
     ...(opts.featuredImage ? { featuredImage: opts.featuredImage } : {}),
   });
@@ -550,5 +556,241 @@ describe("cancelEvent", () => {
     const body = await res.json();
     expect(body.message).toBe("Event already cancelled");
     expect(await AuditLog.countDocuments({ action: "CANCEL_EVENT" })).toBe(0);
+  });
+});
+
+describe("toggleEventInterest", () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+  afterEach(async () => {
+    await clearTestDB();
+    vi.clearAllMocks();
+  });
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
+  const adminId = new mongoose.Types.ObjectId().toString();
+  const memberId = new mongoose.Types.ObjectId().toString();
+
+  beforeEach(async () => {
+    await makeUser(adminId, "admin");
+    await makeUser(memberId, "member");
+    getSessionMock.mockResolvedValue(session("member", memberId) as never);
+  });
+
+  it("returns 401 without a session", async () => {
+    getSessionMock.mockResolvedValue(null as never);
+    const res = await toggleEventInterest(request(), {
+      eventId: new mongoose.Types.ObjectId().toString(),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 400 for an invalid event id", async () => {
+    const res = await toggleEventInterest(request(), { eventId: "not-an-id" });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toBe("Invalid event id");
+  });
+
+  it("returns 404 for an unknown event", async () => {
+    const res = await toggleEventInterest(request(), {
+      eventId: new mongoose.Types.ObjectId().toString(),
+    });
+    expect(res.status).toBe(404);
+    const body = await res.json();
+    expect(body.message).toBe("Event not found");
+  });
+
+  it("marks the user as interested and returns the count", async () => {
+    const event = await makeEvent(adminId, {
+      interestedMembers: [adminId],
+    });
+    const res = await toggleEventInterest(request(), {
+      eventId: event._id.toString(),
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.body).toMatchObject({ interested: true, count: 2 });
+
+    const updated = await Event.findById(event._id).lean();
+    expect(updated!.interestedMembers.map(String)).toContain(memberId);
+  });
+
+  it("removes interest when already interested", async () => {
+    const event = await makeEvent(adminId, {
+      interestedMembers: [memberId],
+    });
+    const res = await toggleEventInterest(request(), {
+      eventId: event._id.toString(),
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.body).toMatchObject({ interested: false, count: 0 });
+
+    const updated = await Event.findById(event._id).lean();
+    expect(updated!.interestedMembers.map(String)).not.toContain(memberId);
+  });
+
+  it("rejects a new interest when the event is at full capacity", async () => {
+    const event = await makeEvent(adminId, {
+      capacity: 1,
+      interestedMembers: [adminId],
+    });
+    const res = await toggleEventInterest(request(), {
+      eventId: event._id.toString(),
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toBe("This event is at full capacity");
+  });
+
+  it("allows removing interest even when the event is at full capacity", async () => {
+    const event = await makeEvent(adminId, {
+      capacity: 1,
+      interestedMembers: [adminId, memberId],
+    });
+    const res = await toggleEventInterest(request(), {
+      eventId: event._id.toString(),
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.body).toMatchObject({ interested: false, count: 1 });
+  });
+
+  it("rejects interest in a completed event unless already interested", async () => {
+    const event = await makeEvent(adminId, { status: "completed" });
+    const res = await toggleEventInterest(request(), {
+      eventId: event._id.toString(),
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toContain("completed or cancelled");
+  });
+});
+
+describe("toggleEventCheckIn", () => {
+  beforeAll(async () => {
+    await connectTestDB();
+  });
+  afterEach(async () => {
+    await clearTestDB();
+    vi.clearAllMocks();
+  });
+  afterAll(async () => {
+    await disconnectTestDB();
+  });
+
+  const adminId = new mongoose.Types.ObjectId().toString();
+  const memberId = new mongoose.Types.ObjectId().toString();
+
+  beforeEach(async () => {
+    await makeUser(adminId, "admin");
+    await makeUser(memberId, "member");
+    getSessionMock.mockResolvedValue(session("admin", adminId) as never);
+  });
+
+  const checkInParams = (eventId: string) => ({
+    eventId,
+    memberId,
+  });
+
+  it("returns 401 without a session", async () => {
+    getSessionMock.mockResolvedValue(null as never);
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(new mongoose.Types.ObjectId().toString()),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("forbids members from managing check-ins", async () => {
+    getSessionMock.mockResolvedValue(session("member", memberId) as never);
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(new mongoose.Types.ObjectId().toString()),
+    );
+    expect(res.status).toBe(403);
+    const body = await res.json();
+    expect(body.message).toContain("MANAGE_EVENTS");
+  });
+
+  it("returns 400 for an invalid event id", async () => {
+    const res = await toggleEventCheckIn(request(), {
+      eventId: "not-an-id",
+      memberId,
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toBe("Invalid event id");
+  });
+
+  it("returns 400 for an invalid member id", async () => {
+    const res = await toggleEventCheckIn(request(), {
+      eventId: new mongoose.Types.ObjectId().toString(),
+      memberId: "not-an-id",
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toBe("Invalid member id");
+  });
+
+  it("returns 404 for an unknown event", async () => {
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(new mongoose.Types.ObjectId().toString()),
+    );
+    expect(res.status).toBe(404);
+    const body = await res.json();
+    expect(body.message).toBe("Event not found");
+  });
+
+  it("rejects checking in a member who is not interested", async () => {
+    const event = await makeEvent(adminId);
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(event._id.toString()),
+    );
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.message).toBe("Member is not interested in this event");
+  });
+
+  it("checks in an interested member and records an audit log", async () => {
+    const event = await makeEvent(adminId, {
+      interestedMembers: [memberId],
+    });
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(event._id.toString()),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.body).toMatchObject({ checkedIn: true, count: 1 });
+
+    const updated = await Event.findById(event._id).lean();
+    expect(updated!.checkedInMembers.map(String)).toContain(memberId);
+    expect(
+      await AuditLog.countDocuments({ action: "EVENT_CHECK_IN" }),
+    ).toBe(1);
+  });
+
+  it("removes a check-in when toggled again", async () => {
+    const event = await makeEvent(adminId, {
+      interestedMembers: [memberId],
+      checkedInMembers: [memberId],
+    });
+    const res = await toggleEventCheckIn(
+      request(),
+      checkInParams(event._id.toString()),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.body).toMatchObject({ checkedIn: false, count: 0 });
+
+    const updated = await Event.findById(event._id).lean();
+    expect(updated!.checkedInMembers.map(String)).not.toContain(memberId);
   });
 });
