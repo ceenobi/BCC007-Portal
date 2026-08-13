@@ -12,7 +12,8 @@ interface RecordOptions {
     | "security"
     | "support"
     | "events"
-    | "announcements";
+    | "announcements"
+    | "expenses";
   description?: string;
   details?: Record<string, any>;
   status?: "success" | "failure";

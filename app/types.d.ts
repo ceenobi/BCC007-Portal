@@ -5,6 +5,7 @@ import type {
   createAnnouncementSchema,
   createBankAccountSchema,
   createEventSchema,
+  createExpenseSchema,
   createTransferSchema,
   deleteMediaSchema,
   forgotPasswordSchema,
@@ -18,6 +19,7 @@ import type {
   updateProfileSchema,
   updateEventSchema,
   updateAnnouncementSchema,
+  updateExpenseSchema,
   updateUserAvatarSchema,
   uploadSchema,
   UploadSignatureSchema,
@@ -76,6 +78,8 @@ export type CreateAnnouncementSchemaType = z.infer<
 export type UpdateAnnouncementSchemaType = z.infer<
   typeof updateAnnouncementSchema
 >;
+export type CreateExpenseSchemaType = z.infer<typeof createExpenseSchema>;
+export type UpdateExpenseSchemaType = z.infer<typeof updateExpenseSchema>;
 export type ResolveBankAccountSchemaType = z.infer<
   typeof resolveBankAccountSchema
 >;
@@ -134,6 +138,28 @@ export type AnnouncementData = {
   featuredImage?: string;
   featuredImageId?: string | undefined;
   publishedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ExpenseData = {
+  _id: string;
+  userId: SessionUser;
+  title: string;
+  description?: string;
+  amount: number;
+  currency: string;
+  category:
+    | "logistics"
+    | "refreshments"
+    | "venue"
+    | "equipment"
+    | "welfare"
+    | "other";
+  status: "pending" | "approved" | "rejected";
+  transferId?: string;
+  monthKey?: string;
+  metadata: Record<string, any>;
   createdAt: string;
   updatedAt: string;
 };
@@ -212,7 +238,8 @@ export type AuditLogData = {
     | "security"
     | "support"
     | "events"
-    | "announcements";
+    | "announcements"
+    | "expenses";
   details: Record<string, any>;
   status: "success" | "failure";
   description?: string;
