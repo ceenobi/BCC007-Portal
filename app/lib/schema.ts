@@ -295,6 +295,43 @@ export const updateAnnouncementSchema = z.object({
   status: z.enum(["draft", "published", "archived"]).optional(),
 });
 
+const expenseFields = {
+  title: z.string().min(3, {
+    message: "Title must be at least 3 characters long",
+  }),
+  description: z
+    .string()
+    .max(1000, {
+      message: "Description must be at most 1000 characters long",
+    })
+    .optional(),
+  amount: z.coerce.number({
+    message: "Amount is required",
+  }).min(1, "Amount must be at least 1 Naira"),
+  category: z.enum([
+    "logistics",
+    "refreshments",
+    "venue",
+    "equipment",
+    "welfare",
+    "other",
+  ]),
+  transferId: z.string().optional(),
+} satisfies z.ZodRawShape;
+
+export const createExpenseSchema = z.object({
+  ...expenseFields,
+  status: z.enum(["pending", "approved", "rejected"]).optional(),
+  // Client-generated once per submission intent; reused on retry so the server
+  // can deduplicate concurrent/duplicate requests (double-click, timeouts).
+  idempotencyKey: z.string().optional(),
+});
+
+export const updateExpenseSchema = z.object({
+  ...expenseFields,
+  status: z.enum(["pending", "approved", "rejected"]).optional(),
+});
+
 export const initializePaymentSchema = z
   .object({
     amount: z.coerce.number().min(2000, "Minimum payment amount is 2000 Naira"),

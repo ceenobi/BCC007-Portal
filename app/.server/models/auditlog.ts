@@ -11,7 +11,8 @@ export interface IAuditLog extends Document {
     | "security"
     | "support"
     | "events"
-    | "announcements";
+    | "announcements"
+    | "expenses";
   details: Record<string, any>;
   status: "success" | "failure";
   description: string;
@@ -36,6 +37,7 @@ const AuditLogSchema = new Schema<IAuditLog>(
         "support",
         "events",
         "announcements",
+        "expenses",
       ],
       required: true,
     },

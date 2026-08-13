@@ -8,6 +8,7 @@ import {
   RiShieldCheckLine,
   RiSettings3Line,
   RiTimeLine,
+  RiWallet3Line,
 } from "@remixicon/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import TableView from "~/components/ui/table-view";
@@ -32,6 +33,7 @@ const categoryIcons: Record<
   support: RiLifebuoyLine,
   events: RiCalendar2Line,
   announcements: RiMegaphoneLine,
+  expenses: RiWallet3Line,
 };
 
 function CategoryBadge({ category }: { category: AuditLogData["category"] }) {

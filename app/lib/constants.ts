@@ -10,11 +10,13 @@ import {
   RiSettings3Line,
   RiSparkling2Line,
   RiTeamLine,
+  RiWallet3Line,
 } from "@remixicon/react";
 import type {
   AnnouncementData,
   AuditLogData,
   EventData,
+  ExpenseData,
   PaymentData,
   SessionUser,
   TicketData,
@@ -265,6 +267,21 @@ export const transferStatus = [
   { value: "abandoned", label: "Abandoned" },
 ] as const;
 
+export const expenseCategory = [
+  { value: "logistics", label: "Logistics" },
+  { value: "refreshments", label: "Refreshments" },
+  { value: "venue", label: "Venue" },
+  { value: "equipment", label: "Equipment" },
+  { value: "welfare", label: "Welfare" },
+  { value: "other", label: "Other" },
+] as const;
+
+export const expenseStatus = [
+  { value: "pending", label: "Pending" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+] as const;
+
 export const sideBarLinks: SidebarLinkGroup[] = [
   {
     id: "home",
@@ -305,6 +322,11 @@ export const sideBarLinks: SidebarLinkGroup[] = [
         name: "Transfers",
         href: "/dashboard/transfers",
         icon: RiRefundLine,
+      },
+      {
+        name: "Expenses",
+        href: "/dashboard/expenses",
+        icon: RiWallet3Line,
       },
     ],
   },
@@ -489,6 +511,71 @@ export const transferStatusConfig: Record<
   },
 };
 
+export const expenseStatusConfig: Record<
+  ExpenseData["status"],
+  { label: string; className: string; dotClassName: string }
+> = {
+  pending: {
+    label: "Pending",
+    className:
+      "border-transparent bg-yellow-500/10 text-yellow-600 dark:text-yellow-400",
+    dotClassName: "bg-yellow-500",
+  },
+  approved: {
+    label: "Approved",
+    className:
+      "border-transparent bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    dotClassName: "bg-emerald-500",
+  },
+  rejected: {
+    label: "Rejected",
+    className: "border-transparent bg-destructive/10 text-destructive",
+    dotClassName: "bg-destructive",
+  },
+};
+
+export const expenseCategoryConfig: Record<
+  ExpenseData["category"],
+  { label: string; className: string; dotClassName: string }
+> = {
+  logistics: {
+    label: "Logistics",
+    className:
+      "border-transparent bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    dotClassName: "bg-blue-500",
+  },
+  refreshments: {
+    label: "Refreshments",
+    className:
+      "border-transparent bg-orange-500/10 text-orange-600 dark:text-orange-400",
+    dotClassName: "bg-orange-500",
+  },
+  venue: {
+    label: "Venue",
+    className:
+      "border-transparent bg-purple-500/10 text-purple-600 dark:text-purple-400",
+    dotClassName: "bg-purple-500",
+  },
+  equipment: {
+    label: "Equipment",
+    className:
+      "border-transparent bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+    dotClassName: "bg-cyan-500",
+  },
+  welfare: {
+    label: "Welfare",
+    className:
+      "border-transparent bg-pink-500/10 text-pink-600 dark:text-pink-400",
+    dotClassName: "bg-pink-500",
+  },
+  other: {
+    label: "Other",
+    className:
+      "border-transparent bg-zinc-500/10 text-zinc-600 dark:text-zinc-400",
+    dotClassName: "bg-zinc-500",
+  },
+};
+
 export const auditCategoryConfig: Record<
   AuditLogData["category"],
   { label: string; className: string }
@@ -527,6 +614,11 @@ export const auditCategoryConfig: Record<
     label: "Announcements",
     className:
       "border-transparent bg-pink-500/10 text-pink-600 dark:text-pink-400",
+  },
+  expenses: {
+    label: "Expenses",
+    className:
+      "border-transparent bg-teal-500/10 text-teal-600 dark:text-teal-400",
   },
 };
 
@@ -584,6 +676,7 @@ export const auditlogCategories = [
   { label: "Settings", value: "settings" },
   { label: "Events", value: "events" },
   { label: "Announcements", value: "announcements" },
+  { label: "Expenses", value: "expenses" },
 ];
 
 export const ticketPriority = [
