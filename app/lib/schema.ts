@@ -232,6 +232,10 @@ const eventFields = {
     (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
     z.coerce.number().optional(),
   ),
+  capacity: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.coerce.number().int().positive().optional(),
+  ),
 } satisfies z.ZodRawShape;
 
 export const createEventSchema = z

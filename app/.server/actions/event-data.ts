@@ -248,6 +248,7 @@ export async function getEvents({
       const events = await Event.find(matchStage)
         .populate("organizer", "name email image")
         .populate("interestedMembers", "name email image")
+        .populate("checkedInMembers", "name email image")
         .skip((page - 1) * limit)
         .limit(limit)
         .sort({ createdAt: -1 })
@@ -298,6 +299,7 @@ export async function getEvent(request: Request, payload: { eventId: string }) {
           select: "name image",
         })
         .populate("interestedMembers", "name email image")
+        .populate("checkedInMembers", "name email image")
         .lean();
       return getEvent ?? null;
     });
@@ -532,7 +534,7 @@ export async function toggleEventInterest(
     }
 
     const current = await Event.findById(payload.eventId)
-      .select("status interestedMembers")
+      .select("status interestedMembers capacity")
       .lean();
     if (!current) {
       return Response.json(
@@ -555,6 +557,23 @@ export async function toggleEventInterest(
           success: false,
           message:
             "You cannot indicate interest in a completed or cancelled event",
+        },
+        { status: 400 },
+      );
+    }
+
+    // An event with a defined capacity cannot exceed it, though existing
+    // interest can always be withdrawn.
+    if (
+      isOpen &&
+      !currentlyInterested &&
+      current.capacity &&
+      (current.interestedMembers?.length ?? 0) >= current.capacity
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message: "This event is at full capacity",
         },
         { status: 400 },
       );
@@ -605,6 +624,144 @@ export async function toggleEventInterest(
         body: {
           interested,
           count: updated.interestedMembers?.length ?? 0,
+        },
+      },
+      { status: 200 },
+    );
+  });
+}
+
+export async function toggleEventCheckIn(
+  request: Request,
+  payload: { eventId: string; memberId: string },
+) {
+  return tryCatchWrapper(async () => {
+    await checkRateLimit(request, "strict");
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session) {
+      logger.error("Unauthorized");
+      return Response.json(
+        { success: false, message: "Unauthorized, session expired" },
+        { status: 401 },
+      );
+    }
+    if (!hasPermission(session.user.role, "MANAGE_EVENTS")) {
+      logger.error("Forbidden");
+      return Response.json(
+        {
+          success: false,
+          message:
+            "Access denied. Requires 'MANAGE_EVENTS' permission.",
+        },
+        { status: 403 },
+      );
+    }
+    if (!payload.eventId || !mongoose.Types.ObjectId.isValid(payload.eventId)) {
+      logger.error("Invalid event id");
+      return Response.json(
+        { success: false, message: "Invalid event id" },
+        { status: 400 },
+      );
+    }
+    if (
+      !payload.memberId ||
+      !mongoose.Types.ObjectId.isValid(payload.memberId)
+    ) {
+      logger.error("Invalid member id");
+      return Response.json(
+        { success: false, message: "Invalid member id" },
+        { status: 400 },
+      );
+    }
+
+    const current = await Event.findById(payload.eventId)
+      .select("status title interestedMembers checkedInMembers")
+      .lean();
+    if (!current) {
+      return Response.json(
+        { success: false, message: "Event not found" },
+        { status: 404 },
+      );
+    }
+
+    const memberId = payload.memberId;
+    const currentlyCheckedIn = (current.checkedInMembers ?? []).some(
+      (id: unknown) => String(id) === memberId,
+    );
+
+    // Only members who indicated interest in the event can be checked in, but
+    // a check-in may always be removed.
+    const isInterested = (current.interestedMembers ?? []).some(
+      (id: unknown) => String(id) === memberId,
+    );
+    if (!isInterested && !currentlyCheckedIn) {
+      return Response.json(
+        {
+          success: false,
+          message: "Member is not interested in this event",
+        },
+        { status: 400 },
+      );
+    }
+
+    let updated: { _id: unknown; checkedInMembers: unknown[] } | null;
+    let checkedIn: boolean;
+    if (!currentlyCheckedIn) {
+      // Atomic toggle: try to add the member to checkedInMembers; if the member
+      // is already present the update matches nothing, so the second branch
+      // pulls.
+      updated = await Event.findOneAndUpdate(
+        { _id: payload.eventId, checkedInMembers: { $ne: memberId } },
+        { $addToSet: { checkedInMembers: memberId } },
+        { new: true, projection: { checkedInMembers: 1 } },
+      ).lean();
+      checkedIn = Boolean(updated);
+      if (!updated) {
+        updated = await Event.findOneAndUpdate(
+          { _id: payload.eventId, checkedInMembers: memberId },
+          { $pull: { checkedInMembers: memberId } },
+          { new: true, projection: { checkedInMembers: 1 } },
+        ).lean();
+        checkedIn = false;
+      }
+    } else {
+      updated = await Event.findOneAndUpdate(
+        { _id: payload.eventId, checkedInMembers: memberId },
+        { $pull: { checkedInMembers: memberId } },
+        { new: true, projection: { checkedInMembers: 1 } },
+      ).lean();
+      checkedIn = false;
+    }
+    if (!updated) {
+      return Response.json(
+        { success: false, message: "Event not found" },
+        { status: 404 },
+      );
+    }
+
+    await invalidateCache(`event:${payload.eventId}`);
+    await invalidateCache("events:*");
+
+    await AuditLogService.record(request, {
+      action: "EVENT_CHECK_IN",
+      category: "events",
+      description: checkedIn
+        ? `Checked in a member at event "${current.title}"`
+        : `Removed a member's check-in at event "${current.title}"`,
+      details: {
+        eventId: payload.eventId,
+        memberId,
+        checkedIn,
+      },
+    });
+
+    return Response.json(
+      {
+        success: true,
+        message: checkedIn ? "Member checked in" : "Check-in removed",
+        body: {
+          checkedIn,
+          count: updated.checkedInMembers?.length ?? 0,
         },
       },
       { status: 200 },

@@ -7,6 +7,7 @@ import { useNavigate, useOutletContext } from "react-router";
 import {
   cancelEvent,
   deleteEvent,
+  toggleEventCheckIn,
   toggleEventInterest,
   updateEvent,
 } from "~/.server/actions/event-data";
@@ -27,6 +28,7 @@ import { getEventQuery } from "~/queries/events";
 import type { EventData, UpdateEventSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 import CancelEvent from "../../features/events/cancel-event";
+import CheckInPanel from "../../features/events/check-in";
 import DeleteEvent from "../../features/events/delete-event";
 import EditEvent from "../../features/events/edit-event";
 import InterestToggle from "../../features/events/interest-toggle";
@@ -90,6 +92,12 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
   if (payload.intent === "toggle-interest") {
     return await toggleEventInterest(request, payload as { eventId: string });
+  }
+  if (payload.intent === "toggle-check-in") {
+    return await toggleEventCheckIn(
+      request,
+      payload as { eventId: string; memberId: string },
+    );
   }
   if (payload.intent === "cancel-event") {
     return await cancelEvent(request, payload as { eventId: string });
@@ -248,6 +256,7 @@ function Event({
           </PageSection>
         )}
       </div>
+      {isPermitted && <CheckInPanel event={event} />}
     </>
   );
 }

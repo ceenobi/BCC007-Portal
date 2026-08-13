@@ -11,6 +11,8 @@ export interface IEvent extends Document {
   eventType: "party" | "meeting" | "birthday" | "other";
   status: "upcoming" | "ongoing" | "completed" | "cancelled";
   interestedMembers: mongoose.Types.ObjectId[];
+  checkedInMembers: mongoose.Types.ObjectId[];
+  capacity?: number;
   organizer: mongoose.Types.ObjectId;
   featuredImage?: string;
   featuredImageId?: string | undefined;
@@ -62,6 +64,17 @@ const EventSchema = new Schema<IEvent>(
         ref: "User",
       },
     ],
+    checkedInMembers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
+    capacity: {
+      type: Number,
+      min: 1,
+    },
     organizer: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -90,6 +103,7 @@ EventSchema.index({ organizer: 1 });
 EventSchema.index({ eventType: 1 });
 EventSchema.index({ status: 1 });
 EventSchema.index({ interestedMembers: 1 });
+EventSchema.index({ checkedInMembers: 1 });
 EventSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
 
 const Event =

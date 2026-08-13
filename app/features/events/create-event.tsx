@@ -290,6 +290,24 @@ export default function CreateEvent({ members }: { members: MemberOption[] }) {
                 />
               </div>
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="capacity" className="text-xs">
+                Capacity
+              </Label>
+              <Input
+                type="number"
+                min={1}
+                id="capacity"
+                placeholder="Maximum attendees (optional)"
+                className="h-10"
+                {...register("capacity")}
+              />
+              {errors.capacity?.message && (
+                <p className="text-xs text-destructive">
+                  {String(errors.capacity.message)}
+                </p>
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="featured-image" className="text-xs">Featured Image</Label>
               <input

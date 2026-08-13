@@ -117,6 +117,8 @@ export type EventData = {
   eventType: "party" | "meeting" | "birthday" | "other";
   status: "upcoming" | "ongoing" | "completed" | "cancelled";
   interestedMembers: SessionData[];
+  checkedInMembers: SessionData[];
+  capacity?: number;
   organizer: SessionData;
   featuredImage?: string;
   featuredImageId?: string | undefined;

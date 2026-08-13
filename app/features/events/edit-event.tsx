@@ -88,6 +88,7 @@ export default function EditEvent({
     organizer: event.organizer?._id ? String(event.organizer._id) : "",
     latitude: event.latitude ?? undefined,
     longitude: event.longitude ?? undefined,
+    capacity: event.capacity ?? undefined,
   };
 
   const {
@@ -176,6 +177,14 @@ export default function EditEvent({
       Number.isNaN(Number(longitude))
     ) {
       delete payload.longitude;
+    }
+    const capacity = data.capacity as unknown;
+    if (
+      capacity === undefined ||
+      capacity === "" ||
+      Number.isNaN(Number(capacity))
+    ) {
+      delete payload.capacity;
     }
     fetcher.submit(payload as any, {
       method: "post",
@@ -320,6 +329,22 @@ export default function EditEvent({
                   {...register("longitude")}
                 />
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="capacity">Capacity</Label>
+              <Input
+                type="number"
+                min={1}
+                id="capacity"
+                placeholder="Maximum attendees (optional)"
+                className="h-10"
+                {...register("capacity")}
+              />
+              {errors.capacity?.message && (
+                <p className="text-xs text-destructive">
+                  {String(errors.capacity.message)}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="featured-image">Featured Image</Label>

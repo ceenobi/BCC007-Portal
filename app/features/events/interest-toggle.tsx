@@ -20,6 +20,10 @@ export default function InterestToggle({
   );
   const [interested, setInterested] = useState(isInitiallyInterested);
   const [count, setCount] = useState(members.length);
+  const capacity = event.capacity;
+  const isFull = Boolean(
+    capacity && !interested && count >= capacity,
+  );
   const fetcher = useFetcher();
 
   const actionData = fetcher.data as
@@ -58,12 +62,24 @@ export default function InterestToggle({
       variant={interested ? "default" : "outline"}
       size="sm"
       onClick={toggle}
-      disabled={fetcher.state === "submitting"}
+      disabled={fetcher.state === "submitting" || isFull}
       aria-pressed={interested}
+      title={
+        isFull
+          ? "This event is at full capacity"
+          : undefined
+      }
     >
       {interested ? <RiHeart3Fill /> : <RiHeart3Line />}
-      {interested ? "Interested" : "I'm interested"}
-      <span className="text-xs opacity-70">({count})</span>
+      {isFull
+        ? "Event full"
+        : interested
+          ? "Interested"
+          : "I'm interested"}
+      <span className="text-xs opacity-70">
+        {count}
+        {capacity ? `/${capacity}` : ""}
+      </span>
     </Button>
   );
 }
