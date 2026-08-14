@@ -43,11 +43,7 @@ export default function EditExpense({ expense }: { expense: ExpenseData }) {
     control,
     reset,
     formState: { errors },
-  } = useForm<
-    z.input<typeof updateExpenseSchema>,
-    any,
-    UpdateExpenseSchemaType
-  >({
+  } = useForm<z.input<typeof updateExpenseSchema>, any, UpdateExpenseSchemaType>({
     resolver: zodResolver(updateExpenseSchema),
     mode: "onChange",
     defaultValues,
@@ -59,10 +55,13 @@ export default function EditExpense({ expense }: { expense: ExpenseData }) {
   }, [expense._id]);
 
   const actionData = fetcher.data as
-    { success?: boolean; message?: string } | undefined;
+    | { success?: boolean; message?: string }
+    | undefined;
 
   const rootError = errors.root as
-    { message?: string } | Array<{ message?: string }> | undefined;
+    | { message?: string }
+    | Array<{ message?: string }>
+    | undefined;
   const rootErrorMessage =
     (Array.isArray(rootError) ? rootError[0]?.message : rootError?.message) ??
     (errors as Record<string, { message?: string } | undefined>)[""]?.message;
