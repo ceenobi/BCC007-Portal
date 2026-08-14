@@ -19,6 +19,7 @@ import type { CreateTransferSchemaType } from "~/types";
 type MemberOption = {
   _id: string;
   name: string;
+  image?: string;
 };
 
 type Balance = {
@@ -128,6 +129,7 @@ export default function InitiateTransfer({
   const memberOptions = members.map((member) => ({
     id: member._id,
     name: member.name,
+    image: member.image,
   }));
 
   return (

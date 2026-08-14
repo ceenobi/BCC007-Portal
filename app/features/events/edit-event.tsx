@@ -32,6 +32,7 @@ const eventTypeOptions = [
 type MemberOption = {
   _id: string;
   name: string;
+  image?: string;
 };
 
 function formatDateInput(date: Date) {
@@ -196,6 +197,7 @@ export default function EditEvent({
   const memberOptions = members.map((member) => ({
     id: member._id,
     name: member.name,
+    image: member.image,
   }));
 
   return (

@@ -153,7 +153,7 @@ function Event({
 }: {
   event: EventData;
   isPermitted: boolean;
-  members: Array<{ _id: string; name: string }>;
+  members: Array<{ _id: string; name: string; image?: string }>;
   currentUserId: string | null;
 }) {
   const navigate = useNavigate();

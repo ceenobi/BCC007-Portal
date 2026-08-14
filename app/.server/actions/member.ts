@@ -22,7 +22,7 @@ export async function getMembersForSelect(request: Request) {
     const body = await fetchWithCache(cacheKey, 3600, async () => {
       return await User.find({ isOnboarded: true })
         .lean()
-        .select("_id name")
+        .select("_id name email image")
         .sort({ name: 1 });
     });
     return Response.json({
@@ -50,7 +50,7 @@ export async function getAdminsForAssign(request: Request) {
     const body = await fetchWithCache(cacheKey, 3600, async () => {
       return await User.find({ isOnboarded: true, role: "admin" })
         .lean()
-        .select("_id name email")
+        .select("_id name email image")
         .sort({ name: 1 });
     });
     return Response.json({
@@ -90,7 +90,7 @@ export async function getMembers({
       if (query) {
         const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const regex = { $regex: escaped, $options: "i" };
-        dbFilter.$or = [{ name: regex }];
+        dbFilter.$or = [{ name: regex }, { email: regex }];
       }
       const total = await User.countDocuments(dbFilter);
       const members = await User.find(dbFilter)

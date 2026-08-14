@@ -4,6 +4,7 @@ import { useFetcher } from "react-router";
 import { toast } from "sonner";
 import ActionBtn from "~/components/ui/action-btn";
 import { AlertBox } from "~/components/ui/alert-box";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import Modal from "~/components/ui/modal";
 import {
@@ -14,12 +15,14 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import { getInitials } from "~/lib/utils";
 import type { TicketData } from "~/types";
 
 type AdminMember = {
   _id: string;
   name: string;
   email?: string;
+  image?: string;
 };
 
 type AssignTicketModalProps = {
@@ -132,14 +135,44 @@ export default function AssignTicketModal({
             <Select value={selected} onValueChange={setSelected}>
               <SelectTrigger className="w-full border focus:outline-lightBlue focus:ring-lightBlue">
                 <SelectValue placeholder="Select an admin">
-                  {admins.find((admin) => admin._id === selected)?.name ??
-                    "Select an admin"}
+                  {(() => {
+                    const selectedAdmin = admins.find(
+                      (admin) => admin._id === selected,
+                    );
+                    if (!selectedAdmin) return "Select an admin";
+                    return (
+                      <span className="flex items-center gap-2">
+                        {selectedAdmin.image && (
+                          <Avatar size="sm" className="shrink-0">
+                            <AvatarImage
+                              src={selectedAdmin.image}
+                              alt={selectedAdmin.name}
+                            />
+                            <AvatarFallback>
+                              {getInitials(selectedAdmin.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                        )}
+                        {selectedAdmin.name}
+                      </span>
+                    );
+                  })()}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {admins.map((admin) => (
                   <SelectItem key={admin._id} value={admin._id}>
-                    {admin.name}
+                    <span className="flex items-center gap-2">
+                      {admin.image && (
+                        <Avatar size="sm" className="shrink-0">
+                          <AvatarImage src={admin.image} alt={admin.name} />
+                          <AvatarFallback>
+                            {getInitials(admin.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      {admin.name}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
