@@ -117,12 +117,22 @@ describe("member list actions", () => {
     expect(body.body.map((m: any) => m.name).sort()).toEqual(["Ada", "Grace"]);
   });
 
+  it("getMembersForSelect includes email and image fields", async () => {
+    const res = await getMembersForSelect(request());
+    const body = await res.json();
+    for (const member of body.body) {
+      expect(typeof member.email).toBe("string");
+      expect(member.image).toBeUndefined();
+    }
+  });
+
   it("getAdminsForAssign returns only onboarded admins", async () => {
     const res = await getAdminsForAssign(request());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.body).toHaveLength(1);
     expect(body.body[0].name).toBe("Grace");
+    expect(typeof body.body[0].email).toBe("string");
   });
 
   it("getMembers returns 401 without a session", async () => {
@@ -146,5 +156,10 @@ describe("member list actions", () => {
     const filteredBody = await filtered.json();
     expect(filteredBody.body.meta.total).toBe(1);
     expect(filteredBody.body.members[0].name).toBe("Ada");
+
+    const emailFiltered = await getMembers({ request: request(), page: 1, limit: 10, query: "grace@example.com" });
+    const emailBody = await emailFiltered.json();
+    expect(emailBody.body.meta.total).toBe(1);
+    expect(emailBody.body.members[0].email).toBe("grace@example.com");
   });
 });

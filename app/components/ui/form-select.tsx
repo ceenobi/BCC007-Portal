@@ -1,4 +1,5 @@
-import { cn } from "~/lib/utils";
+import { cn, getInitials } from "~/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import {
   Select,
   SelectContent,
@@ -10,6 +11,7 @@ import {
 export type SelectOption = {
   name: string;
   id: string | number;
+  image?: string;
 };
 
 interface FormSelectProps {
@@ -20,6 +22,16 @@ interface FormSelectProps {
   disabled?: boolean;
   error?: boolean;
   classname?: string;
+}
+
+function OptionAvatar({ image, name }: { image?: string; name: string }) {
+  if (!image) return null;
+  return (
+    <Avatar size="sm" className="shrink-0">
+      <AvatarImage src={image} alt={name} />
+      <AvatarFallback>{getInitials(name)}</AvatarFallback>
+    </Avatar>
+  );
 }
 
 export function FormSelect({
@@ -49,12 +61,18 @@ export function FormSelect({
         )}
       >
         <SelectValue placeholder={placeholder}>
-          {selectedOption ? selectedOption.name : null}
+          {selectedOption ? (
+            <>
+              <OptionAvatar image={selectedOption.image} name={selectedOption.name} />
+              {selectedOption.name}
+            </>
+          ) : null}
         </SelectValue>
       </SelectTrigger>
       <SelectContent className="capitalize">
         {options.map((option, index) => (
           <SelectItem key={option.id || index} value={String(option.id)}>
+            <OptionAvatar image={option.image} name={option.name} />
             {option.name}
           </SelectItem>
         ))}

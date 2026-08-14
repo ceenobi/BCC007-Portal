@@ -24,6 +24,7 @@ export type SelectOption = {
   name: string;
   id: string | number;
   description?: string;
+  image?: string;
 };
 
 type FormFieldProps<T extends FieldValues> = {

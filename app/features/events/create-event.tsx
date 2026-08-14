@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  RiAddFill,
-  RiCloseLine,
-  RiErrorWarningLine,
-  RiImageAddLine,
-  RiLoader2Line,
+    RiAddFill,
+    RiCloseLine,
+    RiErrorWarningLine,
+    RiImageAddLine,
+    RiLoader2Line,
 } from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,8 +20,8 @@ import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
 import { createEventSchema } from "~/lib/schema";
-import type { CreateEventSchemaType } from "~/types";
 import { cn } from "~/lib/utils";
+import type { CreateEventSchemaType } from "~/types";
 
 const eventTypeOptions = [
   { id: "party", name: "Party" },
@@ -33,6 +33,7 @@ const eventTypeOptions = [
 type MemberOption = {
   _id: string;
   name: string;
+  image?: string;
 };
 
 export default function CreateEvent({ members }: { members: MemberOption[] }) {
@@ -98,6 +99,7 @@ export default function CreateEvent({ members }: { members: MemberOption[] }) {
     setFeaturedImage(null);
     reset();
     setIdempotencyKey(crypto.randomUUID());
+    setIsOpen(false);
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -149,6 +151,7 @@ export default function CreateEvent({ members }: { members: MemberOption[] }) {
   const memberOptions = members.map((member) => ({
     id: member._id,
     name: member.name,
+    image: member.image,
   }));
 
   return (
