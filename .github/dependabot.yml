@@ -2,6 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "test"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -25,9 +26,12 @@ updates:
     ignore:
       - dependency-name: "react-router"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@tanstack/react-table"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "test"
     schedule:
       interval: "weekly"
       day: "monday"
