@@ -4,6 +4,7 @@ A full-stack payment contribution management platform built with **React Router*
 
 [![CI](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ceenobi/BCC007-Portal/actions/workflows/codeql.yml/badge.svg)](https://github.com/ceenobi/BCC007-Portal/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React Router](https://img.shields.io/badge/React_Router-v8-CA4245?logo=reactrouter&logoColor=white)](https://reactrouter.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
