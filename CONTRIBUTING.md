@@ -6,6 +6,10 @@ Thanks for taking the time to contribute! This guide covers the project conventi
 
 By participating in this project you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
+## License
+
+This project is released under the [MIT License](LICENSE). By contributing, you agree that your contributions are licensed under the same terms.
+
 ## Getting Started
 
 ### Prerequisites
