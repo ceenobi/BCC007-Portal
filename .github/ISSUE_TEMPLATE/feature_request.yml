@@ -1,0 +1,65 @@
+name: ✨ Feature request
+description: Propose a new feature or enhancement for the portal
+title: "[Feature]: "
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please [search the issues](https://github.com/ceenobi/BCC007-Portal/issues?q=is%3Aissue) first to avoid duplicates.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this solve? What is missing today?
+      placeholder: "e.g. Members can't see their cumulative contribution for the year."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How you imagine the feature working.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds or alternative designs you've considered.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      description: Which part of the app does this affect?
+      multiple: true
+      options:
+        - Auth / Onboarding
+        - Payments / Dues
+        - Transfers
+        - Events
+        - Tickets
+        - Announcements
+        - Expenses / Treasury
+        - AI Assistant
+        - Dashboard / Analytics
+        - Search
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this to you?
+      options:
+        - Low (nice to have)
+        - Medium (should have)
+        - High (blocking / critical)
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, links, or screenshots that help explain the request.

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/ceenobi/BCC007-Portal/security/policy
+    about: Please report security vulnerabilities privately — see the Security Policy.
+  - name: Project documentation
+    url: https://github.com/ceenobi/BCC007-Portal/blob/main/README.md
+    about: Read the README for setup, environment variables, and development guidance.

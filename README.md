@@ -3,6 +3,13 @@
 A full-stack payment contribution management platform built with **React Router** (framework mode), **MongoDB**, and **Better Auth**. BCC007Portal manages member accounts, dues & payments, peer-to-peer transfers, events, tickets, group announcements, member analytics, and AI-powered assistance.
 
 [![CI](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/ceenobi/BCC007-Portal/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ceenobi/BCC007-Portal/actions/workflows/codeql.yml/badge.svg)](https://github.com/ceenobi/BCC007-Portal/actions/workflows/codeql.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React Router](https://img.shields.io/badge/React_Router-v8-CA4245?logo=reactrouter&logoColor=white)](https://reactrouter.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Yarn](https://img.shields.io/badge/Yarn-4-2C8EBB?logo=yarn&logoColor=white)](https://yarnpkg.com/)
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Tech Stack
 
@@ -79,7 +86,7 @@ yarn qstash
 
 ## Testing
 
-The repo ships a Vitest unit + integration suite (431 tests across 33 files) and a Playwright e2e smoke gate. Tests run against an in-memory MongoDB and mock external services (QStash, Redis, Cloudinary, Paystack) — no real `.env` required.
+The repo ships a Vitest unit + integration suite (**508 tests across 35 files**) and a Playwright e2e smoke gate. Tests run against an in-memory MongoDB and mock external services (QStash, Redis, Cloudinary, Paystack) — no real `.env` required.
 
 ```bash
 # Unit + integration tests (in-memory MongoDB)
@@ -161,7 +168,8 @@ The repository uses a two-branch workflow enforced by branch protection:
 
 - All changes land on the **`test`** branch.
 - A pull request is opened from `test` → `main`.
-- CI (`ci.yml`) runs **typecheck**, **test**, and **e2e** — all must pass before merge.
+- CI (`ci.yml`) runs **typecheck**, **test**, **e2e**, and **coverage** — all must pass before merge.
+- **CodeQL** scans for security vulnerabilities on every push/PR; **Dependabot** keeps npm and GitHub Actions dependencies updated.
 - `main` is protected: direct pushes, force-pushes, and deletions are blocked.
 
 ### Vercel
