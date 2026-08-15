@@ -24,7 +24,7 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Enable Corepack (Yarn 4)
         run: corepack enable
       - uses: actions/setup-node@v5
@@ -37,7 +37,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Enable Corepack (Yarn 4)
         run: corepack enable
       - uses: actions/setup-node@v5
@@ -53,7 +53,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Enable Corepack (Yarn 4)
         run: corepack enable
       - uses: actions/setup-node@v5
@@ -74,7 +74,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Enable Corepack (Yarn 4)
         run: corepack enable
       - uses: actions/setup-node@v5
