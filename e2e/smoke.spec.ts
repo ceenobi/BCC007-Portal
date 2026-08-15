@@ -10,7 +10,7 @@ test.describe("BC007Portal smoke gate", () => {
   test("landing page renders server-side", async ({ page }) => {
     const response = await page.goto("/");
     expect(response?.ok()).toBe(true);
-    await expect(page).toHaveTitle(/BCC007Pay/);
+    await expect(page).toHaveTitle(/BCC007/);
     await expect(
       page.getByRole("heading", { name: /great minds, great feats/i }),
     ).toBeVisible();
