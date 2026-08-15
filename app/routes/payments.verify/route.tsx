@@ -13,16 +13,19 @@ import {
   userContext,
 } from "~/middleware/auth.middleware";
 import type { SessionUser } from "~/types";
+import { buildSeoMeta } from "~/lib/seo";
 import type { Route } from "./+types/route";
 export const middleware = [authenticatedMiddleware];
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Payment status" },
-    {
-      name: "description",
-      content: "Confirming your payment.",
-    },
+    ...buildSeoMeta({
+      title: "Payment status - BCC007",
+      description:
+        "Confirming your payment on the BCC007 alumni platform.",
+      path: "/payments/verify",
+      noindex: true,
+    }),
   ];
 }
 

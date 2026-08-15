@@ -31,6 +31,7 @@ import {
 import fontCssUrlInter from "@fontsource-variable/inter/wght.css?url";
 import fontCssUrl from "@fontsource-variable/manrope/wght.css?url";
 import type { Route } from "./+types/root";
+import { SITE_LOGO, SITE_NAME } from "./lib/seo";
 import "./app.css";
 import ProgressBar from "./components/provider/progress-bar";
 import { ThemeProvider } from "./components/provider/theme";
@@ -64,9 +65,22 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "icon",
-    href: "https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png",
+    href: SITE_LOGO,
     sizes: "any",
   },
+  {
+    rel: "apple-touch-icon",
+    href: SITE_LOGO,
+  },
+  {
+    rel: "manifest",
+    href: "/manifest.webmanifest",
+  },
+];
+
+export const meta: Route.MetaFunction = () => [
+  { name: "theme-color", content: "#020617" },
+  { property: "og:site_name", content: SITE_NAME },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {

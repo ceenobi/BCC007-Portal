@@ -11,13 +11,19 @@ import { AlertBox } from "~/components/ui/alert-box";
 import { FormBox } from "~/components/ui/form-box";
 import { formFields } from "~/lib/constants";
 import { resetPasswordSchema } from "~/lib/schema";
+import { buildSeoMeta } from "~/lib/seo";
 import type { Route } from "./+types/route";
 type ResetPasswordSchemaType = z.infer<typeof resetPasswordSchema>;
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Reset password" },
-    { name: "description", content: `BCC007 - Reset password` },
+    ...buildSeoMeta({
+      title: "Reset password - BCC007",
+      description:
+        "Set a new password for your BCC007 account and regain secure access to the alumni platform.",
+      path: "/auth/reset-password",
+      noindex: true,
+    }),
   ];
 }
 

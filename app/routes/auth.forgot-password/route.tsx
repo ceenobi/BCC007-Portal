@@ -11,13 +11,19 @@ import { AlertBox } from "~/components/ui/alert-box";
 import { FormBox } from "~/components/ui/form-box";
 import { formFields } from "~/lib/constants";
 import { forgotPasswordSchema } from "~/lib/schema";
+import { buildSeoMeta } from "~/lib/seo";
 import type { Route } from "./+types/route";
 type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Recover account" },
-    { name: "description", content: `BCC007 - Recover account` },
+    ...buildSeoMeta({
+      title: "Recover account - BCC007",
+      description:
+        "Recover access to your BCC007 account. We'll send a reset link to your registered email address.",
+      path: "/auth/forgot-password",
+      noindex: true,
+    }),
   ];
 }
 

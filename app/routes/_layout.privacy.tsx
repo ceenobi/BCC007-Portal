@@ -1,16 +1,22 @@
 import { Badge } from "~/components/ui/badge";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
+import { buildSeoMeta, webPageSchema } from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import type { Route } from "./+types/_layout.privacy";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Privacy Policy — BCC007Pay" },
-    {
-      name: "description",
-      content:
-        "How BCC007 collects, uses and protects the personal information of its alumni community on the BCC007Pay platform.",
-    },
+    ...buildSeoMeta({
+      title: "Privacy Policy - BCC007",
+      description:
+        "How BCC007 collects, uses and protects the personal information of its alumni community on the BCC007 platform.",
+      path: "/privacy",
+    }),
+    webPageSchema({
+      title: "Privacy Policy - BCC007",
+      description: "How BCC007 protects the personal information of its alumni community.",
+      path: "/privacy",
+    }),
   ];
 }
 

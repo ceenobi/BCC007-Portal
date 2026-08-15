@@ -10,14 +10,20 @@ import { AlertBox } from "~/components/ui/alert-box";
 import { FormBox } from "~/components/ui/form-box";
 import { formFields } from "~/lib/constants";
 import { signUpSchema } from "~/lib/schema";
+import { buildSeoMeta } from "~/lib/seo";
 import type { SignUpSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Account Registration" },
-    { name: "description", content: `BCC007 - Account Registration` },
+    ...buildSeoMeta({
+      title: "Create Account - BCC007",
+      description:
+        "Create your BCC007 account to join the alumni community and manage payments, transfers and events.",
+      path: "/auth/register",
+      noindex: true,
+    }),
   ];
 }
 

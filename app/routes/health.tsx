@@ -17,6 +17,7 @@ import { getHealthStatus } from "~/.server/utils/health";
 import { Button } from "~/components/ui/button";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { buildSeoMeta } from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import { sessionMiddleware, userContext } from "~/middleware/auth.middleware";
 import { getHealthQuery } from "~/queries/health";
@@ -27,11 +28,12 @@ export const middleware = [sessionMiddleware];
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "System Status - BCC007 Portal" },
-    {
-      name: "description",
-      content: "Live health status of the BCC007 Portal server.",
-    },
+    ...buildSeoMeta({
+      title: "System Status - BCC007",
+      description: "Live health status of the BCC007 Portal server.",
+      path: "/health",
+      noindex: true,
+    }),
   ];
 }
 

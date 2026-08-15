@@ -10,18 +10,33 @@ import { useTheme } from "~/components/provider/theme";
 import { Button } from "~/components/ui/button";
 import { ImageBox } from "~/components/ui/image-box";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
+import {
+  buildSeoMeta,
+  organizationSchema,
+  websiteSchema,
+} from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import type { SessionUser } from "~/types";
 import type { Route } from "./+types/_layout._index";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Welcome to BCC007Pay - Manage your payments and transfers" },
-    {
-      name: "description",
-      content:
-        "BCC007Pay, a web application that allows its members to manage their payments and transfers.",
-    },
+    ...buildSeoMeta({
+      title: "BCC007 - Alumni payments, transfers and events",
+      description:
+        "BCC007 is the alumni community platform that helps members manage payments, transfers and events — and stay connected with old schoolmates.",
+      path: "/",
+      keywords: [
+        "BCC007",
+        "BCC007 alumni",
+        "alumni community",
+        "alumni payments",
+        "group transfers",
+        "Brilliant Child College",
+      ],
+    }),
+    organizationSchema(),
+    websiteSchema(),
   ];
 }
 

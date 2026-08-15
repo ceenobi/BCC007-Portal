@@ -9,7 +9,7 @@ export default {
   // Static, public pages with no session-dependent data are prerendered to
   // static HTML at build time. Everything else (auth, dashboard, health, API
   // routes) is dynamically server-rendered per request.
-  prerender: ["/", "/contact", "/privacy", "/terms"],
+  prerender: ["/", "/contact", "/privacy", "/terms", "/robots.txt", "/sitemap.xml"],
   presets: [vercelPreset()],
   // Uploads source maps and creates a Sentry release after the build.
   buildEnd: sentryOnBuildEnd,

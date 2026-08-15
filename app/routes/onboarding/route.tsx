@@ -17,6 +17,7 @@ import { FormBox } from "~/components/ui/form-box";
 import { FormSelect } from "~/components/ui/form-select";
 import { Input } from "~/components/ui/input";
 import { onboardingSchema } from "~/lib/schema";
+import { buildSeoMeta } from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import { sessionMiddleware, userContext } from "~/middleware/auth.middleware";
 import type {
@@ -35,11 +36,13 @@ const genderOptions = [
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Onboarding - BCC007 Pay" },
-    {
-      name: "description",
-      content: "Onboarding - BCC007 Pay",
-    },
+    ...buildSeoMeta({
+      title: "Complete your profile - BCC007",
+      description:
+        "Finish setting up your BCC007 account so you can start making payments and transfers with your alumni community.",
+      path: "/onboarding",
+      noindex: true,
+    }),
   ];
 }
 
