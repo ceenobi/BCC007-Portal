@@ -4,9 +4,10 @@
 
 - Push changes to the `test` branch (not `main`).
 - Create a PR from `test` to `main`.
-- Wait for all CI checks to pass.
+- Wait for all CI checks to pass (typecheck, test, e2e, coverage; CodeQL + GitGuardian + Vercel also report).
 - Once checks pass, merge the PR to `main`.
 - Sync local `main` after merge.
+- Dependabot opens PRs on the `test` branch for npm and GitHub Actions updates — review and merge them promptly.
 
 ## Documentation
 
