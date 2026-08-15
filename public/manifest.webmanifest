@@ -1,0 +1,16 @@
+{
+  "name": "BCC007 - Alumni Community Platform",
+  "short_name": "BCC007",
+  "description": "BCC007 is the alumni community platform that helps members manage payments, transfers and events.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,16 +1,22 @@
 import { Badge } from "~/components/ui/badge";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
+import { buildSeoMeta, webPageSchema } from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import type { Route } from "./+types/_layout.terms";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Terms of Service — BCC007Pay" },
-    {
-      name: "description",
-      content:
-        "The terms and conditions that govern your use of BCC007Pay, the BCC007 alumni community platform.",
-    },
+    ...buildSeoMeta({
+      title: "Terms of Service - BCC007",
+      description:
+        "The terms and conditions that govern your use of BCC007, the BCC007 alumni community platform.",
+      path: "/terms",
+    }),
+    webPageSchema({
+      title: "Terms of Service - BCC007",
+      description: "The terms and conditions governing use of the BCC007 alumni community platform.",
+      path: "/terms",
+    }),
   ];
 }
 

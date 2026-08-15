@@ -10,13 +10,19 @@ import { AlertBox } from "~/components/ui/alert-box";
 import { FormBox } from "~/components/ui/form-box";
 import { formFields } from "~/lib/constants";
 import { signInSchema } from "~/lib/schema";
+import { buildSeoMeta } from "~/lib/seo";
 import type { SignInSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Account Login" },
-    { name: "description", content: `BCC007 - Account Login` },
+    ...buildSeoMeta({
+      title: "Account Login - BCC007",
+      description:
+        "Sign in to your BCC007 account to manage payments, transfers and events with your alumni community.",
+      path: "/auth/login",
+      noindex: true,
+    }),
   ];
 }
 

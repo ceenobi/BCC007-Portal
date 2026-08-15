@@ -9,17 +9,20 @@ import { PageSection } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
 import { AlertBox } from "~/components/ui/alert-box";
 import { sessionMiddleware, userContext } from "~/middleware/auth.middleware";
+import { buildSeoMeta } from "~/lib/seo";
 import type { SessionUser } from "~/types";
 import type { Route } from "./+types/route";
 export const middleware = [sessionMiddleware];
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "BCC007 - Verify email" },
-    {
-      name: "description",
-      content: "Complete your registration by verifying your email address.",
-    },
+    ...buildSeoMeta({
+      title: "Verify email - BCC007",
+      description:
+        "Complete your BCC007 registration by verifying your email address.",
+      path: "/auth/verify-email",
+      noindex: true,
+    }),
   ];
 }
 

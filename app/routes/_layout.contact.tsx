@@ -9,6 +9,7 @@ import { AlertBox } from "~/components/ui/alert-box";
 import { Badge } from "~/components/ui/badge";
 import { FormBox } from "~/components/ui/form-box";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
+import { buildSeoMeta, webPageSchema } from "~/lib/seo";
 import { contactSchema } from "~/lib/schema";
 import type { Route } from "./+types/_layout.contact";
 type contactSchemaType = z.infer<typeof contactSchema>;
@@ -16,12 +17,17 @@ type contactSchemaType = z.infer<typeof contactSchema>;
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Contact BCC007Pay. Send us a message" },
-    {
-      name: "description",
-      content:
-        "Send a message to BCC007Pay.",
-    },
+    ...buildSeoMeta({
+      title: "Contact BCC007 - Send us a message",
+      description:
+        "Questions, press, partnerships or just a hello? Contact the BCC007 alumni community and we'll get back to you as soon as possible.",
+      path: "/contact",
+    }),
+    webPageSchema({
+      title: "Contact BCC007",
+      description: "Send a message to the BCC007 alumni community.",
+      path: "/contact",
+    }),
   ];
 }
 

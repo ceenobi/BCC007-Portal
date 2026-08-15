@@ -6,15 +6,17 @@ import { Link } from "react-router";
 import Logo from "~/components/navigation/logo";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
+import { buildSeoMeta } from "~/lib/seo";
 
 export function meta() {
   return [
-    { title: "Account Deleted | BCC007" },
-    {
-      name: "description",
-      content:
+    ...buildSeoMeta({
+      title: "Account Deleted - BCC007",
+      description:
         "Your BCC007 account has been deleted successfully. We're sorry to see you go.",
-    },
+      path: "/delete-account-confirmation",
+      noindex: true,
+    }),
   ];
 }
 
