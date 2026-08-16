@@ -123,7 +123,9 @@ describe("completeOnboardingProfile", () => {
       }),
     );
     expect(await AuditLog.countDocuments({ action: "PROFILE_UPDATE" })).toBe(1);
-    expect(await Notification.countDocuments({ type: "profile_updated" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "profile_updated" })).toBe(1);
+    });
   });
 
   it("returns the upstream response when the profile update fails", async () => {

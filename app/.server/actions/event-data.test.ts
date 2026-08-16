@@ -546,7 +546,9 @@ describe("cancelEvent", () => {
     expect(updated!.status).toBe("cancelled");
 
     expect(await AuditLog.countDocuments({ action: "CANCEL_EVENT" })).toBe(1);
-    expect(await Notification.countDocuments({ type: "event_cancelled" })).toBe(2);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "event_cancelled" })).toBe(2);
+    });
   });
 
   it("is idempotent when the event is already cancelled", async () => {

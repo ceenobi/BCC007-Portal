@@ -104,7 +104,9 @@ describe("createTicket", () => {
     expect(ticket!.status).toBe("open");
 
     expect(await AuditLog.countDocuments({ action: "SUPPORT_TICKET" })).toBe(1);
-    expect(await Notification.countDocuments({ type: "ticket_created" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "ticket_created" })).toBe(1);
+    });
     expect(triggerMock).toHaveBeenCalledTimes(1);
     expect(triggerMock).toHaveBeenCalledWith(
       expect.objectContaining({ url: expect.stringContaining("ticket-confirmation") }),
@@ -245,7 +247,9 @@ describe("ticketActions", () => {
 
     const updated = await Ticket.findById(ticket._id).lean();
     expect(updated!.assignedTo?.toString()).toBe(adminId);
-    expect(await Notification.countDocuments({ type: "ticket_assigned" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "ticket_assigned" })).toBe(1);
+    });
     expect(triggerMock).toHaveBeenCalledWith(
       expect.objectContaining({ url: expect.stringContaining("ticket-assigned") }),
     );
@@ -264,6 +268,8 @@ describe("ticketActions", () => {
     expect(body.message).toBe("Ticket is already in the requested state");
 
     expect(await Ticket.findById(ticket._id).lean()).toMatchObject({ status: "resolved" });
-    expect(await Notification.countDocuments({ type: "ticket_resolved" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "ticket_resolved" })).toBe(1);
+    });
   });
 });
