@@ -139,7 +139,9 @@ describe("updateProfileRequest", () => {
     const res = await updateProfileRequest(request(), { name: "Ada" });
     expect(res.status).toBe(200);
     expect(await AuditLog.countDocuments({ action: "PROFILE_UPDATE" })).toBe(1);
-    expect(await Notification.countDocuments({ type: "profile_updated" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "profile_updated" })).toBe(1);
+    });
   });
 });
 
@@ -315,6 +317,8 @@ describe("updateMemberRole", () => {
     const updated = await User.findById(targetId).lean();
     expect(updated!.role).toBe("admin");
     expect(await AuditLog.countDocuments({ action: "UPDATE_ROLE" })).toBe(1);
-    expect(await Notification.countDocuments({ type: "role_updated" })).toBe(1);
+    await vi.waitFor(async () => {
+      expect(await Notification.countDocuments({ type: "role_updated" })).toBe(1);
+    });
   });
 });
