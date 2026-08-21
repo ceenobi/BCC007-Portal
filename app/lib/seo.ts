@@ -6,7 +6,6 @@ export const SITE_DESCRIPTION =
   "BCC007 is the alumni community platform that helps members manage payments, transfers and events — and stay connected.";
 export const SITE_LOGO =
   "https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png";
-export const TWITTER_HANDLE = "@bcc007set";
 
 interface SeoMetaOptions {
   title: string;
@@ -57,7 +56,6 @@ export function buildSeoMeta({
     { property: "og:image", content: image },
     { property: "og:image:alt", content: SITE_NAME },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:site", content: TWITTER_HANDLE },
     { name: "twitter:title", content: fullTitle },
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: image },
