@@ -1,22 +1,22 @@
 import {
-  RiArrowLeftLine,
-  RiCalendarCheckLine,
-  RiCloseCircleLine,
-  RiDeleteBin3Line,
-  RiErrorWarningLine,
-  RiMapPinLine,
-  RiMore2Fill,
-  RiTimeLine,
+    RiArrowLeftLine,
+    RiCalendarCheckLine,
+    RiCloseCircleLine,
+    RiDeleteBin3Line,
+    RiErrorWarningLine,
+    RiMapPinLine,
+    RiMore2Fill,
+    RiTimeLine,
 } from "@remixicon/react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import {
-  cancelEvent,
-  deleteEvent,
-  toggleEventCheckIn,
-  toggleEventInterest,
-  updateEvent,
+    cancelEvent,
+    deleteEvent,
+    toggleEventCheckIn,
+    toggleEventInterest,
+    updateEvent,
 } from "~/.server/actions/event-data";
 import { getMembersForSelect } from "~/.server/actions/member";
 import { PageSection } from "~/components/provider/page-wrapper";
@@ -24,10 +24,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { ImageBox } from "~/components/ui/image-box";
 import MapLocation from "~/components/ui/map-location";
@@ -39,12 +39,12 @@ import { cn, formatEventDate, formatEventTime, getInitials } from "~/lib/utils";
 import { requirePermission, userContext } from "~/middleware/auth.middleware";
 import { getEventQuery } from "~/queries/events";
 import type { EventData, UpdateEventSchemaType } from "~/types";
-import type { Route } from "./+types/route";
 import CancelEvent from "../../features/events/cancel-event";
 import CheckInPanel from "../../features/events/check-in";
 import DeleteEvent from "../../features/events/delete-event";
 import EditEvent from "../../features/events/edit-event";
 import InterestToggle from "../../features/events/interest-toggle";
+import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_EVENTS", "action")];
 
@@ -247,7 +247,7 @@ function Event({
             ) : (
               <div
                 aria-hidden="true"
-                className="flex h-[220px] w-full items-center justify-center bg-muted/50 dark:bg-mainGray/20"
+                className="flex h-55 w-full items-center justify-center bg-muted/50 dark:bg-mainGray/20"
               >
                 <Icon
                   size={56}

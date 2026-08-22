@@ -35,6 +35,8 @@ test.describe("BC007Portal smoke gate", () => {
       page.getByRole("heading", { name: /welcome back/i }),
     ).toBeVisible();
     await page.getByRole("button", { name: /sign in/i }).click();
+    // Small wait for Zod validation to render after form submit
+    await new Promise((resolve) => setTimeout(resolve, 500));
     await expect(page.getByText(/complete this field/i).first()).toBeVisible();
   });
 

@@ -84,7 +84,7 @@ const faqs: { q: string; a: string; href?: string }[] = [
 	},
 	{
 		q: "Is my bank information safe?",
-		a: "Yes. All connections are encrypted, bank details are stored securely through our payment gateway, and every transaction is recorded in your payment history for full transparency.",
+		a: "Yes. All connections are encrypted, bank details are confirmed via Paystack, stored securely, and every transaction is recorded in your payment history for full transparency.",
 	},
 	{
 		q: "Need more help?",
@@ -345,15 +345,15 @@ export default function HomeRoute() {
 					</h1>
 					<div
 						ref={shot.containerRef}
-						className="max-w-full h-auto mx-auto rounded-t-2xl [perspective:1400px]"
+						className="max-w-full h-auto mx-auto rounded-t-2xl perspective-[1400px]"
 					>
 						<div
 							style={shot.getItemStyle(0)}
 							className={cn(
 								"origin-bottom transition-transform",
 								shot.isVisible
-									? "[transform:rotateX(0deg)]"
-									: "[transform:rotateX(14deg)_translateY(48px)]",
+									? "transform-[rotateX(0deg)]"
+									: "transform-[rotateX(14deg)_translateY(48px)]",
 							)}
 						>
 							<ImageBox
