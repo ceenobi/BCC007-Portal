@@ -8,8 +8,21 @@ import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import type { EventData } from "~/types";
 
-export default function CancelEvent({ event }: { event: EventData }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function CancelEvent({
+  event,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  event: EventData;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setIsInternalOpen] = useState(false);
+  const isOpen = controlledOpen ?? internalOpen;
+  const setIsOpen = (next: boolean) => {
+    if (controlledOpen === undefined) setIsInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state === "submitting";
 
@@ -39,15 +52,17 @@ export default function CancelEvent({ event }: { event: EventData }) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setIsOpen(true)}
-        aria-label="Cancel event"
-        className="gap-1.5 text-destructive hover:bg-destructive/10"
-      >
-        <RiCloseCircleLine className="size-4" />
-      </Button>
+      {controlledOpen === undefined && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsOpen(true)}
+          aria-label="Cancel event"
+          className="gap-1.5 text-destructive hover:bg-destructive/10"
+        >
+          <RiCloseCircleLine className="size-4" />
+        </Button>
+      )}
       <Modal
         isOpen={isOpen}
         setIsOpen={setIsOpen}

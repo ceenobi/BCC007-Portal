@@ -66,7 +66,7 @@ export default function CheckInPanel({ event }: { event: EventData }) {
   const isCheckedIn = (id: string) => checkedInIds.includes(id);
 
   return (
-    <div className="mt-6 rounded-sm border shadow-sm">
+    <div className="rounded-sm border shadow-sm">
       <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
         <h3 className="text-sm font-medium">Check-in</h3>
         <span className="text-xs text-muted-foreground">
