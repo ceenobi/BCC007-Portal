@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { env } from "../config/keys";
 import logger from "../config/logger";
 
-const DEFAULT_MODEL = "deepseek-v4-flash-free";
+const DEFAULT_MODEL = "nemotron-3.5-lightning-free";
 const DEFAULT_BASE_URL = "https://opencode.ai/zen/v1";
 
 let cachedClient: OpenAI | null = null;

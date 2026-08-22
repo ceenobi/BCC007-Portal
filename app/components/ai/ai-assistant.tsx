@@ -1,22 +1,22 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import {
+    RiArrowRightLine,
+    RiChatSmile3Line,
+    RiCloseLine,
+    RiLoader2Line,
+    RiRobot3Line,
+    RiUserLine,
+} from "@remixicon/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMatches } from "react-router";
 import {
-  RiArrowRightLine,
-  RiChatSmile3Line,
-  RiCloseLine,
-  RiLoader2Line,
-  RiRobot3Line,
-  RiUserLine,
-} from "@remixicon/react";
-import type { SessionUser } from "~/types.d";
-import { cn } from "~/lib/utils";
-import {
-  AiChatProvider,
-  useAiChat,
-  type AiSuggestion,
+    AiChatProvider,
+    useAiChat,
+    type AiSuggestion,
 } from "~/components/ai/chat-context";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
+import type { SessionUser } from "~/types.d";
 
 const BRAND_ACCENT = "bg-mainBlue text-white";
 const BRAND_ACCENT_SOFT = "bg-lightBlue/10 text-mainBlue";
@@ -76,7 +76,7 @@ function ChatWidget() {
     await sendMessage(content);
   };
 
-  const onSend = (e?: FormEvent) => {
+  const onSend = (e: React.SubmitEvent<HTMLFormElement>) => {
     e?.preventDefault();
     void submit(draft);
   };
