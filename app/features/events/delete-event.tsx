@@ -8,8 +8,21 @@ import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import type { EventData } from "~/types";
 
-export default function DeleteEvent({ event }: { event: EventData }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function DeleteEvent({
+  event,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  event: EventData;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setIsInternalOpen] = useState(false);
+  const isOpen = controlledOpen ?? internalOpen;
+  const setIsOpen = (next: boolean) => {
+    if (controlledOpen === undefined) setIsInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const isSubmitting = fetcher.state === "submitting";
@@ -40,15 +53,17 @@ export default function DeleteEvent({ event }: { event: EventData }) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setIsOpen(true)}
-        aria-label="Delete event"
-        className="gap-1.5 text-destructive hover:bg-destructive/10"
-      >
-        <RiDeleteBin3Line className="size-4" />
-      </Button>
+      {controlledOpen === undefined && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsOpen(true)}
+          aria-label="Delete event"
+          className="gap-1.5 text-destructive hover:bg-destructive/10"
+        >
+          <RiDeleteBin3Line className="size-4" />
+        </Button>
+      )}
       <Modal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
