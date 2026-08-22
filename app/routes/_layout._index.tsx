@@ -1,10 +1,11 @@
 import {
-	RiAccountBoxLine,
-	RiArrowRightLine,
-	RiCashLine,
-	RiCheckLine,
-	RiInstagramLine,
-	RiShieldLine,
+    RiAccountBoxLine,
+    RiArrowDownSLine,
+    RiArrowRightLine,
+    RiCashLine,
+    RiCheckLine,
+    RiInstagramLine,
+    RiShieldLine,
 } from "@remixicon/react";
 import { Link, useOutletContext } from "react-router";
 import { useTheme } from "~/components/provider/theme";
@@ -60,6 +61,38 @@ const services = [
 	},
 ];
 
+const faqs: { q: string; a: string; href?: string }[] = [
+	{
+		q: "What is BCC007?",
+		a: "BCC007 is the official alumni platform for Brilliant Child College. It brings old students together in one place to pay dues, send money to each other, organise events and stay up to date with announcements.",
+	},
+	{
+		q: "Who can join?",
+		a: "Membership is open to all alumni of Brilliant Child College 2007 set. Register with your email, verify it, and complete a short onboarding — profile and bank details — to unlock your dashboard. Membership is invite only.",
+	},
+	{
+		q: "How do payments work?",
+		a: "Dues and contributions are processed securely through Paystack. Save your bank details once during onboarding and you can pay dues or contribute to group projects in a few clicks.",
+	},
+	{
+		q: "Can I transfer money to other members?",
+		a: "Yes. Verified members can send money directly to fellow alumni through admins from the dashboard using their saved bank accounts — no more asking for account numbers in group chats.",
+	},
+	{
+		q: "How do I keep up with events?",
+		a: "The events page lists upcoming reunions, meetings and fundraisers with RSVP tracking, while announcements and notifications keep you in the loop on everything the set is planning.",
+	},
+	{
+		q: "Is my bank information safe?",
+		a: "Yes. All connections are encrypted, bank details are stored securely through our payment gateway, and every transaction is recorded in your payment history for full transparency.",
+	},
+	{
+		q: "Need more help?",
+		a: "Send us a message and a member of the team will get back to you.",
+		href: "/contact",
+	},
+];
+
 export default function HomeRoute() {
 	const { user } = useOutletContext() as { user: SessionUser };
 	const { theme } = useTheme();
@@ -78,6 +111,7 @@ export default function HomeRoute() {
 	});
 	const servicesAnim = useWaveAnimation({ threshold: 0.1, staggerDelay: 120 });
 	const about = useWaveAnimation({ threshold: 0.15, staggerDelay: 100 });
+	const faq = useWaveAnimation({ threshold: 0.15, staggerDelay: 80 });
 	const cta = useWaveAnimation({ threshold: 0.25, staggerDelay: 100 });
 
 	return (
@@ -443,7 +477,55 @@ export default function HomeRoute() {
 						</div>
 					</div>
 				</div>
-			</div>
+      </div>
+      <div
+				ref={faq.containerRef}
+				className="relative py-20 overflow-x-clip"
+				id="faq"
+      >
+        <div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
+         	<h1
+						style={faq.getItemStyle(0)}
+						className={faq.getItemClassName(
+							"text-mainGray dark:text-muted-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170",
+						)}
+					>
+					Questions, answered.
+          </h1>
+          <div className="max-w-6xl mx-auto">
+            {faqs.map((item, i) => (
+              <details
+                key={item.q}
+                open={i === 0}
+                style={faq.getItemStyle(i + 1)}
+                className={faq.getItemClassName(
+                  "group border-b border-gray-200 dark:border-gray-800",
+                )}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-mainBlack dark:text-white [&::-webkit-details-marker]:hidden">
+                  {item.q}
+                  <RiArrowDownSLine
+                    size={20}
+                    aria-hidden
+                    className="shrink-0 text-mainGray dark:text-muted-foreground transition-transform duration-300 group-open:rotate-180"
+                  />
+                </summary>
+                <p className="pb-5 text-sm leading-relaxed text-mainGray dark:text-muted-foreground">
+                  {item.a}{" "}
+                  {item.href && (
+                    <Link
+                      to={item.href}
+                      className="font-medium text-lightBlue hover:underline"
+                    >
+                      Reach out here
+                    </Link>
+                  )}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
 			<div ref={cta.containerRef} className="relative py-20">
 				<div className="max-w-6xl mx-auto px-4 space-y-4 relative z-10 text-center">
 					<h1
