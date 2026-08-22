@@ -5,8 +5,8 @@ import Logo from "./logo";
 import Menu from "./menu";
 
 const links = [
-	{ name: "About", href: "#about" },
-	{ name: "Services", href: "#services" },
+	{ name: "About", href: "about" },
+	{ name: "Services", href: "services" },
 	{ name: "Contact", href: "/contact" },
 ];
 
@@ -20,7 +20,7 @@ export default function HomeNav({ user }: { user?: SessionUser | null }) {
 						{links.map((link) => (
 							<NavLink
 								key={link.name}
-								to={link.href}
+								to={["about", "services"].includes(link.href) ? `/#${link.href}` : link.href}
 								className="cursor-pointer text-sm font-medium hover:text-mainBlue hover:dark:text-lightBlue"
 							>
 								{({ isActive }) => (
