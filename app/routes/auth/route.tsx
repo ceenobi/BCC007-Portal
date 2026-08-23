@@ -27,10 +27,10 @@ export default function AuthLayout() {
 					</div>
 				</div>
 			</div>
-			<div className="col-span-12 lg:col-span-5 border-l h-full shadow-md overflow-auto">
-				<div className="w-full md:max-w-120 mx-auto mt-10 px-4 h-full">
+			<div className="col-span-12 lg:col-span-5 border-l min-h-full shadow-md">
+				<div className="w-full md:max-w-120 mx-auto mt-5 px-4 h-full">
 					<Logo size={8} showLogoText={true} classname="text-xl" />
-					<PageWrapper className="py-10 space-y-6 flex flex-col h-full justify-center items-center">
+					<PageWrapper className="py-4 space-y-6 flex flex-col h-full justify-center items-center">
 						<Outlet />
 					</PageWrapper>
 				</div>

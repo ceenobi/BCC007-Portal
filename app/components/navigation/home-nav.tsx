@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router";
+import { useIsMobile } from "~/hooks/useIsMobile";
 import type { SessionUser } from "~/types";
 import { Button } from "../ui/button";
 import Logo from "./logo";
@@ -11,6 +12,7 @@ const links = [
 ];
 
 export default function HomeNav({ user }: { user?: SessionUser | null }) {
+	const isMobile = useIsMobile({ MOBILE_BREAKPOINT: 567 });
 	return (
 		<header className="fixed top-0 w-full z-50 bg-white border-b backdrop-blur supports-backdrop-filter:bg-background/5">
 			<div className="max-w-6xl mx-auto p-4 flex justify-between items-center">
@@ -20,7 +22,11 @@ export default function HomeNav({ user }: { user?: SessionUser | null }) {
 						{links.map((link) => (
 							<NavLink
 								key={link.name}
-								to={["about", "services"].includes(link.href) ? `/#${link.href}` : link.href}
+								to={
+									["about", "services"].includes(link.href)
+										? `/#${link.href}`
+										: link.href
+								}
 								className="cursor-pointer text-sm font-medium hover:text-mainBlue hover:dark:text-lightBlue"
 							>
 								{({ isActive }) => (
@@ -51,15 +57,15 @@ export default function HomeNav({ user }: { user?: SessionUser | null }) {
 					<div className="flex gap-3 items-center">
 						<Link to="/auth/login">
 							<Button
-								variant="ghost"
+								variant={isMobile ? "default" : "ghost"}
 								size="sm"
-								className="hidden md:block bg-transparent"
+								className={isMobile ? "btn" : "bg-transparent"}
 							>
 								Login
 							</Button>
 						</Link>
 						<Link to="/auth/register">
-							<Button size="sm" className="btn">
+							<Button size="sm" className="btn hidden md:block">
 								Register
 							</Button>
 						</Link>

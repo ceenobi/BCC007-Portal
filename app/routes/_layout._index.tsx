@@ -1,11 +1,11 @@
 import {
-    RiAccountBoxLine,
-    RiArrowDownSLine,
-    RiArrowRightLine,
-    RiCashLine,
-    RiCheckLine,
-    RiInstagramLine,
-    RiShieldLine,
+	RiAccountBoxLine,
+	RiArrowDownSLine,
+	RiArrowRightLine,
+	RiCashLine,
+	RiCheckLine,
+	RiInstagramLine,
+	RiShieldLine,
 } from "@remixicon/react";
 import { Link, useOutletContext } from "react-router";
 import { useTheme } from "~/components/provider/theme";
@@ -17,7 +17,7 @@ import { cn } from "~/lib/utils";
 import type { SessionUser } from "~/types";
 import type { Route } from "./+types/_layout._index";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
 	return [
 		...buildSeoMeta({
 			title: "BCC007 - Alumni payments, transfers and events",
@@ -149,7 +149,7 @@ export default function HomeRoute() {
 							</p>
 							<div
 								style={heroCtas.getItemStyle(0)}
-								className={heroCtas.getItemClassName("space-x-4")}
+								className={heroCtas.getItemClassName("flex items-center gap-4")}
 							>
 								<Link
 									to={user ? "/dashboard" : "/auth/login"}
@@ -166,14 +166,11 @@ export default function HomeRoute() {
 										/>
 									</Button>
 								</Link>
-								<Link
-									to="/contact"
-									className="text-[14px] font-bold transition-colors"
-								>
+								<Link to="/contact" className="group">
 									<Button
 										variant="outline"
 										size="lg"
-										className="w-full max-w-40"
+										className="w-full max-w-40 text-[14px] font-bold transition-color"
 									>
 										Talk to us
 									</Button>
@@ -365,8 +362,8 @@ export default function HomeRoute() {
 								width={761}
 								height={420}
 								alt="dashboard"
-								containerClassName="border border-b-none rounded-t-2xl w-full h-full"
-								className="border border-b-none rounded-t-2xl"
+								containerClassName="border border-b-none rounded-t-2xl p-1 w-full h-full shadow-lg"
+								className="rounded-t-2xl"
 								loading="lazy"
 								decoding="async"
 								quality="original"
@@ -477,55 +474,55 @@ export default function HomeRoute() {
 						</div>
 					</div>
 				</div>
-      </div>
-      <div
+			</div>
+			<div
 				ref={faq.containerRef}
 				className="relative py-20 overflow-x-clip"
 				id="faq"
-      >
-        <div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
-         	<h1
+			>
+				<div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
+					<h1
 						style={faq.getItemStyle(0)}
 						className={faq.getItemClassName(
 							"text-mainGray dark:text-muted-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170",
 						)}
 					>
-					Questions, answered.
-          </h1>
-          <div className="max-w-6xl mx-auto">
-            {faqs.map((item, i) => (
-              <details
-                key={item.q}
-                open={i === 0}
-                style={faq.getItemStyle(i + 1)}
-                className={faq.getItemClassName(
-                  "group border-b border-gray-200 dark:border-gray-800",
-                )}
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-mainBlack dark:text-white [&::-webkit-details-marker]:hidden">
-                  {item.q}
-                  <RiArrowDownSLine
-                    size={20}
-                    aria-hidden
-                    className="shrink-0 text-mainGray dark:text-muted-foreground transition-transform duration-300 group-open:rotate-180"
-                  />
-                </summary>
-                <p className="pb-5 text-sm leading-relaxed text-mainGray dark:text-muted-foreground">
-                  {item.a}{" "}
-                  {item.href && (
-                    <Link
-                      to={item.href}
-                      className="font-medium text-lightBlue hover:underline"
-                    >
-                      Reach out here
-                    </Link>
-                  )}
-                </p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </div>
+						Questions, answered.
+					</h1>
+					<div className="max-w-6xl mx-auto">
+						{faqs.map((item, i) => (
+							<details
+								key={item.q}
+								open={i === 0}
+								style={faq.getItemStyle(i + 1)}
+								className={faq.getItemClassName(
+									"group border-b border-gray-200 dark:border-gray-800",
+								)}
+							>
+								<summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-mainBlack dark:text-white [&::-webkit-details-marker]:hidden">
+									{item.q}
+									<RiArrowDownSLine
+										size={20}
+										aria-hidden
+										className="shrink-0 text-mainGray dark:text-muted-foreground transition-transform duration-300 group-open:rotate-180"
+									/>
+								</summary>
+								<p className="pb-5 text-sm leading-relaxed text-mainGray dark:text-muted-foreground">
+									{item.a}{" "}
+									{item.href && (
+										<Link
+											to={item.href}
+											className="font-medium text-lightBlue hover:underline"
+										>
+											Reach out here
+										</Link>
+									)}
+								</p>
+							</details>
+						))}
+					</div>
+				</div>
+			</div>
 			<div ref={cta.containerRef} className="relative py-20">
 				<div className="max-w-6xl mx-auto px-4 space-y-4 relative z-10 text-center">
 					<h1
