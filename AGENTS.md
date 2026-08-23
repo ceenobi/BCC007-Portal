@@ -9,6 +9,12 @@
 - Sync local `main` after merge.
 - Dependabot opens PRs on the `test` branch for npm and GitHub Actions updates — review and merge them promptly.
 
+## Releases
+
+- Cut a GitHub Release after each meaningful batch of PRs merges to `main` (e.g., a feature or a set of related fixes).
+- Use semantic versioning starting at `v0.x` while the product is pre-GA: bump the **minor** for features (`v0.2.0`), the **patch** for fixes/chores only (`v0.1.1`). Move to `v1.0.0` at general availability.
+- Steps: tag the merged `main` commit (`git tag -a vX.Y.Z && git push origin vX.Y.Z`), then create the release on GitHub with notes summarizing the included PRs.
+
 ## Documentation
 
 - After completing a feature, update `progress.md` with a summary of what was done and any relevant context (files changed, decisions made, known issues).
