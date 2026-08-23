@@ -17,7 +17,9 @@ export default function HomeLayout({ loaderData }: Route.ComponentProps) {
 	return (
 		<>
 			<HomeNav user={user} />
-			<Outlet context={{ user }} />
+			<main className="min-h-[calc(100vh-50px)]">
+				<Outlet context={{ user }} />
+			</main>
 			<Footer />
 		</>
 	);
