@@ -115,7 +115,7 @@ export default function Register() {
 					InviteCode is unique and valid for a single registration session only.
 				</p>
 			</fetcher.Form>
-			<div className="flex items-center justify-center gap-2 mt-10">
+			<div className="flex items-center justify-center gap-2 mt-7">
 				<p className="text-[13px] text-muted-foreground">
 					Have an account?{" "}
 					<Link
@@ -126,7 +126,7 @@ export default function Register() {
 					</Link>
 				</p>
 			</div>
-			<p className="mt-10 xl:mt-14 text-xs text-mainGray dark:text-muted-foreground text-center text-balance">
+			<p className="mt-7 xl:mt-14 text-xs text-mainGray dark:text-muted-foreground text-center text-balance">
 				By continuing, you agree to BCC007's{" "}
 				<Link to="/terms" className="underline cursor-pointer">
 					Terms of Service

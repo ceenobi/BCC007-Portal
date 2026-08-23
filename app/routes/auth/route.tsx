@@ -14,7 +14,7 @@ export default function AuthLayout() {
 	const quote = useWaveAnimation({ threshold: 0, startVisible: true });
 	return (
 		<section className="grid grid-cols-12 min-h-screen items-center justify-center">
-			<div className="relative hidden lg:block col-span-12 lg:col-span-6 xl:col-span-7 h-screen">
+			<div className="relative hidden lg:block col-span-12 lg:col-span-6 xl:col-span-7 h-screen overflow-hidden">
 				<div className="absolute inset-0 z-0 opacity-50 h-full w-full bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem]" />
 				<div className="relative z-5 flex justify-center items-center h-full">
 					<div className="w-full max-w-100 xl:max-w-150 mx-auto">
@@ -34,10 +34,12 @@ export default function AuthLayout() {
 					</div>
 				</div>
 			</div>
-			<div className="col-span-12 lg:col-span-6 xl:col-span-5 border-l min-h-full">
-				<div className="w-full md:max-w-120 mx-auto mt-5 px-4 h-full">
-					<Logo size={8} showLogoText={true} classname="text-xl" />
-					<PageWrapper className="py-4 flex flex-col w-full h-full justify-center items-center">
+			<div className="col-span-12 lg:col-span-6 xl:col-span-5 border-l h-screen overflow-auto scrollbarHide">
+				<div className="w-full md:max-w-110 mx-auto mt-5 px-4 h-full">
+					{/*<div className="fixed top-4 z-10">
+					</div>*/}
+					<PageWrapper className="space-y-8 flex flex-col w-full h-full justify-center items-center">
+						<Logo size={8} showLogoText={true} classname="text-xl" />
 						<Outlet />
 					</PageWrapper>
 				</div>

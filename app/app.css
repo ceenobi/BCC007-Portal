@@ -242,3 +242,13 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* chrome,safari */
+.scrollbarHide::-webkit-scrollbar {
+  display: none;
+}
+/* edge, firefox */
+.scrollbarHide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
