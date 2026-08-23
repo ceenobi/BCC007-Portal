@@ -1,14 +1,14 @@
-import { Link, data } from "react-router";
 import {
 	RiArrowGoBackFill,
 	RiHome6Line,
 	RiSearchEyeLine,
 } from "@remixicon/react";
+import { data, Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { buildSeoMeta } from "~/lib/seo";
 import type { Route } from "./+types/$";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
 	return [
 		...buildSeoMeta({
 			title: "Page Not Found",
@@ -19,7 +19,7 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export async function loader({}: Route.LoaderArgs) {
+export async function loader(_args: Route.LoaderArgs) {
 	return data(null, { status: 404 });
 }
 
