@@ -16,9 +16,21 @@ const baseLayout = (
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
+          :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --primary: #1e1b4b;
+            --primary-accent: #6366f1;
+            --muted: #64748b;
+            --text: #0f172a;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --warning: #f59e0b;
+          }
+
           body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8fafc;
+            background-color: var(--bg);
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
@@ -27,127 +39,160 @@ const baseLayout = (
           .wrapper {
             width: 100%;
             table-layout: fixed;
-            background-color: #f8fafc;
-            padding: 48px 0;
+            background-color: var(--bg);
+            padding: 40px 0;
           }
 
           .container {
             width: 100%;
             max-width: 600px;
-            background-color: #ffffff;
+            background-color: var(--card);
             margin: 0 auto;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
           }
 
           .header {
-            background-color: #ffffff;
-            padding: 40px 40px 20px;
+            background: linear-gradient(135deg, var(--primary), #2563eb);
+            padding: 48px 32px;
             text-align: left;
-            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+          }
+
+          .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+          }
+
+          .logo-container {
+            text-align: center;
+            margin-bottom: 24px;
+          }
+
+          .logo-img {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
           }
 
           .logo-text {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
-            color: #1e1b4b;
+            color: #ffffff;
             letter-spacing: -0.02em;
             display: flex;
             align-items: center;
+            justify-content: center;
           }
 
           .content {
-            padding: 40px;
-            color: #334155;
+            padding: 48px 32px;
+            color: var(--text);
           }
 
           .title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 24px;
-            color: #0f172a;
+            margin-bottom: 20px;
+            color: var(--text);
             letter-spacing: -0.02em;
           }
 
           .welcome-text {
             font-size: 16px;
             font-weight: 600;
-            color: #6366f1;
-            margin-bottom: 12px;
+            color: var(--primary-accent);
+            margin-bottom: 16px;
           }
 
           .text {
             font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 32px;
-            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            color: var(--muted);
           }
 
           .button-container {
             margin: 32px 0;
+            text-align: center;
           }
 
           .button {
-            background-color: #6366f1;
+            background-color: var(--primary-accent);
             color: #ffffff !important;
-            padding: 12px 24px;
-            border-radius: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
             display: inline-block;
             transition: background-color 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+          }
+
+          .button:hover {
+            background-color: #4f46e5;
           }
 
           .expiry-text {
-            font-size: 13px;
-            color: #94a3b8;
+            font-size: 12px;
+            color: var(--muted);
             margin-top: 16px;
             font-style: italic;
           }
 
           .divider {
             height: 1px;
-            background-color: #f1f5f9;
-            margin: 40px 0;
+            background-color: var(--border);
+            margin: 32px 0;
           }
 
           .footer {
-            padding: 0 40px 40px;
+            padding: 32px 32px 24px;
             text-align: left;
-            color: #94a3b8;
+            color: var(--muted);
             font-size: 12px;
           }
 
           .footer-links {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
           }
 
           .footer-link {
-            color: #64748b;
+            color: var(--muted);
             text-decoration: none;
             margin-right: 16px;
             font-weight: 500;
+            transition: color 0.2s;
           }
 
           .footer-link:hover {
-            color: #6366f1;
+            color: var(--primary-accent);
           }
 
           @media only screen and (max-width: 640px) {
             .wrapper {
-              padding: 20px 0;
+              padding: 24px 0;
             }
             .container {
-              border-radius: 0;
-              border-left: none;
-              border-right: none;
+              border-radius: 16px;
             }
-            .content, .header, .footer {
-              padding-left: 24px;
-              padding-right: 24px;
+            .header {
+              padding: 32px 24px;
+            }
+            .content {
+              padding: 32px 24px;
+            }
+            .title {
+              font-size: 24px;
             }
           }
         </style>
@@ -156,9 +201,9 @@ const baseLayout = (
         <div class="wrapper">
           <div class="container">
             <div class="header">
-              <div class="logo-text">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="color: #6366f1; margin-right: 8px; vertical-align: middle;"><path d="M5.23379 7.72989C6.65303 5.48625 9.15342 4 12.0002 4C14.847 4 17.3474 5.48625 18.7667 7.72989L20.4569 6.66071C18.6865 3.86199 15.5612 2 12.0002 2C8.43928 2 5.31393 3.86199 3.54356 6.66071L5.23379 7.72989ZM12.0002 20C9.15342 20 6.65303 18.5138 5.23379 16.2701L3.54356 17.3393C5.31393 20.138 8.43928 22 12.0002 22C15.5612 22 18.6865 20.138 20.4569 17.3393L18.7667 16.2701C17.3474 18.5138 14.847 20 12.0002 20ZM12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12ZM12 13C14.2091 13 16 14.7909 16 17H8C8 14.7909 9.79086 13 12 13ZM6 12C6 13.6569 4.65685 15 3 15C1.34315 15 0 13.6569 0 12C0 10.3431 1.34315 9 3 9C4.65685 9 6 10.3431 6 12ZM21 15C22.6569 15 24 13.6569 24 12C24 10.3431 22.6569 9 21 9C19.3431 9 18 10.3431 18 12C18 13.6569 19.3431 15 21 15Z"></path></svg>
-                BCC007 Portal
+              <div class="logo-container">
+                <img src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png" alt="BCC007 Portal" class="logo-img" style="width: 48px; height: 48px;">
+                <span class="logo-text">BCC007 Portal</span>
               </div>
             </div>
             <div class="content">
@@ -180,7 +225,7 @@ const baseLayout = (
 
               <div class="divider"></div>
 
-              <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin: 0;">
+              <p style="font-size: 13px; color: var(--muted); line-height: 1.5; margin: 0;">
                 If you didn't request this email, you can safely ignore it. Your account security is our priority.
               </p>
             </div>
