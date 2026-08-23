@@ -1,10 +1,13 @@
+import type { IAnnouncement } from "../models/announcement";
+import type { IEvent } from "../models/event";
+
 const baseLayout = (
-  title: string,
-  name: string,
-  content: string,
-  actionLink?: string,
-  actionText?: string,
-  expiryText?: string,
+	title: string,
+	name: string,
+	content: string,
+	actionLink?: string,
+	actionText?: string,
+	expiryText?: string,
 ) => `
     <!DOCTYPE html>
     <html lang="en">
@@ -212,14 +215,14 @@ const baseLayout = (
               <div class="text">${content}</div>
 
               ${
-                actionLink
-                  ? `
+								actionLink
+									? `
                 <div class="button-container">
                   <a href="${actionLink}" class="button">${actionText || "Confirm Action"}</a>
                 </div>
               `
-                  : ""
-              }
+									: ""
+							}
 
               ${expiryText ? `<p class="expiry-text">${expiryText}</p>` : ""}
 
@@ -245,87 +248,90 @@ const baseLayout = (
   `;
 
 export const verifyAccountTemplate = (name: string, link: string) =>
-  baseLayout(
-    "Verify Your Email",
-    name,
-    "Welcome to BCC007 Portal! We're thrilled to have you join our platform. To ensure the security of your account, please verify your email address to complete your registration.",
-    link,
-    "Verify Email Address",
-    "This link will expire in 15 minutes for your security.",
-  );
+	baseLayout(
+		"Verify Your Email",
+		name,
+		"Welcome to BCC007 Portal! We're thrilled to have you join our platform. To ensure the security of your account, please verify your email address to complete your registration.",
+		link,
+		"Verify Email Address",
+		"This link will expire in 15 minutes for your security.",
+	);
 
 export const InvitationCodeTemplate = (code: string, link: string) =>
-  baseLayout(
-    "Platform Invite",
-    "Hello",
-    `You have been invited to join the BCC007 Alumni Platform. Use the code below during your registration process.<br/><br/>
+	baseLayout(
+		"Platform Invite",
+		"Hello",
+		`You have been invited to join the BCC007 Alumni Platform. Use the code below during your registration process.<br/><br/>
      <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; text-align: center; margin: 24px 0;">
        <span style="font-family: monospace; font-size: 24px; font-weight: 700; color: #0f172a; letter-spacing: 4px;">${code}</span>
      </div>
      Click the button below to get started. Code expires after 24 hours.`,
-    link,
-    "Join Platform",
-  );
+		link,
+		"Join Platform",
+	);
 
 export const forgotPasswordTemplate = (
-  name: string,
-  resetPasswordLink: string,
+	name: string,
+	resetPasswordLink: string,
 ) =>
-  baseLayout(
-    "Reset Password",
-    name,
-    "We received a request to reset your password. If this was you, please use the button below to proceed with your reset.",
-    resetPasswordLink,
-    "Reset Password",
-    "This link will expire in 15 minutes for your security.",
-  );
+	baseLayout(
+		"Reset Password",
+		name,
+		"We received a request to reset your password. If this was you, please use the button below to proceed with your reset.",
+		resetPasswordLink,
+		"Reset Password",
+		"This link will expire in 15 minutes for your security.",
+	);
 
 export const passwordResetSuccessTemplate = (name: string) =>
-  baseLayout(
-    "Password Reset Successful",
-    name,
-    "Your password has been successfully reset. You can now log in using your new credentials.<br/><br/>If you did not request this change, please contact our support team immediately.",
-  );
+	baseLayout(
+		"Password Reset Successful",
+		name,
+		"Your password has been successfully reset. You can now log in using your new credentials.<br/><br/>If you did not request this change, please contact our support team immediately.",
+	);
 
-export const eventCreatedTemplate = (name: string, event: any) =>
-  baseLayout(
-    "Event Created",
-    name,
-    `Your event "${event.title}" has been successfully created.<br/><br/> You can now view and manage your event on the platform.`,
-  );
+export const eventCreatedTemplate = (name: string, event: IEvent) =>
+	baseLayout(
+		"Event Created",
+		name,
+		`Your event "${event.title}" has been successfully created.<br/><br/> You can now view and manage your event on the platform.`,
+	);
 
-export const announcementTemplate = (name: string, announcement: any) =>
-  baseLayout(
-    "New Announcement",
-    name,
-    `${announcement.title}<br/><br/>${announcement.content.replace(/\n/g, "<br/>")}`,
-    "/dashboard/announcements",
-    "View Announcement",
-  );
+export const announcementTemplate = (
+	name: string,
+	announcement: IAnnouncement,
+) =>
+	baseLayout(
+		"New Announcement",
+		name,
+		`${announcement.title}<br/><br/>${announcement.content.replace(/\n/g, "<br/>")}`,
+		"/dashboard/announcements",
+		"View Announcement",
+	);
 
 export const paymentConfirmationTemplate = (
-  name: string,
-  data: {
-    amount: number;
-    reference: string;
-    paymentType: string;
-    date: Date;
-  },
+	name: string,
+	data: {
+		amount: number;
+		reference: string;
+		paymentType: string;
+		date: Date;
+	},
 ) => {
-  const formattedAmount = new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-  }).format(data.amount);
-  const paymentTypeLabel = data.paymentType.replace(/_/g, " ").toUpperCase();
-  const formattedDate = data.date.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+	const formattedAmount = new Intl.NumberFormat("en-NG", {
+		style: "currency",
+		currency: "NGN",
+	}).format(data.amount);
+	const paymentTypeLabel = data.paymentType.replace(/_/g, " ").toUpperCase();
+	const formattedDate = data.date.toLocaleString("en-GB", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
-  const receiptContent = `
+	const receiptContent = `
     <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
       <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
         <span style="font-size: 14px; color: #64748b;">Payment Type</span>
@@ -350,51 +356,51 @@ export const paymentConfirmationTemplate = (
     Your payment has been received and confirmed successfully. Thank you for your support — every contribution helps the BCC007 community.
   `;
 
-  return baseLayout(
-    "Payment Confirmed",
-    name,
-    receiptContent,
-    "/dashboard/payments",
-    "View Payments",
-  );
+	return baseLayout(
+		"Payment Confirmed",
+		name,
+		receiptContent,
+		"/dashboard/payments",
+		"View Payments",
+	);
 };
 
 export const emailChangeConfirmationTemplate = (
-  name: string,
-  newEmail: string,
+	name: string,
+	newEmail: string,
 ) =>
-  baseLayout(
-    "Email Change Requested",
-    name,
-    `We received a request to change the email address on your BCC007 account to <strong>${newEmail}</strong>.<br/><br/>If this was you, no further action is needed — your email will be updated once the change is verified.<br/><br/>If you did not request this change, please contact our support team immediately to secure your account.`,
-  );
+	baseLayout(
+		"Email Change Requested",
+		name,
+		`We received a request to change the email address on your BCC007 account to <strong>${newEmail}</strong>.<br/><br/>If this was you, no further action is needed — your email will be updated once the change is verified.<br/><br/>If you did not request this change, please contact our support team immediately to secure your account.`,
+	);
 
 export const transferNotificationTemplate = (
-  name: string,
-  data: {
-    amount: number;
-    reference: string;
-    date: Date;
-    status: string;
-  },
+	name: string,
+	data: {
+		amount: number;
+		reference: string;
+		date: Date;
+		status: string;
+	},
 ) => {
-  const formattedAmount = new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-  }).format(data.amount);
-  const formattedDate = data.date.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const isSuccess = data.status === "success";
-  const badgeBg = isSuccess ? "#dcfce7" : "#fee2e2";
-  const badgeColor = isSuccess ? "#166534" : "#991b1b";
-  const badgeText = isSuccess ? "✓ Transfer Completed" : "Transfer Update";
+	const formattedAmount = new Intl.NumberFormat("en-NG", {
+		style: "currency",
+		currency: "NGN",
+	}).format(data.amount);
+	const formattedDate = data.date.toLocaleString("en-GB", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+	const isSuccess = data.status === "success";
+	const badgeBg = isSuccess ? "#dcfce7" : "#fee2e2";
+	const badgeColor = isSuccess ? "#166534" : "#991b1b";
+	const badgeText = isSuccess ? "✓ Transfer Completed" : "Transfer Update";
 
-  const content = `
+	const content = `
     <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
       <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
         <span style="font-size: 14px; color: #64748b;">Amount</span>
@@ -413,28 +419,28 @@ export const transferNotificationTemplate = (
       </div>
     </div>
     ${
-      isSuccess
-        ? "Your transfer has been processed and sent to your bank account successfully."
-        : "There was an issue processing your transfer. Please check your bank account or contact support."
-    }
+			isSuccess
+				? "Your transfer has been processed and sent to your bank account successfully."
+				: "There was an issue processing your transfer. Please check your bank account or contact support."
+		}
   `;
 
-  return baseLayout(
-    isSuccess ? "Transfer Received" : "Transfer Update",
-    name,
-    content,
-    "/dashboard/settings/account",
-    "View Account",
-  );
+	return baseLayout(
+		isSuccess ? "Transfer Received" : "Transfer Update",
+		name,
+		content,
+		"/dashboard/settings/account",
+		"View Account",
+	);
 };
 
 export const contactOwnerTemplate = (data: {
-  fullname: string;
-  email: string;
-  subject: string;
-  message: string;
+	fullname: string;
+	email: string;
+	subject: string;
+	message: string;
 }) => {
-  const content = `
+	const content = `
     <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin: 16px 0;">
       <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
         <span style="font-size: 14px; color: #64748b;">From</span>
@@ -454,39 +460,35 @@ export const contactOwnerTemplate = (data: {
     </div>
   `;
 
-  return baseLayout(
-    "New Contact Message",
-    "BCC007 Team",
-    content,
-  );
+	return baseLayout("New Contact Message", "BCC007 Team", content);
 };
 
 export const contactConfirmationTemplate = (data: {
-  fullname: string;
-  subject: string;
+	fullname: string;
+	subject: string;
 }) => {
-  const content = `Thank you for reaching out regarding "<strong>${data.subject}</strong>".<br/><br/>We have received your message and our team will get back to you as soon as possible.<br/><br/>If you have any additional details to share, simply reply to this email or visit our contact page.`;
+	const content = `Thank you for reaching out regarding "<strong>${data.subject}</strong>".<br/><br/>We have received your message and our team will get back to you as soon as possible.<br/><br/>If you have any additional details to share, simply reply to this email or visit our contact page.`;
 
-  return baseLayout(
-    "We've Received Your Message",
-    data.fullname,
-    content,
-    "/contact",
-    "Contact Us",
-  );
+	return baseLayout(
+		"We've Received Your Message",
+		data.fullname,
+		content,
+		"/contact",
+		"Contact Us",
+	);
 };
 
 export const ticketConfirmationTemplate = (
-  name: string,
-  ticketId: string,
-  title: string,
-  description: string,
-  priority: string,
+	name: string,
+	ticketId: string,
+	title: string,
+	description: string,
+	priority: string,
 ) =>
-  baseLayout(
-    "Support Ticket Confirmation",
-    name,
-    `Your support ticket has been created successfully. Here's a summary of your request:<br/><br/>
+	baseLayout(
+		"Support Ticket Confirmation",
+		name,
+		`Your support ticket has been created successfully. Here's a summary of your request:<br/><br/>
      <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
        <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
        <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
@@ -494,58 +496,58 @@ export const ticketConfirmationTemplate = (
        <p style="margin: 4px 0;"><strong>Description:</strong> ${description}</p>
      </div>
      Our support team will review your ticket and get back to you as soon as possible. You can track the status of your ticket in the Help Desk section.`,
-  );
+	);
 
 export const ticketAssignedTemplate = (
-  name: string,
-  ticketId: string,
-  title: string,
+	name: string,
+	ticketId: string,
+	title: string,
 ) =>
-  baseLayout(
-    "Ticket Assigned",
-    name,
-    `A support ticket has been assigned to you. Here's the details:<br/><br/>
+	baseLayout(
+		"Ticket Assigned",
+		name,
+		`A support ticket has been assigned to you. Here's the details:<br/><br/>
      <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
        <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
        <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
      </div>
      Please review and take the appropriate action.`,
-  );
+	);
 
 export const ticketResolvedTemplate = (
-  name: string,
-  ticketId: string,
-  title: string,
+	name: string,
+	ticketId: string,
+	title: string,
 ) =>
-  baseLayout(
-    "Ticket Resolved",
-    name,
-    `Your support ticket has been marked as resolved. Here's a summary:<br/><br/>
+	baseLayout(
+		"Ticket Resolved",
+		name,
+		`Your support ticket has been marked as resolved. Here's a summary:<br/><br/>
      <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
        <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
        <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
      </div>
      If you have any further questions, please create a new ticket.`,
-  );
+	);
 
 export const deleteAccountRequestTemplate = (name: string, link: string) =>
-  baseLayout(
-    "Delete Account Request",
-    name,
-    "We received a request to delete your account. If this was you, please use the button below to proceed with your deletion.",
-    link,
-    "Delete Account",
-    "This link will expire in 15 minutes for your security.",
-  );
+	baseLayout(
+		"Delete Account Request",
+		name,
+		"We received a request to delete your account. If this was you, please use the button below to proceed with your deletion.",
+		link,
+		"Delete Account",
+		"This link will expire in 15 minutes for your security.",
+	);
 
 export const birthdayReminderTemplate = (name: string, age: number) =>
-  baseLayout(
-    "Happy Birthday",
-    name,
-    `Today is your special day, <strong>${name}</strong>!<br/><br/>
+	baseLayout(
+		"Happy Birthday",
+		name,
+		`Today is your special day, <strong>${name}</strong>!<br/><br/>
      On behalf of the entire BCC007 community, we want to wish you a very happy ${age}th birthday and a year filled with joy, health, and success.<br/><br/>
      We're grateful to have you as part of the family — thank you for all you contribute to our community.<br/><br/>
      Enjoy your day to the fullest!`,
-    "/dashboard",
-    "Visit Dashboard",
-  );
+		"/dashboard",
+		"Visit Dashboard",
+	);
