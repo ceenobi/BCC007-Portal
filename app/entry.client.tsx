@@ -7,7 +7,7 @@ Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN as string | undefined,
   environment: import.meta.env.MODE,
   integrations: [Sentry.reactRouterTracingIntegration()],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: import.meta.env.MODE === "production" ? 0.2 : 1.0,
   tracePropagationTargets: [/^\//],
 });
 
