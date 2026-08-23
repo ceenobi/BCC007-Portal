@@ -69,7 +69,7 @@ export default function Login() {
 	};
 
 	return (
-		<PageSection index={0} className="md:px-8 w-full">
+		<PageSection index={0}>
 			<div className="space-y-3">
 				<h1 className="text-3xl font-medium sm:leading-none">Welcome back</h1>
 				<h2 className="text-sm text-foreground font-medium">
