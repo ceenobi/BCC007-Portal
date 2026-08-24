@@ -1,5 +1,9 @@
+import { env } from "../config/keys";
 import type { IAnnouncement } from "../models/announcement";
 import type { IEvent } from "../models/event";
+
+const absoluteUrl = (path: string) =>
+	path.startsWith("http") ? path : `${env.clientUrl}${path}`;
 
 const baseLayout = (
 	title: string,
@@ -112,7 +116,7 @@ const baseLayout = (
           .welcome-text {
             font-size: 16px;
             font-weight: 600;
-            color: var(--primary-accent);
+            color: #4f46e5;
             margin-bottom: 16px;
           }
 
@@ -129,7 +133,7 @@ const baseLayout = (
           }
 
           .button {
-            background-color: var(--primary-accent);
+            background-color: #4f46e5;
             color: #ffffff !important;
             padding: 14px 28px;
             border-radius: 12px;
@@ -142,7 +146,7 @@ const baseLayout = (
           }
 
           .button:hover {
-            background-color: #4f46e5;
+            background-color: #4338ca;
           }
 
           .expiry-text {
@@ -170,7 +174,7 @@ const baseLayout = (
           }
 
           .footer-link {
-            color: var(--muted);
+            color: #475569;
             text-decoration: none;
             margin-right: 16px;
             font-weight: 500;
@@ -178,7 +182,7 @@ const baseLayout = (
           }
 
           .footer-link:hover {
-            color: var(--primary-accent);
+            color: #4f46e5;
           }
 
           @media only screen and (max-width: 640px) {
@@ -218,7 +222,13 @@ const baseLayout = (
 								actionLink
 									? `
                 <div class="button-container">
-                  <a href="${actionLink}" class="button">${actionText || "Confirm Action"}</a>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                    <tr>
+                      <td align="center" bgcolor="#4f46e5" style="border-radius: 12px; background-color: #4f46e5;">
+                        <a href="${absoluteUrl(actionLink)}" target="_blank" class="button" style="display: inline-block; padding: 14px 28px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 15px; font-weight: 600; color: #ffffff !important; text-decoration: none; border-radius: 12px; background-color: #4f46e5;">${actionText || "Confirm Action"}</a>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               `
 									: ""
@@ -228,15 +238,15 @@ const baseLayout = (
 
               <div class="divider"></div>
 
-              <p style="font-size: 13px; color: var(--muted); line-height: 1.5; margin: 0;">
+              <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
                 If you didn't request this email, you can safely ignore it. Your account security is our priority.
               </p>
             </div>
             <div class="footer">
               <div class="footer-links">
-                <a href="/support/guide" class="footer-link">Support</a>
-                <a href="/privacy" class="footer-link">Privacy Policy</a>
-                <a href="/terms" class="footer-link">Terms of Service</a>
+                <a href="${absoluteUrl("/support/guide")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Support</a>
+                <a href="${absoluteUrl("/privacy")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Privacy Policy</a>
+                <a href="${absoluteUrl("/terms")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Terms of Service</a>
               </div>
               <p style="margin-bottom: 8px;">© ${new Date().getFullYear()} BCC007 Portal. All rights reserved.</p>
               <p>Crafting unique experiences for BCC007 students.</p>
