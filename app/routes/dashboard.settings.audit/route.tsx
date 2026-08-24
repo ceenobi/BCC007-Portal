@@ -12,6 +12,8 @@ import {
     SelectValue,
 } from "~/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import AuditLogList from "~/features/settings/audit/audit-log-list";
+import AuditSkeleton from "~/features/settings/audit/audit-skeleton";
 import { auditlogCategories } from "~/lib/constants";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
@@ -21,10 +23,8 @@ import {
     getUserAuditLogsQuery,
 } from "~/queries/audit-logs";
 import type { Route } from "./+types/route";
-import AuditLogList from "~/features/settings/audit/audit-log-list";
-import AuditSkeleton from "~/features/settings/audit/audit-skeleton";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Audit Logs — BCC007" },
     {

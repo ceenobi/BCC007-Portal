@@ -270,7 +270,7 @@ export const verifyAccountTemplate = (name: string, link: string) =>
 export const InvitationCodeTemplate = (code: string, link: string) =>
 	baseLayout(
 		"Platform Invite",
-		"Hello",
+		"Member",
 		`You have been invited to join the BCC007 Alumni Platform. Use the code below during your registration process.<br/><br/>
      <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; text-align: center; margin: 24px 0;">
        <span style="font-family: monospace; font-size: 24px; font-weight: 700; color: #0f172a; letter-spacing: 4px;">${code}</span>

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { toast } from "sonner";
 import {
-  cancelSubscription,
-  getUserSubscription,
+    cancelSubscription,
+    getUserSubscription,
 } from "~/.server/actions/payment";
 import { PageSection } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
@@ -15,7 +15,7 @@ import { Separator } from "~/components/ui/separator";
 import type { CancelSubscriptionSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Subscription Settings | BCC007" },
     {

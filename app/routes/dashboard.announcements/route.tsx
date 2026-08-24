@@ -2,9 +2,9 @@ import { dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { Await, useOutletContext } from "react-router";
 import {
-  createAnnouncement,
-  deleteAnnouncement,
-  updateAnnouncement,
+    createAnnouncement,
+    deleteAnnouncement,
+    updateAnnouncement,
 } from "~/.server/actions/announcement-data";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import DataError from "~/components/ui/data-error";
@@ -15,9 +15,9 @@ import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import { getAnnouncementsQuery } from "~/queries/announcements";
 import type {
-  CreateAnnouncementSchemaType,
-  SessionUser,
-  UpdateAnnouncementSchemaType,
+    CreateAnnouncementSchemaType,
+    SessionUser,
+    UpdateAnnouncementSchemaType,
 } from "~/types";
 import AnnouncementsList from "../../features/announcements/announcements-list";
 import AnnouncementsSkeleton from "../../features/announcements/announcements-skeleton";
@@ -27,7 +27,7 @@ import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_ANNOUNCEMENTS", "action")];
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Announcements - Manage BCC007 Team announcements" },
     {
@@ -100,7 +100,7 @@ export default function Announcements({ loaderData }: Route.ComponentProps) {
             Broadcast messages to all group members.
           </p>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-4">
           <Search
             id="search-announcements"
             placeholder="Search announcements..."

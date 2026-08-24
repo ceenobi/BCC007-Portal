@@ -1,29 +1,29 @@
 import { dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import {
-  Await,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useOutletContext,
+    Await,
+    Outlet,
+    useLocation,
+    useNavigate,
+    useOutletContext,
 } from "react-router";
 import { getMembersForSelect } from "~/.server/actions/member";
 import {
-  finalizeTransfer,
-  getAvailableBalance,
-  initiateTransfer,
-  retryTransfer,
+    finalizeTransfer,
+    getAvailableBalance,
+    initiateTransfer,
+    retryTransfer,
 } from "~/.server/actions/transfer";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "~/components/ui/select";
 import Filter from "~/features/transfers/filter";
 import InitiateTransfer from "~/features/transfers/initiate-transfer";
@@ -33,14 +33,14 @@ import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { getUserTransfersQuery } from "~/queries/transfers";
 import type {
-  CreateTransferSchemaType,
-  FinalizeTransferSchemaType,
-  RetryTransferSchemaType,
-  SessionUser,
+    CreateTransferSchemaType,
+    FinalizeTransferSchemaType,
+    RetryTransferSchemaType,
+    SessionUser,
 } from "~/types";
 import type { Route } from "./+types/route";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Payment Transfers - Payment transfers to member accounts" },
     {
@@ -131,7 +131,6 @@ export default function Transfers({ loaderData }: Route.ComponentProps) {
 
   return (
     <PageWrapper>
-      <>
         <PageSection index={0} className="space-y-8 px-4 xl:px-8">
           <div className="space-y-2">
             <h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
@@ -205,7 +204,6 @@ export default function Transfers({ loaderData }: Route.ComponentProps) {
         ) : (
           <Outlet context={{ user }} />
         )}
-      </>
     </PageWrapper>
   );
 }

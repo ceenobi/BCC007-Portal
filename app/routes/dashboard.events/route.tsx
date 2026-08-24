@@ -20,7 +20,7 @@ import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_EVENTS", "action")];
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Events - Manage BCC007 Team events" },
     {
@@ -87,7 +87,7 @@ export default function Events({ loaderData }: Route.ComponentProps) {
                 See past, upcoming and ongoing events.
               </p>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-4">
               <Search
                 id="search-events"
                 placeholder="Search events..."

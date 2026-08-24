@@ -46,6 +46,7 @@ export default function ResetPassword() {
 		formState: { errors },
 	} = useForm<ResetPasswordSchemaType>({
 		resolver: zodResolver(resetPasswordSchema),
+		mode: "onChange",
 	});
 	const fetcher = useFetcher();
 	const navigate = useNavigate();
@@ -81,7 +82,7 @@ export default function ResetPassword() {
 			<div className="space-y-3">
 				<h1 className="text-3xl font-medium sm:leading-none">Reset password</h1>
 				<h2 className="text-sm text-foreground font-medium">
-					Enter your new password below
+					Enter your new password below in order to reset your account.
 				</h2>
 			</div>
 			<fetcher.Form
