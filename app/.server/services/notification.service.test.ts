@@ -62,9 +62,27 @@ describe("NotificationService", () => {
   });
 
   it("returns paginated unread notifications newest first", async () => {
-    await Notification.create({ userId, type: "account_login", title: "first", message: "m" });
-    await Notification.create({ userId, type: "account_login", title: "second", message: "m" });
-    await Notification.create({ userId, type: "account_login", title: "third", message: "m" });
+    await Notification.create({
+      userId,
+      type: "account_login",
+      title: "first",
+      message: "m",
+      createdAt: new Date(Date.now() - 3000),
+    });
+    await Notification.create({
+      userId,
+      type: "account_login",
+      title: "second",
+      message: "m",
+      createdAt: new Date(Date.now() - 2000),
+    });
+    await Notification.create({
+      userId,
+      type: "account_login",
+      title: "third",
+      message: "m",
+      createdAt: new Date(Date.now() - 1000),
+    });
     await Notification.create({
       userId,
       type: "account_login",

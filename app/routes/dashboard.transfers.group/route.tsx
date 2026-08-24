@@ -4,16 +4,16 @@ import { Await } from "react-router";
 import { PageSection } from "~/components/provider/page-wrapper";
 import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
+import TransferList from "~/features/transfers/transfer-list";
+import TransferSkeleton from "~/features/transfers/transfer-skeleton";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { requirePermission } from "~/middleware/auth.middleware";
 import { getGroupTransfersQuery } from "~/queries/transfers";
-import TransferSkeleton from "~/features/transfers/transfer-skeleton";
-import TransferList from "~/features/transfers/transfer-list";
 import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_TRANSFERS")];
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     { title: "Group Transfers - Manage BCC007 Team transfers" },
     {

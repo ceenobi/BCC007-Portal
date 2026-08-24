@@ -1,7 +1,7 @@
 ---
 description: Performance auditor for BCC007 Portal - analyzes database indexes and query plans via MongoDB, audits cache TTL/invalidation coverage, checks QStash workflow costs, and reviews frontend bundle/render efficiency. Read-only; reports prioritized findings. Use when the user asks about performance, slow queries, optimization, or app speed.
 mode: subagent
-color: magenta
+color: "accent"
 permission:
   edit: deny
   bash: ask
