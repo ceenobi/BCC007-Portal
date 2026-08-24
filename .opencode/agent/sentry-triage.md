@@ -1,7 +1,7 @@
 ---
 description: Triages Sentry issues for the BCC007 Portal project - searches issues, pulls event details and stacktraces, resolves/ignores issues with explanatory comments, and applies protective settings. Use when the user mentions Sentry, production errors, issue triage, or monitoring.
 mode: subagent
-color: yellow
+color: "warning"
 permission:
   edit: deny
   bash: deny
