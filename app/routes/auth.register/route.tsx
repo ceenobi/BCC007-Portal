@@ -39,7 +39,7 @@ export default function Register() {
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
+		formState: { errors, submitCount },
 	} = useForm<SignUpSchemaType>({
 		resolver: zodResolver(signUpSchema),
 		mode: "onChange",
@@ -85,6 +85,7 @@ export default function Register() {
 			>
 				<AlertBox
 					showAlert={!!(actionData && !actionData?.success)}
+					resetKey={submitCount}
 					title="Error"
 					description={
 						actionData?.message || "An error occurred. Please try again."

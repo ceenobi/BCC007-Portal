@@ -39,7 +39,7 @@ export default function Login() {
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
+		formState: { errors, submitCount },
 	} = useForm<SignInSchemaType>({
 		resolver: zodResolver(signInSchema),
 		mode: "onChange",
@@ -82,6 +82,7 @@ export default function Login() {
 			>
 				<AlertBox
 					showAlert={!!(actionData && !actionData?.success)}
+					resetKey={submitCount}
 					title="Error"
 					description={
 						actionData?.message || "An error occurred. Please try again."

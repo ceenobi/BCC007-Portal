@@ -43,7 +43,7 @@ export default function ResetPassword() {
 	const {
 		handleSubmit,
 		register,
-		formState: { errors },
+		formState: { errors, submitCount },
 	} = useForm<ResetPasswordSchemaType>({
 		resolver: zodResolver(resetPasswordSchema),
 		mode: "onChange",
@@ -91,6 +91,7 @@ export default function ResetPassword() {
 			>
 				<AlertBox
 					showAlert={!!(actionData && !actionData?.success)}
+					resetKey={submitCount}
 					title="Error"
 					description={
 						actionData?.message || "An error occurred. Please try again."

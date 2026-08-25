@@ -44,7 +44,7 @@ export default function ContactRoute() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, submitCount },
   } = useForm<contactSchemaType>({
     resolver: zodResolver(contactSchema),
     mode: "onChange",
@@ -117,6 +117,7 @@ export default function ContactRoute() {
             >
               <AlertBox
                 showAlert={!!(actionData && !actionData?.success)}
+                resetKey={submitCount}
                 title="Error"
                 description={
                   actionData?.message || "An error occurred. Please try again."
