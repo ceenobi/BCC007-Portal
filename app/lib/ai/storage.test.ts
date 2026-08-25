@@ -86,7 +86,7 @@ describe("ai chat storage", () => {
     it("does not leak another user's history", () => {
       localStorage.setItem(
         "bcc007:ai-chat:user-1",
-        JSON.stringify([msg("user", "secret")]),
+        JSON.stringify([msg("user", "fixture-note-user-1")]),
       );
       expect(loadChat("user-2")).toEqual([]);
     });
