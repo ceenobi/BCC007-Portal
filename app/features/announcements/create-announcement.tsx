@@ -19,7 +19,6 @@ import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
 import { createAnnouncementSchema } from "~/lib/schema";
-import { cn } from "~/lib/utils";
 import type { CreateAnnouncementSchemaType } from "~/types";
 
 export default function CreateAnnouncement() {

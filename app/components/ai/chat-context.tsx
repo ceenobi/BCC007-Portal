@@ -189,6 +189,14 @@ export function AiChatProvider({
         setIsStreaming(false);
         setToolStatus(null);
       };
+      // `done`/`error` may race with the post-parse fallback below; guarantee
+      // finalize (and its commit) runs exactly once per send.
+      let finalized = false;
+      const finalizeOnce = (persist = false) => {
+        if (finalized) return;
+        finalized = true;
+        finalize(persist);
+      };
 
       try {
         const res = await fetch("/api/ai/chat", {
@@ -209,7 +217,7 @@ export function AiChatProvider({
             // Fall back to the generic message.
           }
           setError(message);
-          finalize(true);
+          finalizeOnce(true);
           return;
         }
         if (!res.body) throw new Error("No response stream available");
@@ -233,15 +241,16 @@ export function AiChatProvider({
               (data as { message?: string })?.message ??
               "The AI assistant hit an error. Please try again.";
             setError(message);
-            finalize(true);
+            finalizeOnce(true);
           },
         });
-        // Stream ended without a terminal event (e.g. connection closed).
-        if (isStreaming) finalize(true);
+        // Stream ended without a terminal event (e.g. connection closed);
+        // no-op if `done`/`error` already finalized.
+        finalizeOnce(true);
       } catch (err) {
         if ((err as Error)?.name === "AbortError") return;
         setError("Could not reach the AI assistant. Please try again.");
-        finalize(true);
+        finalizeOnce(true);
       }
     },
     [commit, isStreaming],

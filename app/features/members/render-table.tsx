@@ -5,7 +5,6 @@ import { getOptimizedImageUrl } from "~/lib/cloudinary";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import TableView from "~/components/ui/table-view";
 import type { SessionUser } from "~/types";
-import { RoleBadge } from "./role-badge";
 import ModifyRole from "./modify-role";
 
 function getInitials(name: string) {

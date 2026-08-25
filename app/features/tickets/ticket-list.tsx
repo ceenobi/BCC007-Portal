@@ -139,7 +139,6 @@ export default function TicketList({
     currentPage: tickets.meta?.currentPage || 1,
   });
 
-  const isSubmitting = fetcher.state === "submitting";
 
   useEffect(() => {
     if (!fetcher.data) return;

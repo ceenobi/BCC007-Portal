@@ -9,7 +9,6 @@ import ActionBtn from "~/components/ui/action-btn";
 import { Button } from "~/components/ui/button";
 import { FormBox } from "~/components/ui/form-box";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { createTransferSchema } from "~/lib/schema";
