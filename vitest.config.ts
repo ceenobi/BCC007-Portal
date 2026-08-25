@@ -8,6 +8,8 @@ export default defineConfig({
     },
   },
   test: {
+    // Default node env; component tests opt into a DOM via a
+    // `@vitest-environment happy-dom` pragma comment.
     environment: "node",
     include: ["app/**/*.{test,spec}.{ts,tsx}"],
     exclude: [
@@ -18,7 +20,7 @@ export default defineConfig({
     ],
     // Start a single in-memory MongoDB for the whole run and share its URI.
     globalSetup: ["./vitest.global-setup.ts"],
-    setupFiles: ["./vitest.setup.ts"],
+    setupFiles: ["./vitest.setup.ts", "./vitest.dom-setup.ts"],
     testTimeout: 20_000,
     hookTimeout: 30_000,
     coverage: {
