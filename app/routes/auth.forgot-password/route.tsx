@@ -41,7 +41,7 @@ export default function ForgotPassword() {
 		handleSubmit,
 		register,
 		reset,
-		formState: { errors },
+		formState: { errors, submitCount },
 	} = useForm<ForgotPasswordSchemaType>({
 		resolver: zodResolver(forgotPasswordSchema),
 	});
@@ -85,6 +85,7 @@ export default function ForgotPassword() {
 			>
 				<AlertBox
 					showAlert={!!(actionData && !actionData?.success)}
+					resetKey={submitCount}
 					title="Error"
 					description={
 						actionData?.message || "An error occurred. Please try again."
