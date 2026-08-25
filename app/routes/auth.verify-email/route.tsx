@@ -101,7 +101,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 						<div className="min-h-6">
 							{actionData && (
 								<AlertBox
-									showAlert={actionData !== undefined}
+									showAlert={true}
 									title={
 										actionData.success ? "Verification Sent" : "Request Failed"
 									}

@@ -50,8 +50,6 @@ export default function ContactRoute() {
     mode: "onChange",
   });
   const fetcher = useFetcher();
-  const coordinates = { lat: 6.519, lng: 3.3748 };
-  const mapsUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
   const isSubmitting = fetcher.state === "submitting";
   const actionData = fetcher.data as
     | { success?: boolean; message?: string; body?: { message: string } }
