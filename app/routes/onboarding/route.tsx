@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RiArrowLeftLine, RiCameraLine, RiCheckLine } from "@remixicon/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { FieldError } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { redirect, useFetcher, useNavigate } from "react-router";
@@ -280,28 +280,44 @@ export default function Onboarding({ loaderData }: Route.ComponentProps) {
 		});
 	};
 
-	const resolveAccount = async () => {
-		if (accountNumber.length !== 10 || !bankCode) return;
-		setIsResolving(true);
-		setResolvedName("");
-		try {
-			const res = await fetch("/api/banks/resolve", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ accountNumber, bankCode }),
-			});
-			const data = await res.json();
-			if (data.success) {
-				setResolvedName(data.body?.accountName ?? "");
-			} else {
-				toast.error(data.message || "Could not verify account");
+	const verifyAccount = useCallback(
+		async (signal?: AbortSignal) => {
+			if (accountNumber.length !== 10 || !bankCode) return;
+			setIsResolving(true);
+			try {
+				const res = await fetch("/api/banks/resolve", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ accountNumber, bankCode }),
+					signal,
+				});
+				const data = await res.json();
+				if (data.success) {
+					setResolvedName(data.body?.accountName ?? "");
+				} else {
+					toast.error(data.message || "Could not verify account");
+				}
+			} catch (error) {
+				if ((error as Error)?.name !== "AbortError") {
+					toast.error("Could not verify account");
+				}
+			} finally {
+				if (!signal?.aborted) setIsResolving(false);
 			}
-		} catch {
-			toast.error("Could not verify account");
-		} finally {
-			setIsResolving(false);
-		}
-	};
+		},
+		[accountNumber, bankCode],
+	);
+
+	// Auto-verify shortly after both the bank and a full 10-digit number are in.
+	useEffect(() => {
+		if (accountNumber.length !== 10 || !bankCode) return;
+		const controller = new AbortController();
+		const timer = setTimeout(() => void verifyAccount(controller.signal), 500);
+		return () => {
+			clearTimeout(timer);
+			controller.abort();
+		};
+	}, [accountNumber, bankCode, verifyAccount]);
 
 	const handleSubmitBank = (e: React.SubmitEvent) => {
 		e.preventDefault();
@@ -509,7 +525,10 @@ export default function Onboarding({ loaderData }: Route.ComponentProps) {
 											setAccountNumber(e.target.value.replace(/\D/g, ""));
 											setResolvedName("");
 										}}
-										onBlur={resolveAccount}
+										onBlur={() => {
+											if (!isResolving && !resolvedName)
+												void verifyAccount();
+										}}
 									/>
 									<p className="text-xs text-muted-foreground">
 										Enter your 10-digit account number and we&apos;ll confirm
