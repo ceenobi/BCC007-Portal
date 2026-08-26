@@ -76,7 +76,8 @@ export default function ForgotPassword() {
 					Forgot password
 				</h1>
 				<h2 className="text-sm text-foreground font-medium">
-					Let's help you get back into your account
+					Let's help you get back into your account. Enter your email below to
+					receive a reset link.
 				</h2>
 			</div>
 			<fetcher.Form

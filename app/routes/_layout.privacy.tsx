@@ -4,7 +4,7 @@ import { buildSeoMeta, webPageSchema } from "~/lib/seo";
 import { cn } from "~/lib/utils";
 import type { Route } from "./+types/_layout.privacy";
 
-export function meta({}: Route.MetaArgs) {
+export function meta(_args: Route.MetaArgs) {
   return [
     ...buildSeoMeta({
       title: "Privacy Policy - BCC007",
@@ -32,7 +32,7 @@ const sections: PrivacySection[] = [
   {
     title: "1. Introduction",
     body: [
-      "This Privacy Policy explains how BCC007 (\"we\", \"us\" or \"our\") collects, uses, discloses and protects the personal information of members of the BCC007 alumni community who use the BCC007Pay platform (the \"Service\").",
+      "This Privacy Policy explains how BCC007 (\"we\", \"us\" or \"our\") collects, uses, discloses and protects the personal information of members of the BCC007 alumni community who use the BCC007 Group platform (the \"Service\").",
       "By creating an account or using the Service, you agree to the practices described in this policy.",
     ],
   },
@@ -198,7 +198,7 @@ export default function Privacy() {
               className={header.getItemClassName("text-mainGray dark:text-muted-foreground leading-7 max-w-2xl")}
             >
               How we collect, use and protect your personal information on the
-              BCC007Pay platform. Last updated {LAST_UPDATED}.
+              BCC007 Group platform. Last updated {LAST_UPDATED}.
             </p>
           </header>
 
