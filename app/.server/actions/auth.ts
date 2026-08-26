@@ -657,25 +657,19 @@ export async function resetPasswordRequest(
 		const url = new URL(request.url);
 		const token = url.searchParams.get("token") || undefined;
 		if (!token) {
-			return Response.json(
-				{
-					success: false,
-					message: "Token is required",
-				},
-				{ status: 400 },
-			);
+			return Response.json({
+				success: false,
+				message: "Token is required",
+			});
 		}
 		const result = resetPasswordSchema.safeParse(payload);
 		if (!result.success) {
 			logger.error({ result }, "Invalid reset password data");
-			return Response.json(
-				{
-					success: false,
-					message: "Invalid form data",
-					errors: z.treeifyError(result.error),
-				},
-				{ status: 400 },
-			);
+			return Response.json({
+				success: false,
+				message: "Invalid form data",
+				errors: z.treeifyError(result.error),
+			});
 		}
 		const response = await auth.api.resetPassword({
 			body: {
@@ -686,7 +680,15 @@ export async function resetPasswordRequest(
 		});
 		if (!response.ok) {
 			logger.error({ status: response.status }, "Failed to reset password");
-			return response;
+			// Non-2xx responses are diverted into React Router's error channel
+			// and never reach fetcher.data — surface failures as a 200 envelope
+			// so the client can render actionData.success === false.
+			const body = await response.json().catch(() => null);
+			return Response.json({
+				success: false,
+				message:
+					body?.message || "Failed to reset password. Please try again.",
+			});
 		}
 
 		await AuditLogService.record(request, {

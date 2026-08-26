@@ -56,6 +56,9 @@ export default function ResetPassword() {
 		| { success?: boolean; message?: string }
 		| undefined;
 
+	const showFailure =
+		fetcher.state === "idle" && !!actionData && actionData.success === false;
+
 	useEffect(() => {
 		if (actionData?.success === true) {
 			toast.success(actionData.message);
@@ -90,7 +93,7 @@ export default function ResetPassword() {
 				className="mt-6 xl:mt-10 space-y-2"
 			>
 				<AlertBox
-					showAlert={!!(actionData && !actionData?.success)}
+					showAlert={showFailure}
 					resetKey={submitCount}
 					title="Error"
 					description={
@@ -119,6 +122,30 @@ export default function ResetPassword() {
 					classname="mt-1 w-full h-10 btn"
 				/>
 			</fetcher.Form>
+		</PageSection>
+	);
+}
+
+// Non-2xx action responses land here instead of fetcher.data — render the
+// server's message so failures are never silent.
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+	const message =
+		error instanceof Error && "data" in error
+			? ((error.data as { message?: string } | undefined)?.message ??
+				"Something went wrong. Please try again.")
+			: "Something went wrong. Please try again.";
+
+	return (
+		<PageSection index={0}>
+			<div className="space-y-3">
+				<h1 className="text-3xl font-medium sm:leading-none">Reset password</h1>
+			</div>
+			<AlertBox
+				showAlert
+				title="Error"
+				description={message}
+				variant="destructive"
+			/>
 		</PageSection>
 	);
 }
