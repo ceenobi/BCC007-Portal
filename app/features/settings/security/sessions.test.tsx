@@ -5,14 +5,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Sessions from "./sessions";
 
 const mockSubmit = vi.fn();
-let mockFetcher: {
-  state: string;
-  data: unknown;
-  submit: typeof mockSubmit;
-};
+type MockFetcher = { state: string; data: unknown; submit: typeof mockSubmit };
+// SessionRow calls useFetcher() once per row (two rows here). Return one
+// STABLE fetcher per row slot so state survives re-renders.
+const rowFetchers: MockFetcher[] = [
+  { state: "idle", data: undefined, submit: mockSubmit },
+  { state: "idle", data: undefined, submit: mockSubmit },
+];
+let fetcherCallCount = 0;
 
 vi.mock("react-router", () => ({
-  useFetcher: () => mockFetcher,
+  useFetcher: () => rowFetchers[fetcherCallCount++ % rowFetchers.length],
 }));
 
 vi.mock("sonner", () => ({
@@ -39,7 +42,11 @@ const sessions = [
 ];
 
 beforeEach(() => {
-  mockFetcher = { state: "idle", data: undefined, submit: mockSubmit };
+  fetcherCallCount = 0;
+  for (const f of rowFetchers) {
+    f.state = "idle";
+    f.data = undefined;
+  }
   vi.mocked(toast.success).mockClear();
   vi.mocked(toast.error).mockClear();
   mockSubmit.mockClear();
@@ -77,24 +84,27 @@ describe("Sessions", () => {
   });
 
   it("shows a success toast when revocation succeeds", async () => {
-    let view = render(<Sessions sessions={sessions} currentSessionId="s1" />);
-    // The hook is per-row; simulate the second row's fetcher resolving.
-    mockFetcher.data = { success: true, message: "Session revoked" };
+    const view = render(<Sessions sessions={sessions} currentSessionId="s1" />);
+    // One stable fetcher per row; the revoked session (s2) is the second row.
+    expect(rowFetchers[1].data).toBeUndefined();
+    rowFetchers[1].data = { success: true, message: "Session revoked" };
     view.rerender(<Sessions sessions={sessions} currentSessionId="s1" />);
 
-    await waitFor(() =>
-      expect(toast.success).toHaveBeenCalledWith("Session revoked"),
-    );
+    // Only the revoked row's fetcher resolved — exactly one toast.
+    await waitFor(() => expect(toast.success).toHaveBeenCalledTimes(1));
+    expect(toast.success).toHaveBeenCalledWith("Session revoked");
   });
 
   it("shows an inline AlertBox error when revocation fails", async () => {
-    let view = render(<Sessions sessions={sessions} currentSessionId="s1" />);
-    mockFetcher.data = { success: false, message: "Token expired" };
+    const view = render(<Sessions sessions={sessions} currentSessionId="s1" />);
+    expect(rowFetchers[1].data).toBeUndefined();
+    rowFetchers[1].data = { success: false, message: "Token expired" };
     view.rerender(<Sessions sessions={sessions} currentSessionId="s1" />);
 
-    // Both rows share the mocked fetcher, so the alert renders per row.
-    const alerts = await screen.findAllByText("Token expired");
-    expect(alerts.length).toBeGreaterThan(0);
+    // Only the revoked row renders the alert — not one per row.
+    await waitFor(() =>
+      expect(screen.getAllByText("Token expired")).toHaveLength(1),
+    );
     expect(toast.success).not.toHaveBeenCalled();
   });
 });
