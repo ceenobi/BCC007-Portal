@@ -47,23 +47,23 @@ const baseLayout = (
             width: 100%;
             table-layout: fixed;
             background-color: var(--bg);
-            padding: 40px 0;
+            padding: 28px 0;
           }
 
           .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 560px;
             background-color: var(--card);
             margin: 0 auto;
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07), 0 3px 8px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border);
           }
 
           .header {
             background: linear-gradient(135deg, var(--primary), #2563eb);
-            padding: 48px 32px;
+            padding: 36px 24px;
             text-align: left;
             position: relative;
           }
@@ -80,69 +80,69 @@ const baseLayout = (
 
           .logo-container {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
           }
 
           .logo-img {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             margin: 0 auto;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.1));
           }
 
           .logo-text {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
             color: #ffffff;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
             display: flex;
             align-items: center;
             justify-content: center;
           }
 
           .content {
-            padding: 48px 32px;
+            padding: 36px 24px;
             color: var(--text);
           }
 
           .title {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             color: var(--text);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
           }
 
           .welcome-text {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #4f46e5;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
           }
 
           .text {
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
             color: var(--muted);
           }
 
           .button-container {
-            margin: 32px 0;
+            margin: 24px 0;
             text-align: center;
           }
 
           .button {
             background-color: #4f46e5;
             color: #ffffff !important;
-            padding: 14px 28px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             display: inline-block;
             transition: background-color 0.2s;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
           }
 
           .button:hover {
@@ -150,33 +150,33 @@ const baseLayout = (
           }
 
           .expiry-text {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--muted);
-            margin-top: 16px;
+            margin-top: 12px;
             font-style: italic;
           }
 
           .divider {
             height: 1px;
             background-color: var(--border);
-            margin: 32px 0;
+            margin: 24px 0;
           }
 
           .footer {
-            padding: 32px 32px 24px;
+            padding: 24px 24px 20px;
             text-align: left;
             color: var(--muted);
-            font-size: 12px;
+            font-size: 11px;
           }
 
           .footer-links {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
           }
 
           .footer-link {
             color: #475569;
             text-decoration: none;
-            margin-right: 16px;
+            margin-right: 12px;
             font-weight: 500;
             transition: color 0.2s;
           }
@@ -185,21 +185,50 @@ const baseLayout = (
             color: #4f46e5;
           }
 
-          @media only screen and (max-width: 640px) {
+          @media only screen and (max-width: 480px) {
             .wrapper {
-              padding: 24px 0;
+              padding: 20px 0;
             }
             .container {
-              border-radius: 16px;
+              max-width: 440px;
+              border-radius: 12px;
             }
             .header {
-              padding: 32px 24px;
+              padding: 28px 20px;
             }
             .content {
-              padding: 32px 24px;
+              padding: 28px 20px;
             }
             .title {
-              font-size: 24px;
+              font-size: 20px;
+            }
+            .welcome-text {
+              font-size: 12px;
+            }
+            .text {
+              font-size: 13px;
+              line-height: 1.5;
+            }
+            .button {
+              padding: 10px 20px;
+              font-size: 13px;
+            }
+            .expiry-text {
+              font-size: 10px;
+            }
+            .divider {
+              margin: 20px 0;
+            }
+            .footer {
+              padding: 20px 20px 16px;
+              font-size: 10px;
+            }
+            .footer-links {
+              margin-bottom: 12px;
+            }
+            .footer-link {
+              margin-right: 8px;
+              font-size: 10px;
             }
           }
         </style>
@@ -209,7 +238,7 @@ const baseLayout = (
           <div class="container">
             <div class="header">
               <div class="logo-container">
-                <img src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png" alt="BCC007 Portal" class="logo-img" style="width: 48px; height: 48px;">
+                <img src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png" alt="BCC007 Portal" class="logo-img" style="width: 40px; height: 40px;">
                 <span class="logo-text">BCC007 Portal</span>
               </div>
             </div>
@@ -224,8 +253,8 @@ const baseLayout = (
                 <div class="button-container">
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                     <tr>
-                      <td align="center" bgcolor="#4f46e5" style="border-radius: 12px; background-color: #4f46e5;">
-                        <a href="${absoluteUrl(actionLink)}" target="_blank" class="button" style="display: inline-block; padding: 14px 28px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 15px; font-weight: 600; color: #ffffff !important; text-decoration: none; border-radius: 12px; background-color: #4f46e5;">${actionText || "Confirm Action"}</a>
+                      <td align="center" bgcolor="#4f46e5" style="border-radius: 10px; background-color: #4f46e5;">
+                        <a href="${absoluteUrl(actionLink)}" target="_blank" class="button" style="display: inline-block; padding: 12px 24px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 14px; font-weight: 600; color: #ffffff !important; text-decoration: none; border-radius: 10px; background-color: #4f46e5;">${actionText || "Confirm Action"}</a>
                       </td>
                     </tr>
                   </table>
@@ -238,17 +267,17 @@ const baseLayout = (
 
               <div class="divider"></div>
 
-              <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
+              <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
                 If you didn't request this email, you can safely ignore it. Your account security is our priority.
               </p>
             </div>
             <div class="footer">
               <div class="footer-links">
-                <a href="${absoluteUrl("/support/guide")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Support</a>
-                <a href="${absoluteUrl("/privacy")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Privacy Policy</a>
-                <a href="${absoluteUrl("/terms")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 16px; font-weight: 500;">Terms of Service</a>
+                <a href="${absoluteUrl("/support/guide")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Support</a>
+                <a href="${absoluteUrl("/privacy")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Privacy Policy</a>
+                <a href="${absoluteUrl("/terms")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Terms of Service</a>
               </div>
-              <p style="margin-bottom: 8px;">© ${new Date().getFullYear()} BCC007 Portal. All rights reserved.</p>
+              <p style="margin-bottom: 6px;">© ${new Date().getFullYear()} BCC007 Portal. All rights reserved.</p>
               <p>Crafting unique experiences for BCC007 students.</p>
             </div>
           </div>
@@ -342,25 +371,25 @@ export const paymentConfirmationTemplate = (
 	});
 
 	const receiptContent = `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Payment Type</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${paymentTypeLabel}</span>
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Payment Type</span>
+        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${paymentTypeLabel}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Amount</span>
-        <span style="font-size: 18px; font-weight: 700; color: #0f172a;">${formattedAmount}</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Amount</span>
+        <span style="font-size: 16px; font-weight: 700; color: #0f172a;">${formattedAmount}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Reference</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Reference</span>
+        <span style="font-size: 13px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Date</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Date</span>
+        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
       </div>
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; text-align: center;">
-        <span style="display: inline-block; background-color: #dcfce7; color: #166534; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 6px;">✓ Payment Confirmed</span>
+      <div style="text-align: center; margin-top: 14px;">
+        <span style="display: inline-block; background-color: #dcfce7; color: #166534; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 5px;">✓ Payment Confirmed</span>
       </div>
     </div>
     Your payment has been received and confirmed successfully. Thank you for your support — every contribution helps the BCC007 community.
@@ -411,21 +440,21 @@ export const transferNotificationTemplate = (
 	const badgeText = isSuccess ? "✓ Transfer Completed" : "Transfer Update";
 
 	const content = `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Amount</span>
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Amount</span>
         <span style="font-size: 18px; font-weight: 700; color: #0f172a;">${formattedAmount}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Reference</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Reference</span>
+        <span style="font-size: 13px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Date</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
+        <span style="font-size: 13px; color: #64748b;">Date</span>
+        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
       </div>
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; text-align: center;">
-        <span style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 6px;">${badgeText}</span>
+      <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; text-align: center;">
+        <span style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 5px;">${badgeText}</span>
       </div>
     </div>
     ${
