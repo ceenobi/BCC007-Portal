@@ -96,7 +96,12 @@ describe("AssignTicketModal", () => {
         id: "t1",
         assignedTo: "admin-2",
       }),
-      expect.objectContaining({ action: "/dashboard/help-center" }),
+      // The route parses request.json() — assert the full request contract.
+      {
+        method: "post",
+        action: "/dashboard/help-center",
+        encType: "application/json",
+      },
     );
   });
 
@@ -115,7 +120,11 @@ describe("AssignTicketModal", () => {
         id: "t1",
         assignedTo: null,
       }),
-      expect.anything(),
+      {
+        method: "post",
+        action: "/dashboard/help-center",
+        encType: "application/json",
+      },
     );
   });
 
@@ -132,6 +141,12 @@ describe("AssignTicketModal", () => {
 
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith("Assigned!"));
     expect(mockReset).toHaveBeenCalled();
+    // Success path must actually close the modal, per the test title.
+    await waitFor(() =>
+      expect(
+        screen.queryByText(/assign "cannot log in" to an admin/i),
+      ).not.toBeInTheDocument(),
+    );
   });
 
   it("toasts an error without closing on failure", async () => {
