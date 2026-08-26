@@ -1,6 +1,5 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockSubmit = vi.fn();
@@ -81,7 +80,6 @@ describe("BankInfo auto-verification", () => {
     );
 
   it("auto-verifies once a full 10-digit account number is entered", async () => {
-    const user = userEvent.setup();
     setupWithBankPrefilled();
 
     const input = screen.getByPlaceholderText("Account number");
@@ -105,7 +103,6 @@ describe("BankInfo auto-verification", () => {
   });
 
   it("does not verify until the account number reaches 10 digits", async () => {
-    const user = userEvent.setup();
     setupWithBankPrefilled();
 
     const input = screen.getByPlaceholderText("Account number");
