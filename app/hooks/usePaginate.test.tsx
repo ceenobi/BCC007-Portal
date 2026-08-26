@@ -1,6 +1,5 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import usePaginate from "./usePaginate";
 
@@ -86,7 +85,6 @@ describe("usePaginate", () => {
   });
 
   it("resets to page 1 when the limit changes", async () => {
-    const user = userEvent.setup();
     mockParams = new URLSearchParams("page=4&limit=10");
     render(<Probe />);
 
