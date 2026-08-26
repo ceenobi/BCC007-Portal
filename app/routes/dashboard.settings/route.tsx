@@ -131,49 +131,47 @@ export default function Settings({ loaderData }: Route.ComponentProps) {
 				</div>
 			</PageSection>
 			{currentPath ? (
-				<>
-					<PageSection index={1} className="mt-4 space-y-8 px-4 xl:px-8">
-						<AlertBox
-							showAlert={fetcher.data && !fetcher.data?.success}
-							title="Error"
-							description={
-								fetcher.data?.message || "An error occurred. Please try again."
-							}
-							variant="destructive"
-						/>
-						<UploadAvatar />
-						<UpdateProfile
-							setActiveForm={setActiveForm}
-							user={user}
-							activeForm={activeForm}
-						/>
-						<UpdatePassword
-							setActiveForm={setActiveForm}
-							user={user}
-							activeForm={activeForm}
-						/>
-						<BankInfo
-							setActiveForm={setActiveForm}
-							user={user}
-							activeForm={activeForm}
-							bankDetails={bankDetails}
-							banks={banks}
-						/>
-						<Privacy
-							setActiveForm={setActiveForm}
-							user={user}
-							activeForm={activeForm}
-						/>
-						<ActionBtn
-							text="Save changes"
-							type="submit"
-							form={activeForm}
-							disabled={fetcher.state !== "idle" || !activeForm}
-							loading={fetcher.state !== "idle"}
-							classname="md:hidden btn w-full"
-						/>
-					</PageSection>
-				</>
+				<PageSection index={1} className="mt-4 space-y-8 px-4 xl:px-8">
+					<AlertBox
+						showAlert={fetcher.data && !fetcher.data?.success}
+						title="Error"
+						description={
+							fetcher.data?.message || "An error occurred. Please try again."
+						}
+						variant="destructive"
+					/>
+					<UploadAvatar />
+					<UpdateProfile
+						setActiveForm={setActiveForm}
+						user={user}
+						activeForm={activeForm}
+					/>
+					<UpdatePassword
+						setActiveForm={setActiveForm}
+						user={user}
+						activeForm={activeForm}
+					/>
+					<BankInfo
+						setActiveForm={setActiveForm}
+						user={user}
+						activeForm={activeForm}
+						bankDetails={bankDetails}
+						banks={banks}
+					/>
+					<Privacy
+						setActiveForm={setActiveForm}
+						user={user}
+						activeForm={activeForm}
+					/>
+					<ActionBtn
+						text="Save changes"
+						type="submit"
+						form={activeForm}
+						disabled={fetcher.state !== "idle" || !activeForm}
+						loading={fetcher.state !== "idle"}
+						classname="md:hidden btn w-full"
+					/>
+				</PageSection>
 			) : (
 				<Outlet context={{ user }} />
 			)}
