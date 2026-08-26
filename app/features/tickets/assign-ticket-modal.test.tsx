@@ -57,8 +57,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("AssignTicketModal", () => {
-  it("shows the assign trigger for unassigned tickets and change-assignee for assigned ones", async () => {
-    const user = userEvent.setup();
+  it("shows the assign trigger for unassigned tickets and change-assignee for assigned ones", () => {
     const view = render(
       <AssignTicketModal ticket={unassignedTicket} admins={admins} />,
     );
