@@ -74,9 +74,7 @@ describe("AssignTicketModal", () => {
 
   it("opens with the current assignee preselected and submits assign intent on confirm", async () => {
     const user = userEvent.setup();
-    const view = render(
-      <AssignTicketModal ticket={assignedTicket} admins={admins} />,
-    );
+    render(<AssignTicketModal ticket={assignedTicket} admins={admins} />);
     await user.click(
       screen.getByRole("button", { name: /change assignee/i }),
     );
@@ -107,9 +105,7 @@ describe("AssignTicketModal", () => {
 
   it("submits a null assignee when unassigning", async () => {
     const user = userEvent.setup();
-    const view = render(
-      <AssignTicketModal ticket={assignedTicket} admins={admins} />,
-    );
+    render(<AssignTicketModal ticket={assignedTicket} admins={admins} />);
     await user.click(screen.getByRole("button", { name: /change assignee/i }));
     await screen.findByText(/assign "cannot log in" to an admin/i);
 
