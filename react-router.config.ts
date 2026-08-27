@@ -6,10 +6,11 @@ export default {
   // Config options...
   // Server-side render by default, to enable SPA mode set this to `false`
   ssr: true,
-  // Static, public pages with no session-dependent data are prerendered to
-  // static HTML at build time. Everything else (auth, dashboard, health, API
-  // routes) is dynamically server-rendered per request.
-  prerender: ["/", "/contact", "/privacy", "/terms", "/robots.txt", "/sitemap.xml"],
+  // Only truly static, non-session assets are prerendered. The public
+  // shell (`_layout` → `/`, `/contact`, `/privacy`, `/terms`) renders
+  // `HomeNav` with per-request session data via `sessionMiddleware`, so it
+  // must be SSR — otherwise Vercel serves a static `user: null` shell in prod.
+  prerender: ["/robots.txt", "/sitemap.xml"],
   presets: [vercelPreset()],
   // Uploads source maps and creates a Sentry release after the build.
   buildEnd: sentryOnBuildEnd,
