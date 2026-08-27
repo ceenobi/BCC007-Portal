@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import z from "zod";
 import { hasPermission } from "~/lib/rbac";
 import {
@@ -377,15 +378,9 @@ export async function signInWithEmail(
 		}
 
 		const newHeaders = new Headers(response.headers);
-		return Response.json(
-			{
-				success: true,
-				message: "Login successful",
-			},
-			{
-				headers: newHeaders,
-			},
-		);
+		// Option A: server redirect commits Set-Cookie atomically and avoids
+		// the fetcher + client navigate race that drops the session on "/".
+		return redirect("/dashboard", { headers: newHeaders });
 	});
 }
 
