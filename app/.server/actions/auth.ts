@@ -176,9 +176,11 @@ export async function signUpWithEmail(
 		for (const [k, v] of response.headers.entries()) {
 			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
 		}
+		const rawCookie = response.headers.get("set-cookie");
 		const cookies: string[] =
-			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
-			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+			(
+				response.headers as unknown as { getSetCookie?: () => string[] }
+			).getSetCookie?.() ?? (rawCookie ? [rawCookie] : []);
 		for (const c of cookies) headers.append("Set-Cookie", c);
 		await AuditLogService.record(request, {
 			action: "USER_SIGNUP",
@@ -225,8 +227,7 @@ export async function resendVerifyEmail(request: Request, email: string) {
 			return Response.json(
 				{
 					success: true,
-					message:
-						"Super admin accounts don't require email verification.",
+					message: "Super admin accounts don't require email verification.",
 				},
 				{ status: 200 },
 			);
@@ -392,9 +393,11 @@ export async function signInWithEmail(
 		for (const [k, v] of response.headers.entries()) {
 			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
 		}
+		const rawCookie = response.headers.get("set-cookie");
 		const cookies: string[] =
-			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
-			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+			(
+				response.headers as unknown as { getSetCookie?: () => string[] }
+			).getSetCookie?.() ?? (rawCookie ? [rawCookie] : []);
 		for (const c of cookies) headers.append("Set-Cookie", c);
 		return redirect("/dashboard", { headers });
 	});
@@ -444,9 +447,11 @@ export async function logoutUser(request: Request) {
 		for (const [k, v] of response.headers.entries()) {
 			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
 		}
+		const rawCookie = response.headers.get("set-cookie");
 		const cookies: string[] =
-			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
-			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+			(
+				response.headers as unknown as { getSetCookie?: () => string[] }
+			).getSetCookie?.() ?? (rawCookie ? [rawCookie] : []);
 		for (const c of cookies) headers.append("Set-Cookie", c);
 
 		await AuditLogService.record(request, {
@@ -704,8 +709,7 @@ export async function resetPasswordRequest(
 			const body = await response.json().catch(() => null);
 			return Response.json({
 				success: false,
-				message:
-					body?.message || "Failed to reset password. Please try again.",
+				message: body?.message || "Failed to reset password. Please try again.",
 			});
 		}
 
