@@ -3,6 +3,7 @@ import { createContext, redirect } from "react-router";
 import type { Permission } from "~/lib/constants";
 import { hasPermission } from "~/lib/rbac";
 import type { SessionUser } from "~/types";
+import { getSession } from "~/.server/actions/auth";
 
 export const userContext = createContext<SessionUser | null>(null);
 export const cookieContext = createContext<string>("");
@@ -26,7 +27,6 @@ export const guestOnlyMiddleware: MiddlewareFunction = async (
   if (normalizedPath === "/auth/verify-email") {
     return await next();
   }
-  const { getSession } = await import("~/.server/actions/auth");
   const session = await getSession(request);
   if (session) {
     return redirect("/");
@@ -39,7 +39,6 @@ export const authenticatedMiddleware: MiddlewareFunction = async (
   { request, context },
   next,
 ) => {
-  const { getSession } = await import("~/.server/actions/auth");
   const session = await getSession(request);
 
   if (!session) {
@@ -71,13 +70,14 @@ export const sessionMiddleware: MiddlewareFunction = async (
   { request, context },
   next,
 ) => {
-  const { getSession } = await import("~/.server/actions/auth");
   const session = await getSession(request);
   if (session) {
     // better-auth returns id, but SessionUser uses _id (MongoDB convention)
     context.set(userContext, toSessionUser(session.user));
-    context.set(cookieContext, request.headers.get("Cookie") || "");
+  } else {
+    context.set(userContext, null);
   }
+  context.set(cookieContext, request.headers.get("Cookie") || "");
   return await next();
 };
 

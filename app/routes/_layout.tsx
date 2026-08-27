@@ -7,6 +7,11 @@ import type { Route } from "./+types/_layout";
 
 export const middleware = [sessionMiddleware];
 
+export const headers: Route.HeadersFunction = () => ({
+  "Cache-Control": "private, no-store",
+  Vary: "Cookie",
+});
+
 export async function loader({ context }: Route.LoaderArgs) {
 	const user = context.get(userContext);
 	return { user };

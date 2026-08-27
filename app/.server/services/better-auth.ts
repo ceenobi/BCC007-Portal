@@ -39,7 +39,9 @@ const createAuth = (db: any, client: any) =>
         },
       },
     },
-    trustedOrigins: [getOrigin(env.clientUrl)].filter(Boolean) as string[],
+    trustedOrigins: [getOrigin(env.clientUrl), getOrigin(env.betterAuthUrl)].filter(
+      Boolean,
+    ) as string[],
     baseURL: env.betterAuthUrl,
     session: {
       maxAge: 60 * 60 * 24 * 7,
@@ -176,6 +178,7 @@ const createAuth = (db: any, client: any) =>
         sameSite: "lax",
         secure: env.nodeEnv === "production",
         httpOnly: true,
+        path: "/",
       },
     },
   });

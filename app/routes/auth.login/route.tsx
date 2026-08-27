@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link, useFetcher, useNavigate } from "react-router";
-import { toast } from "sonner";
+import { Link, useFetcher } from "react-router";
 import { signInWithEmail } from "~/.server/actions/auth";
 import { PageSection } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
@@ -45,20 +44,10 @@ export default function Login() {
 		mode: "onChange",
 	});
 	const fetcher = useFetcher();
-	const navigate = useNavigate();
 	const isSubmitting = fetcher.state === "submitting";
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string; email?: string }
 		| undefined;
-
-	useEffect(() => {
-		if (actionData?.success === true) {
-			toast.success(actionData.message);
-			navigate("/dashboard", {
-				replace: true,
-			});
-		}
-	}, [actionData, navigate]);
 
 	const onFormSubmit: SubmitHandler<SignInSchemaType> = (data) => {
 		fetcher.submit(data, {

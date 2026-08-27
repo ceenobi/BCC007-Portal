@@ -149,7 +149,7 @@ describe("sessionMiddleware", () => {
     const context = makeContext();
     const res = await call(sessionMiddleware, { request: req("/"), context });
     expect(res.status).toBe(200);
-    expect(context.get(userContext)).toBeUndefined();
+    expect(context.get(userContext)).toBeNull();
   });
 });
 
