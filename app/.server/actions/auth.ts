@@ -172,7 +172,14 @@ export async function signUpWithEmail(
 
 		await InviteCode.findOneAndDelete({ inviteCode: payload.inviteCode });
 
-		const newHeaders = new Headers(response.headers);
+		const headers = new Headers();
+		for (const [k, v] of response.headers.entries()) {
+			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
+		}
+		const cookies: string[] =
+			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
+			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+		for (const c of cookies) headers.append("Set-Cookie", c);
 		await AuditLogService.record(request, {
 			action: "USER_SIGNUP",
 			category: "auth",
@@ -187,7 +194,7 @@ export async function signUpWithEmail(
 				email: payload.email,
 			},
 			{
-				headers: newHeaders,
+				headers,
 			},
 		);
 	});
@@ -377,10 +384,19 @@ export async function signInWithEmail(
 			});
 		}
 
-		const newHeaders = new Headers(response.headers);
-		// Option A: server redirect commits Set-Cookie atomically and avoids
-		// the fetcher + client navigate race that drops the session on "/".
-		return redirect("/dashboard", { headers: newHeaders });
+		// Forward Set-Cookie atomically with the 302. `Headers.getSetCookie()`
+		// is required — `new Headers(response.headers)` can collapse duplicate
+		// `Set-Cookie` entries (session_token + session_data) into one mangled
+		// header, which silently drops the session in prod (secure cookies).
+		const headers = new Headers();
+		for (const [k, v] of response.headers.entries()) {
+			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
+		}
+		const cookies: string[] =
+			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
+			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+		for (const c of cookies) headers.append("Set-Cookie", c);
+		return redirect("/dashboard", { headers });
 	});
 }
 
@@ -424,7 +440,14 @@ export async function logoutUser(request: Request) {
 			logger.error({ status: response.status }, "Failed to logout");
 			return response;
 		}
-		const newHeaders = new Headers(response.headers);
+		const headers = new Headers();
+		for (const [k, v] of response.headers.entries()) {
+			if (k.toLowerCase() !== "set-cookie") headers.set(k, v);
+		}
+		const cookies: string[] =
+			(response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ??
+			(response.headers.get("set-cookie") ? [response.headers.get("set-cookie")!] : []);
+		for (const c of cookies) headers.append("Set-Cookie", c);
 
 		await AuditLogService.record(request, {
 			action: "USER_LOGOUT",
@@ -438,7 +461,7 @@ export async function logoutUser(request: Request) {
 				message: "Logged out successfully.",
 			},
 			{
-				headers: newHeaders,
+				headers,
 			},
 		);
 	});
