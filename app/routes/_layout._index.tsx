@@ -264,7 +264,6 @@ export default function HomeRoute() {
 										"w-full h-80",
 										features.isVisible && "animate-float",
 									)}
-									loading="lazy"
 									decoding="async"
 								/>
 							</div>
@@ -296,7 +295,6 @@ export default function HomeRoute() {
 											"w-full h-50",
 											features.isVisible && "animate-float",
 										)}
-										loading="lazy"
 										decoding="async"
 									/>
 								</div>
@@ -323,7 +321,6 @@ export default function HomeRoute() {
 											"w-full h-50",
 											features.isVisible && "animate-float",
 										)}
-										loading="lazy"
 										decoding="async"
 									/>
 								</div>
@@ -364,7 +361,6 @@ export default function HomeRoute() {
 								alt="dashboard"
 								containerClassName="border border-b-none rounded-t-2xl p-1 w-full h-full shadow-lg"
 								className="rounded-t-2xl"
-								loading="lazy"
 								decoding="async"
 								quality="original"
 							/>
@@ -390,7 +386,7 @@ export default function HomeRoute() {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 						{services.map((service, index) => (
 							<div
-								key={index}
+								key={service.title}
 								style={servicesAnim.getItemStyle(index + 1)}
 								className={servicesAnim.getItemClassName(
 									"bg-white dark:bg-lightGray p-6 rounded-xl border shadow hover:shadow-lg hover:-translate-y-1",
