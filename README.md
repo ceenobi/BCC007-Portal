@@ -173,6 +173,11 @@ The repository uses a two-branch workflow enforced by branch protection:
 - **CodeQL** scans for security vulnerabilities on every push/PR; **Dependabot** keeps npm and GitHub Actions dependencies updated.
 - `main` is protected: direct pushes, force-pushes, and deletions are blocked.
 
+
+### CodeReviews
+
+- ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/ceenobi/BCC007-Portal?utm_source=oss&utm_medium=github&utm_campaign=ceenobi%2FBCC007-Portal&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 ### Vercel
 
 Deploy with `--prebuilt` after running `yarn build` in CI (see the CI skill docs in this repo). The containerized/DIY app server is also production-ready:
