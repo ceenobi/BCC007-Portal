@@ -12,7 +12,7 @@ export default function Logo({
   return (
     <Link to="/" className="flex gap-1 items-center w-fit" data-tour="logo">
       <img
-        src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png"
+        src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal,f_auto,q_auto/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png"
         alt="BCC007_Logo"
         className={`${size ? `w-${size} h-${size}` : ""}`}
       />
