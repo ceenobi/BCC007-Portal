@@ -15,7 +15,6 @@ import {
 import { saveBankAccount } from "~/.server/actions/bank-data";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
-import { AlertBox } from "~/components/ui/alert-box";
 import BankInfo from "~/features/settings/account/bank-info";
 import Privacy from "~/features/settings/account/privacy";
 import UpdatePassword from "~/features/settings/account/update-password";
@@ -132,14 +131,14 @@ export default function Settings({ loaderData }: Route.ComponentProps) {
 			</PageSection>
 			{currentPath ? (
 				<PageSection index={1} className="mt-4 space-y-8 px-4 xl:px-8">
-					<AlertBox
+					{/*<AlertBox
 						showAlert={fetcher.data && !fetcher.data?.success}
 						title="Error"
 						description={
 							fetcher.data?.message || "An error occurred. Please try again."
 						}
 						variant="destructive"
-					/>
+					/>*/}
 					<UploadAvatar />
 					<UpdateProfile
 						setActiveForm={setActiveForm}
