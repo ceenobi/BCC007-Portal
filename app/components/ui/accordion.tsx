@@ -60,7 +60,7 @@ function AccordionContent({
 	return (
 		<Accordion.Panel
 			className={cn(
-				"grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[panel-open]:grid-rows-[1fr]",
+				"grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-open:grid-rows-[1fr]",
 				className,
 			)}
 			{...props}
