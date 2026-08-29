@@ -111,32 +111,32 @@ const faqs: { q: string; a: string; href?: string }[] = [
 
 const impactStats = [
 	{ value: "2007", label: "Set · Brilliant Child College" },
-	{ value: "₦10M+", label: "Raised for the set" },
-	{ value: "120+", label: "Events hosted" },
-	{ value: "300+", label: "Active members" },
+	{ value: "₦1M+", label: "Raised for the set" },
+	{ value: "10+", label: "Events hosted" },
+	{ value: "40+", label: "Active members" },
 ];
 
 const testimonials = [
 	{
 		quote:
 			"BCC007 made it effortless to stay in touch with my classmates and contribute to our projects. The payments just work.",
-		name: "Adaeze O.",
+		name: "Edwin A.",
 		role: "Class of 2007",
-		initials: "AO",
+		initials: "EA",
 	},
 	{
 		quote:
 			"I never miss an event now. The notifications and RSVPs keep our set connected across cities.",
-		name: "Tunde B.",
+		name: "Eva A.",
 		role: "Class of 2007",
-		initials: "TB",
+		initials: "EA",
 	},
 	{
 		quote:
 			"Sending money to a fellow alum takes seconds. No more chasing account numbers in group chats.",
-		name: "Ngozi E.",
+		name: "Kelechi C.",
 		role: "Class of 2007",
-		initials: "NE",
+		initials: "KC",
 	},
 ];
 
@@ -171,10 +171,10 @@ export default function HomeRoute() {
 
 	return (
 		<>
-			<main className="relative pb-20 pt-10 md:pt-20 mx-auto max-w-6xl px-4">
+			<main className="relative overflow-x-clip pb-20 pt-10 md:pt-20 mx-auto max-w-6xl px-4">
 				<div
 					aria-hidden
-					className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-lightBlue/15 blur-3xl"
+					className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-lg -translate-x-1/2 rounded-full bg-lightBlue/15 blur-3xl sm:w-2xl"
 				/>
 				<div ref={hero.containerRef}>
 					<div className="mt-16 grid grid-cols-1 items-center gap-12 lg:mt-28 lg:grid-cols-2">
@@ -213,18 +213,18 @@ export default function HomeRoute() {
 								celebrate the achievements of our community.
 							</p>
 							<div
-								style={heroCtas.getItemStyle(0)}
-								className={heroCtas.getItemClassName(
-									"flex flex-wrap items-center gap-4",
+								style={hero.getItemStyle(3)}
+								className={hero.getItemClassName(
+									"flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-center",
 								)}
 							>
 								<Link
 									to={user ? "/dashboard" : "/auth/login"}
-									className="group"
+									className="group w-full sm:w-auto"
 								>
 									<Button
 										size="lg"
-										className="h-12 gap-1.5 px-6 tracking-tight btn"
+										className="h-12 w-full gap-1.5 px-6 tracking-tight btn"
 									>
 										Go to dashboard
 										<RiArrowRightLine
@@ -233,11 +233,11 @@ export default function HomeRoute() {
 										/>
 									</Button>
 								</Link>
-								<Link to="/contact" className="group">
+								<Link to="/contact" className="group w-full sm:w-auto">
 									<Button
 										variant="outline"
 										size="lg"
-										className="h-12 gap-1.5 px-6 text-[14px] font-semibold transition-colors"
+										className="h-12 w-full gap-1.5 px-6 text-[14px] font-semibold transition-colors"
 									>
 										Talk to us
 									</Button>
@@ -253,18 +253,18 @@ export default function HomeRoute() {
 								className="absolute -inset-8 -z-10 rounded-full bg-lightBlue/20 blur-3xl"
 							/>
 							<ImageBox
-								src={cn(
+								src={
 									theme === "dark"
 										? "https://res.cloudinary.com/ceenobi/image/upload/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
-										: "https://res.cloudinary.com/ceenobi/image/upload/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.jpg",
-								)}
+										: "https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
+								}
 								width={761}
 								height={420}
 								alt="BCC007 dashboard"
 								containerClassName="rounded-2xl border border-border bg-card p-2 shadow-2xl shadow-lightBlue/10"
 								className="rounded-xl"
 								decoding="async"
-								quality="original"
+								// quality="original"
 							/>
 							<div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
 								<RiStarFill className="size-4 text-lightBlue" />
@@ -280,7 +280,7 @@ export default function HomeRoute() {
 				</div>
 				<div
 					ref={features.containerRef}
-					className="mt-24 grid grid-cols-12 gap-6"
+					className="mt-16 grid grid-cols-12 gap-6 lg:mt-24"
 				>
 					<div
 						style={features.getItemStyle(0)}
@@ -428,11 +428,11 @@ export default function HomeRoute() {
 							)}
 						>
 							<ImageBox
-								src={cn(
+								src={
 									theme === "dark"
 										? "https://res.cloudinary.com/ceenobi/image/upload/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
-										: "https://res.cloudinary.com/ceenobi/image/upload/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.jpg",
-								)}
+										: "https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
+								}
 								width={761}
 								height={420}
 								alt="dashboard"
@@ -447,7 +447,7 @@ export default function HomeRoute() {
 				<hr className="border-border/60" />
 			</div>
 			<div ref={servicesAnim.containerRef} className="relative py-20">
-				<div className="absolute inset-0 -z-0 h-full w-full opacity-50 bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem] animate-grid-drift" />
+				<div className="absolute inset-0 z-0 h-full w-full opacity-50 bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem] animate-grid-drift" />
 				<div className="relative z-10 mx-auto max-w-6xl space-y-8 px-4">
 					<h1
 						style={servicesAnim.getItemStyle(0)}
@@ -478,7 +478,6 @@ export default function HomeRoute() {
 										<h2 className="text-lg font-semibold text-mainBlack dark:text-white">
 											{service.title}
 										</h2>
-										<RiArrowRightLine className="size-5 shrink-0 text-mainGray transition-transform group-hover/service:translate-x-1 dark:text-muted-foreground" />
 									</div>
 									<p className="text-sm text-mainGray dark:text-muted-foreground">
 										{service.description}
@@ -606,7 +605,7 @@ export default function HomeRoute() {
 								key={t.name}
 								style={testimonialsAnim.getItemStyle(i)}
 								className={testimonialsAnim.getItemClassName(
-									"p-6 transition hover:-translate-y-1 hover:shadow-lg",
+									"p-6 transition hover:-translate-y-1 hover:shadow-lg dark:bg-bgDark",
 								)}
 							>
 								<RiDoubleQuotesL className="size-7 text-lightBlue/60" />
