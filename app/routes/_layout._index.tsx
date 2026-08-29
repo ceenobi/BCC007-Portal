@@ -1,15 +1,29 @@
 import {
 	RiAccountBoxLine,
-	RiArrowDownSLine,
 	RiArrowRightLine,
+	RiCalendarLine,
 	RiCashLine,
 	RiCheckLine,
+	RiDoubleQuotesL,
+	RiGroupLine,
 	RiInstagramLine,
 	RiShieldLine,
+	RiSparklingLine,
+	RiStarFill,
+	RiThumbUpLine,
 } from "@remixicon/react";
 import { Link, useOutletContext } from "react-router";
 import { useTheme } from "~/components/provider/theme";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "~/components/ui/accordion";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 import { ImageBox } from "~/components/ui/image-box";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
 import { buildSeoMeta, organizationSchema, websiteSchema } from "~/lib/seo";
@@ -61,6 +75,8 @@ const services = [
 	},
 ];
 
+const serviceIcons = [RiCashLine, RiCalendarLine, RiThumbUpLine, RiGroupLine];
+
 const faqs: { q: string; a: string; href?: string }[] = [
 	{
 		q: "What is BCC007?",
@@ -93,6 +109,40 @@ const faqs: { q: string; a: string; href?: string }[] = [
 	},
 ];
 
+const impactStats = [
+	{ value: "2007", label: "Set · Brilliant Child College" },
+	{ value: "₦10M+", label: "Raised for the set" },
+	{ value: "120+", label: "Events hosted" },
+	{ value: "300+", label: "Active members" },
+];
+
+const testimonials = [
+	{
+		quote:
+			"BCC007 made it effortless to stay in touch with my classmates and contribute to our projects. The payments just work.",
+		name: "Adaeze O.",
+		role: "Class of 2007",
+		initials: "AO",
+	},
+	{
+		quote:
+			"I never miss an event now. The notifications and RSVPs keep our set connected across cities.",
+		name: "Tunde B.",
+		role: "Class of 2007",
+		initials: "TB",
+	},
+	{
+		quote:
+			"Sending money to a fellow alum takes seconds. No more chasing account numbers in group chats.",
+		name: "Ngozi E.",
+		role: "Class of 2007",
+		initials: "NE",
+	},
+];
+
+const eyebrow =
+	"text-xs font-semibold uppercase tracking-[0.2em] text-lightBlue";
+
 export default function HomeRoute() {
 	const { user } = useOutletContext() as { user: SessionUser };
 	const { theme } = useTheme();
@@ -111,45 +161,62 @@ export default function HomeRoute() {
 	});
 	const servicesAnim = useWaveAnimation({ threshold: 0.1, staggerDelay: 120 });
 	const about = useWaveAnimation({ threshold: 0.15, staggerDelay: 100 });
+	const statsAnim = useWaveAnimation({ threshold: 0.2, staggerDelay: 100 });
+	const testimonialsAnim = useWaveAnimation({
+		threshold: 0.1,
+		staggerDelay: 120,
+	});
 	const faq = useWaveAnimation({ threshold: 0.15, staggerDelay: 80 });
 	const cta = useWaveAnimation({ threshold: 0.25, staggerDelay: 100 });
 
 	return (
 		<>
-			<main className="py-10 pb-20 md:py-20 max-w-6xl mx-auto px-4">
-				<div ref={heroCtas.containerRef}>
-					<div
-						ref={hero.containerRef}
-						className="mt-20 lg:mt-40 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center"
-					>
+			<main className="relative pb-20 pt-10 md:pt-20 mx-auto max-w-6xl px-4">
+				<div
+					aria-hidden
+					className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-lightBlue/15 blur-3xl"
+				/>
+				<div ref={hero.containerRef}>
+					<div className="mt-16 grid grid-cols-1 items-center gap-12 lg:mt-28 lg:grid-cols-2">
 						<div className="space-y-6">
-							<h1
+							<Badge
+								variant="outline"
 								style={hero.getItemStyle(0)}
+								className={cn(
+									hero.getItemClassName(""),
+									"gap-1.5 border-lightBlue/30 bg-lightBlue/10 text-lightBlue",
+								)}
+							>
+								<RiSparklingLine size={14} /> Alumni community platform
+							</Badge>
+							<h1
+								style={hero.getItemStyle(1)}
 								className={hero.getItemClassName(
-									"text-foreground text-4xl sm:text-5xl sm:leading-none font-medium w-full max-w-80 md:max-w-118.5",
+									"text-foreground text-4xl font-semibold tracking-tight sm:text-5xl sm:leading-none md:max-w-xl",
 								)}
 							>
 								Discover{" "}
 								<span className="uppercase bg-linear-to-r from-lightBlue via-sky-400 to-lightBlue bg-size-[200%_auto] bg-clip-text text-transparent animate-shimmer">
 									Bcc007
 								</span>{" "}
-								Great minds, Great feats
+								— great minds, great feats
 							</h1>
 							<p
-								style={hero.getItemStyle(1)}
+								style={hero.getItemStyle(2)}
 								className={hero.getItemClassName(
-									"lg:hidden text-balance text-mainGray dark:text-muted-foreground",
+									"max-w-md text-balance text-mainGray dark:text-muted-foreground",
 								)}
 							>
 								We are a community dedicated to preserving and promoting the
-								core values and culture of our alma mater - Brilliant Child
-								College. Through our platform, we connect with our fellow
-								alumni, share experiences, and celebrate the achievements of our
-								community.
+								core values and culture of our alma mater — Brilliant Child
+								College. Connect with fellow alumni, share experiences, and
+								celebrate the achievements of our community.
 							</p>
 							<div
 								style={heroCtas.getItemStyle(0)}
-								className={heroCtas.getItemClassName("flex items-center gap-4")}
+								className={heroCtas.getItemClassName(
+									"flex flex-wrap items-center gap-4",
+								)}
 							>
 								<Link
 									to={user ? "/dashboard" : "/auth/login"}
@@ -157,7 +224,7 @@ export default function HomeRoute() {
 								>
 									<Button
 										size="lg"
-										className="w-full max-w-40 tracking-tight btn"
+										className="h-12 gap-1.5 px-6 tracking-tight btn"
 									>
 										Go to dashboard
 										<RiArrowRightLine
@@ -170,7 +237,7 @@ export default function HomeRoute() {
 									<Button
 										variant="outline"
 										size="lg"
-										className="w-full max-w-40 text-[14px] font-bold transition-color"
+										className="h-12 gap-1.5 px-6 text-[14px] font-semibold transition-colors"
 									>
 										Talk to us
 									</Button>
@@ -179,89 +246,96 @@ export default function HomeRoute() {
 						</div>
 						<div
 							style={heroCtas.getItemStyle(1)}
-							className={heroCtas.getItemClassName(
-								"hidden lg:block w-full max-w-165",
-							)}
+							className={heroCtas.getItemClassName("relative")}
 						>
-							<p className="text-balance text-mainGray dark:text-muted-foreground">
-								We are a community dedicated to preserving and promoting the
-								core values and culture of our alma mater - Brilliant Child
-								College. Through our platform, we connect with our fellow
-								alumni, share experiences, and celebrate the achievements of our
-								community.
-							</p>
+							<div
+								aria-hidden
+								className="absolute -inset-8 -z-10 rounded-full bg-lightBlue/20 blur-3xl"
+							/>
+							<ImageBox
+								src={cn(
+									theme === "dark"
+										? "https://res.cloudinary.com/ceenobi/image/upload/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
+										: "https://res.cloudinary.com/ceenobi/image/upload/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.jpg",
+								)}
+								width={761}
+								height={420}
+								alt="BCC007 dashboard"
+								containerClassName="rounded-2xl border border-border bg-card p-2 shadow-2xl shadow-lightBlue/10"
+								className="rounded-xl"
+								decoding="async"
+								quality="original"
+							/>
+							<div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
+								<RiStarFill className="size-4 text-lightBlue" />
+								<span className="font-semibold text-mainBlack dark:text-white">
+									4.9
+								</span>
+								<span className="text-mainGray dark:text-muted-foreground">
+									member rating
+								</span>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div
 					ref={features.containerRef}
-					className="mt-20 grid grid-cols-12 gap-6 items-center"
+					className="mt-24 grid grid-cols-12 gap-6"
 				>
 					<div
 						style={features.getItemStyle(0)}
 						className={features.getItemClassName(
-							"col-span-12 lg:col-span-6 rounded-xl p-4 md:p-6 dark:bg-lightGray border border-gray-200 dark:border-gray-700 hover:shadow hover:-translate-y-1 space-y-6",
+							"col-span-12 rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg md:p-8 lg:col-span-6",
 						)}
 					>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div className="space-y-3">
-								<div className="flex gap-2 items-center">
-									<RiAccountBoxLine size={22} />
-									<h2 className="text-base font-medium text-mainBlack dark:text-white">
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+							<div className="space-y-4">
+								<div className="flex items-center gap-3">
+									<span className="flex size-10 items-center justify-center rounded-xl bg-lightBlue/10 text-lightBlue">
+										<RiAccountBoxLine size={22} />
+									</span>
+									<h2 className="text-lg font-semibold text-mainBlack dark:text-white">
 										Create an Account
 									</h2>
 								</div>
-								<p className="w-full max-w-70 text-mainGray dark:text-muted-foreground text-sm text-balance">
+								<p className="max-w-sm text-sm text-balance text-mainGray dark:text-muted-foreground">
 									As a{" "}
 									<a
 										href="https://instagram.com/bcc007set"
 										target="_blank"
-										className="text-mainBlack dark:text-white"
 										rel="noopener noreferrer"
+										className="font-medium text-lightBlue hover:underline"
 									>
-										BCC007 Alumini
+										BCC007 Alumni
 									</a>
 									, your experience starts by creating an account.
 								</p>
-								<div className="mt-6 md:mt-15 space-y-2 text-mainBlack dark:text-white">
-									<div
-										style={features.getItemStyle(1)}
-										className={cn(
-											"flex gap-1 items-center",
-											features.getItemClassName(""),
-										)}
-									>
-										<RiCheckLine className="size-5" />
-										<p className="text-sm">Get Onboarded</p>
-									</div>
-									<div
-										style={features.getItemStyle(2)}
-										className={cn(
-											"flex gap-1 items-center",
-											features.getItemClassName(""),
-										)}
-									>
-										<RiCheckLine className="size-5" />
-										<p className="text-sm">Be active on the group</p>
-									</div>
-									<div
-										style={features.getItemStyle(3)}
-										className={cn(
-											"flex gap-1 items-center",
-											features.getItemClassName(""),
-										)}
-									>
-										<RiCheckLine className="size-5" />
-										<p className="text-sm">Contribute to a cause</p>
-									</div>
-								</div>
+								<ul className="space-y-2 text-mainBlack dark:text-white">
+									{[
+										"Get Onboarded",
+										"Be active on the group",
+										"Contribute to a cause",
+									].map((text, i) => (
+										<li
+											key={text}
+											style={features.getItemStyle(i + 1)}
+											className={cn(
+												"flex items-center gap-2",
+												features.getItemClassName(""),
+											)}
+										>
+											<RiCheckLine className="size-5 text-lightBlue" />
+											<span className="text-sm">{text}</span>
+										</li>
+									))}
+								</ul>
 							</div>
 							<div className="hidden md:block">
 								<img
 									src="/Tasks complete.svg"
 									alt="todo"
 									className={cn(
-										"w-full h-80",
+										"h-80 w-full",
 										features.isVisible && "animate-float",
 									)}
 									decoding="async"
@@ -271,75 +345,78 @@ export default function HomeRoute() {
 					</div>
 					<div
 						style={features.getItemStyle(1)}
-						className={features.getItemClassName("col-span-12 lg:col-span-6")}
+						className={features.getItemClassName(
+							"col-span-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:col-span-6",
+						)}
 					>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div className="border rounded-xl p-4 md:p-6 dark:bg-lightGray border-gray-200 dark:border-gray-700 hover:shadow hover:-translate-y-1 space-y-4">
-								<div className="flex gap-1 items-center">
-									<RiShieldLine className="size-5" />
-									<h2 className="text-base text-mainBlack dark:text-white">
-										Authentication
-									</h2>
-								</div>
-								<p className="text-mainGray dark:text-muted-foreground text-sm">
-									<span className="text-mainBlack dark:text-white">
-										Secure user signup and login
-									</span>
-									. Membership is invite only.
-								</p>
-								<div className="hidden md:block">
-									<img
-										src="/Secure-login.svg"
-										alt="secure-login"
-										className={cn(
-											"w-full h-50",
-											features.isVisible && "animate-float",
-										)}
-										decoding="async"
-									/>
-								</div>
+						<div className="space-y-3 rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+							<span className="flex size-10 items-center justify-center rounded-xl bg-lightBlue/10 text-lightBlue">
+								<RiShieldLine className="size-5" />
+							</span>
+							<h2 className="text-lg font-semibold text-mainBlack dark:text-white">
+								Authentication
+							</h2>
+							<p className="text-sm text-mainGray dark:text-muted-foreground">
+								<span className="font-medium text-mainBlack dark:text-white">
+									Secure user signup and login
+								</span>
+								. Membership is invite only.
+							</p>
+							<div className="hidden md:block">
+								<img
+									src="/Secure-login.svg"
+									alt="secure-login"
+									className={cn(
+										"h-50 w-full",
+										features.isVisible && "animate-float",
+									)}
+									decoding="async"
+								/>
 							</div>
-							<div className="border rounded-xl p-4 md:p-6 dark:bg-lightGray border-gray-200 dark:border-gray-700 hover:shadow hover:-translate-y-1 space-y-4">
-								<div className="flex gap-1 items-center">
-									<RiCashLine className="size-5" />
-									<h2 className="text-base text-mainBlack dark:text-white">
-										Make Payments
-									</h2>
-								</div>
-								<p className="text-mainGray dark:text-muted-foreground text-sm">
-									Make payments securely using{" "}
-									<span className="text-mainBlack dark:text-white">
-										Paystack.
-									</span>{" "}
-									This funds the group's activities.
-								</p>
-								<div className="hidden md:block">
-									<img
-										src="/Empty-wallet.svg"
-										alt="wallet"
-										className={cn(
-											"w-full h-50",
-											features.isVisible && "animate-float",
-										)}
-										decoding="async"
-									/>
-								</div>
+						</div>
+						<div className="space-y-3 rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+							<span className="flex size-10 items-center justify-center rounded-xl bg-lightBlue/10 text-lightBlue">
+								<RiCashLine className="size-5" />
+							</span>
+							<h2 className="text-lg font-semibold text-mainBlack dark:text-white">
+								Make Payments
+							</h2>
+							<p className="text-sm text-mainGray dark:text-muted-foreground">
+								Make payments securely using{" "}
+								<span className="font-medium text-mainBlack dark:text-white">
+									Paystack.
+								</span>{" "}
+								This funds the group's activities.
+							</p>
+							<div className="hidden md:block">
+								<img
+									src="/Empty-wallet.svg"
+									alt="wallet"
+									className={cn(
+										"h-50 w-full",
+										features.isVisible && "animate-float",
+									)}
+									decoding="async"
+								/>
 							</div>
 						</div>
 					</div>
 				</div>
 			</main>
 			<div id="services">
-				<div className="max-w-6xl mx-auto px-4 space-y-8">
-					<h1 className="text-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170">
-						Stay productive and updated without{" "}
-						<span className="text-mainGray dark:text-muted-foreground">
-							leaving the dashboard
-						</span>
-					</h1>
+				<div className="mx-auto max-w-6xl space-y-8 px-4">
+					<div>
+						<p className={eyebrow}>Dashboard</p>
+						<h1 className="mt-2 w-full max-w-170 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl sm:leading-none">
+							Stay productive and updated without{" "}
+							<span className="text-mainGray dark:text-muted-foreground">
+								leaving the dashboard
+							</span>
+						</h1>
+					</div>
 					<div
 						ref={shot.containerRef}
-						className="max-w-full h-auto mx-auto rounded-t-2xl perspective-[1400px]"
+						className="mx-auto max-w-full h-auto rounded-t-2xl perspective-[1400px]"
 					>
 						<div
 							style={shot.getItemStyle(0)}
@@ -359,7 +436,7 @@ export default function HomeRoute() {
 								width={761}
 								height={420}
 								alt="dashboard"
-								containerClassName="border border-b-none rounded-t-2xl p-1 w-full h-full shadow-lg"
+								containerClassName="rounded-t-2xl border border-b-none border-border p-1 w-full h-full shadow-2xl shadow-lightBlue/10"
 								className="rounded-t-2xl"
 								decoding="async"
 								quality="original"
@@ -367,58 +444,97 @@ export default function HomeRoute() {
 						</div>
 					</div>
 				</div>
-				<hr />
+				<hr className="border-border/60" />
 			</div>
 			<div ref={servicesAnim.containerRef} className="relative py-20">
-				<div className="absolute inset-0 z-0 opacity-50 h-full w-full bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem] animate-grid-drift" />
-				<div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
+				<div className="absolute inset-0 -z-0 h-full w-full opacity-50 bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem] animate-grid-drift" />
+				<div className="relative z-10 mx-auto max-w-6xl space-y-8 px-4">
 					<h1
 						style={servicesAnim.getItemStyle(0)}
 						className={servicesAnim.getItemClassName(
-							"text-mainGray dark:text-muted-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170",
+							"w-full max-w-170 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl sm:leading-none",
 						)}
 					>
 						Our Services <br />
-						<span className="text-mainBlack dark:text-white">
+						<span className="text-mainGray dark:text-muted-foreground">
 							Discover the key features of our services.
 						</span>
 					</h1>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-						{services.map((service, index) => (
-							<div
-								key={service.title}
-								style={servicesAnim.getItemStyle(index + 1)}
-								className={servicesAnim.getItemClassName(
-									"bg-white dark:bg-lightGray p-6 rounded-xl border shadow hover:shadow-lg hover:-translate-y-1",
-								)}
-							>
-								<h2 className="text-lg font-medium text-mainBlack dark:text-white">
-									{service.title}
-								</h2>
-								<p className="text-sm text-mainGray dark:text-muted-foreground">
-									{service.description}
-								</p>
-							</div>
-						))}
+					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+						{services.map((service, index) => {
+							const Icon = serviceIcons[index];
+							return (
+								<div
+									key={service.title}
+									style={servicesAnim.getItemStyle(index + 1)}
+									className={servicesAnim.getItemClassName(
+										"group/service flex flex-col gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg",
+									)}
+								>
+									<span className="flex size-11 items-center justify-center rounded-xl bg-lightBlue/10 text-lightBlue">
+										<Icon className="size-5" />
+									</span>
+									<div className="flex items-start justify-between gap-4">
+										<h2 className="text-lg font-semibold text-mainBlack dark:text-white">
+											{service.title}
+										</h2>
+										<RiArrowRightLine className="size-5 shrink-0 text-mainGray transition-transform group-hover/service:translate-x-1 dark:text-muted-foreground" />
+									</div>
+									<p className="text-sm text-mainGray dark:text-muted-foreground">
+										{service.description}
+									</p>
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</div>
-			<hr />
+			<hr className="border-border/60" />
+			<div ref={statsAnim.containerRef} className="relative py-16">
+				<div className="mx-auto max-w-6xl px-4">
+					<div
+						style={statsAnim.getItemStyle(0)}
+						className={statsAnim.getItemClassName(
+							"relative overflow-hidden rounded-3xl bg-mainBlue px-6 py-12 text-white shadow-xl sm:px-12",
+						)}
+					>
+						<div
+							aria-hidden
+							className="absolute -right-10 -top-10 size-56 rounded-full bg-lightBlue/20 blur-3xl"
+						/>
+						<div className="relative grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+							{impactStats.map((stat, i) => (
+								<div
+									key={stat.label}
+									style={statsAnim.getItemStyle(i + 1)}
+									className={statsAnim.getItemClassName("space-y-1")}
+								>
+									<div className="text-3xl font-semibold text-lightBlue sm:text-4xl">
+										{stat.value}
+									</div>
+									<div className="text-sm text-white/70">{stat.label}</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr className="border-border/60" />
 			<div
 				ref={about.containerRef}
-				className="relative py-20 overflow-x-clip"
+				className="relative overflow-x-clip py-20"
 				id="about"
 			>
-				<div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
+				<div className="relative z-10 mx-auto max-w-6xl space-y-8 px-4">
 					<h1
 						style={about.getItemStyle(0)}
 						className={about.getItemClassName(
-							"text-mainGray dark:text-muted-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170",
+							"w-full max-w-170 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl sm:leading-none",
 						)}
 					>
 						About us
 						<br />
-						<span className="text-mainBlack dark:text-white">
+						<span className="text-mainGray dark:text-muted-foreground">
 							Who we are? What we do?
 						</span>
 					</h1>
@@ -430,7 +546,7 @@ export default function HomeRoute() {
 									transitionDuration: "700ms",
 								}}
 								className={cn(
-									"w-full h-full origin-left transition-[clip-path]",
+									"h-full w-full origin-left transition-[clip-path]",
 									about.isVisible
 										? "[clip-path:inset(0_0%_0_0)]"
 										: "[clip-path:inset(0_100%_0_0)]",
@@ -441,7 +557,7 @@ export default function HomeRoute() {
 									width={761}
 									height={500}
 									alt="bcc007_group"
-									containerClassName="rounded-xl w-full h-full"
+									containerClassName="h-full w-full rounded-xl"
 									className="rounded-xl"
 									loading="lazy"
 									decoding="async"
@@ -452,18 +568,20 @@ export default function HomeRoute() {
 							style={about.getItemStyle(2)}
 							className={cn(
 								about.getItemClassName(
-									"col-span-12 md:col-span-5 border border-gray-200 dark:border-gray-700 bg-[#ff4d00] p-6 rounded-xl items-center",
+									"col-span-12 flex items-center rounded-xl border border-brandOrange bg-brandOrange p-6 md:col-span-5",
 								),
 								about.isVisible ? "translate-x-0" : "translate-x-8",
 							)}
 						>
-							<div className="flex flex-col justify-between items-center h-full text-white">
-								<p className="text-base lg:text-xl font-normal leading-snug text-balance">
+							<div className="flex h-full flex-col justify-between gap-4 text-white">
+								<RiDoubleQuotesL className="size-8 text-white/80" />
+								<p className="text-balance text-base font-normal leading-snug lg:text-xl">
 									We are a community united by the values and spirit of
 									Brilliant Child College — staying connected, sharing stories,
 									and celebrating every achievement.
-									<br /> <br /> With your regular donations and contributions,
-									we strengthen our bonds, host programs that bring us together,
+									<br />
+									<br /> With your regular donations and contributions, we
+									strengthen our bonds, host programs that bring us together,
 									and build meaningful opportunities for a brighter future.
 								</p>
 							</div>
@@ -472,38 +590,67 @@ export default function HomeRoute() {
 				</div>
 			</div>
 			<div
-				ref={faq.containerRef}
-				className="relative py-20 overflow-x-clip"
-				id="faq"
+				ref={testimonialsAnim.containerRef}
+				className="relative bg-lightBlue/5 py-20"
 			>
-				<div className="max-w-6xl mx-auto px-4 space-y-8 relative z-10">
-					<h1
-						style={faq.getItemStyle(0)}
-						className={faq.getItemClassName(
-							"text-mainGray dark:text-muted-foreground text-3xl sm:text-4xl sm:leading-none font-medium w-full max-w-170",
-						)}
-					>
-						Questions, answered.
-					</h1>
-					<div className="max-w-6xl mx-auto">
-						{faqs.map((item, i) => (
-							<details
-								key={item.q}
-								open={i === 0}
-								style={faq.getItemStyle(i + 1)}
-								className={faq.getItemClassName(
-									"group border-b border-gray-200 dark:border-gray-800",
+				<div className="relative z-10 mx-auto max-w-6xl space-y-8 px-4">
+					<div>
+						<p className={eyebrow}>Testimonials</p>
+						<h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+							Loved by the set
+						</h1>
+					</div>
+					<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+						{testimonials.map((t, i) => (
+							<Card
+								key={t.name}
+								style={testimonialsAnim.getItemStyle(i)}
+								className={testimonialsAnim.getItemClassName(
+									"p-6 transition hover:-translate-y-1 hover:shadow-lg",
 								)}
 							>
-								<summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-mainBlack dark:text-white [&::-webkit-details-marker]:hidden">
-									{item.q}
-									<RiArrowDownSLine
-										size={20}
-										aria-hidden
-										className="shrink-0 text-mainGray dark:text-muted-foreground transition-transform duration-300 group-open:rotate-180"
-									/>
-								</summary>
-								<p className="pb-5 text-sm leading-relaxed text-mainGray dark:text-muted-foreground">
+								<RiDoubleQuotesL className="size-7 text-lightBlue/60" />
+								<p className="mt-3 text-sm leading-relaxed text-mainGray dark:text-muted-foreground">
+									{t.quote}
+								</p>
+								<div className="mt-5 flex items-center gap-3">
+									<Avatar className="size-10">
+										<AvatarFallback className="bg-lightBlue/10 text-lightBlue">
+											{t.initials}
+										</AvatarFallback>
+									</Avatar>
+									<div>
+										<div className="text-sm font-medium text-mainBlack dark:text-white">
+											{t.name}
+										</div>
+										<div className="text-xs text-mainGray dark:text-muted-foreground">
+											{t.role}
+										</div>
+									</div>
+								</div>
+							</Card>
+						))}
+					</div>
+				</div>
+			</div>
+			<div ref={faq.containerRef} className="relative py-20" id="faq">
+				<div className="relative z-10 mx-auto max-w-3xl space-y-8 px-4">
+					<div>
+						<p className={eyebrow}>FAQ</p>
+						<h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+							Questions, answered.
+						</h1>
+					</div>
+					<Accordion defaultValue={[faqs[0].q]}>
+						{faqs.map((item, i) => (
+							<AccordionItem
+								key={item.q}
+								value={item.q}
+								style={faq.getItemStyle(i + 1)}
+								className={faq.getItemClassName("")}
+							>
+								<AccordionTrigger>{item.q}</AccordionTrigger>
+								<AccordionContent>
 									{item.a}{" "}
 									{item.href && (
 										<Link
@@ -513,18 +660,18 @@ export default function HomeRoute() {
 											Reach out here
 										</Link>
 									)}
-								</p>
-							</details>
+								</AccordionContent>
+							</AccordionItem>
 						))}
-					</div>
+					</Accordion>
 				</div>
 			</div>
 			<div ref={cta.containerRef} className="relative py-20">
-				<div className="max-w-6xl mx-auto px-4 space-y-4 relative z-10 text-center">
+				<div className="relative z-10 mx-auto max-w-6xl space-y-4 px-4 text-center">
 					<h1
 						style={cta.getItemStyle(0)}
 						className={cta.getItemClassName(
-							"text-mainBlack dark:text-white text-3xl sm:text-4xl sm:leading-none font-medium w-full",
+							"w-full text-3xl font-semibold tracking-tight text-mainBlack dark:text-white sm:text-4xl sm:leading-none",
 						)}
 					>
 						Join the community
@@ -532,7 +679,7 @@ export default function HomeRoute() {
 					<p
 						style={cta.getItemStyle(1)}
 						className={cta.getItemClassName(
-							"text-mainGray dark:text-muted-foreground text-base font-normal leading-snug text-balance",
+							"text-balance text-base font-normal leading-snug text-mainGray dark:text-muted-foreground",
 						)}
 					>
 						Discover what our community has been up to lately.
@@ -550,12 +697,12 @@ export default function HomeRoute() {
 							{cta.isVisible && (
 								<span
 									aria-hidden
-									className="absolute inset-0 rounded-full border border-lightBlue/60 animate-pulse-ring"
+									className="absolute inset-0 animate-pulse-ring rounded-full border border-lightBlue/60"
 								/>
 							)}
 							<Button
 								variant="outline"
-								className="text-mainBlack dark:text-white p-2.5 hover:bg-white/80"
+								className="p-2.5 text-mainBlack hover:bg-white/80 dark:text-white"
 							>
 								Follow our community{" "}
 								<RiInstagramLine className="transition-transform group-hover:rotate-12" />
