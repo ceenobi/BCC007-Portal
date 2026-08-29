@@ -90,28 +90,20 @@ export default function BankInfo({
 		[accountNumber, bankCode],
 	);
 
-	// Auto-verify shortly after both the bank and a full 10-digit number are in,
-	// but only when the user has changed BOTH the account number and the bank
-	// from the saved details. This avoids re-resolving on mount / when switching
-	// forms, when the inputs still match the saved bank details.
+	// Auto-verify shortly after both the bank and a full 10-digit number are in.
 	useEffect(() => {
 		if (accountNumber.length !== 10 || !bankCode) return;
-		const accountNumberChanged = accountNumber !== initialAccountNumber;
-		const bankChanged = bankCode !== initialBankCode;
-		if (!accountNumberChanged || !bankChanged) return;
+		// Don't re-resolve the combination already saved for this user (avoids the
+		// spurious resolve that fired on mount before this guard existed).
+		if (accountNumber === initialAccountNumber && bankCode === initialBankCode)
+			return;
 		const controller = new AbortController();
 		const timer = setTimeout(() => void verifyAccount(controller.signal), 500);
 		return () => {
 			clearTimeout(timer);
 			controller.abort();
 		};
-	}, [
-		accountNumber,
-		bankCode,
-		verifyAccount,
-		initialAccountNumber,
-		initialBankCode,
-	]);
+	}, [accountNumber, bankCode, verifyAccount]);
 
 	const onFormSubmit = () => {
 		const bankName =
