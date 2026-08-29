@@ -62,7 +62,6 @@ export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
   return (
     <TourProvider user={user}>
       <Navbar user={user} />
-      <>
         <Sidebar
           isOpenSidebar={isOpenSidebar}
           setIsOpenSidebar={setIsOpenSidebar}
@@ -71,7 +70,6 @@ export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
         <main className={`${isOpenSidebar ? "lg:ml-50" : "lg:ml-12"}`}>
           <Outlet context={{ user }} />
         </main>
-      </>
     </TourProvider>
   );
 }

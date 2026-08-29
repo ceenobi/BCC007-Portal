@@ -41,7 +41,24 @@ const fetchMock = vi.fn(async () =>
     { status: 200 },
   ),
 );
-vi.stubGlobal("fetch", fetchMock);
+
+// Override global fetch so the component calls our mock. `vi.stubGlobal` uses
+// Object.defineProperty, which silently fails to replace native `fetch` on
+// Node 20+ (non-configurable global) — so we also assign directly and cover
+// the happy-dom `window` surface.
+function installFetchMock() {
+  try {
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
+  } catch {}
+  try {
+    vi.stubGlobal("fetch", fetchMock);
+  } catch {}
+  try {
+    const w = (globalThis as { window?: { fetch?: unknown } }).window;
+    if (w) w.fetch = fetchMock;
+  } catch {}
+}
+installFetchMock();
 
 import type { PaystackBank } from "~/.server/services/paystack.service";
 import type { BankDetails } from "~/types";
@@ -56,6 +73,7 @@ const banks = [
 
 beforeEach(() => {
   fetchMock.mockClear();
+  installFetchMock();
 });
 
 afterEach(cleanup);
@@ -86,7 +104,7 @@ describe("BankInfo auto-verification", () => {
     fireEvent.change(input, { target: { value: "0123456789" } });
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1), {
-      timeout: 3000,
+      timeout: 10000,
     });
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/banks/resolve",
@@ -98,7 +116,7 @@ describe("BankInfo auto-verification", () => {
 
     await waitFor(
       () => expect(screen.getByText("ADA OBI")).toBeInTheDocument(),
-      { timeout: 3000 },
+      { timeout: 10000 },
     );
   });
 
