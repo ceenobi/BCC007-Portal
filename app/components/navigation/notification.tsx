@@ -45,7 +45,7 @@ export default function Notification() {
 			<DropdownMenuGroup>
 				<DropdownMenuContent
 					align="end"
-					className="w-[97%] sm:w-96 p-0 dark:bg-lightGray border max-h-[68dvh] flex flex-col"
+					className="w-[97vw] sm:w-96 p-0 dark:bg-lightGray border max-h-[68dvh] flex flex-col"
 				>
 					<div className="p-4 border-b bg-muted/30 flex items-center justify-between shrink-0">
 						<h4 className="font-semibold text-base">Notifications</h4>
@@ -77,7 +77,7 @@ export default function Notification() {
 						) : notifications.length === 0 ? (
 							<div className="p-8 text-center text-sm text-muted-foreground">
 								<RiNotificationOffFill
-									size={32}
+									size={28}
 									className="mx-auto mb-2 text-muted-foreground/50"
 								/>
 								No notifications yet
@@ -99,7 +99,7 @@ export default function Notification() {
 											<div
 												className={`size-2 rounded-full mt-1.5 shrink-0 ${
 													!notif.read
-														? "bg-mainBlue dark:bg-darkBlue"
+														? "bg-mainBlue dark:bg-lightBlue"
 														: "bg-transparent"
 												}`}
 											/>
