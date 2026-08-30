@@ -65,7 +65,7 @@ export default function Account({ loaderData }: Route.ComponentProps) {
 								Details
 							</h1>
 						</div>
-						<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 md:px-4 py-6 text-mainGray dark:text-muted-foreground">
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 py-6 text-mainGray dark:text-muted-foreground">
 							<div>
 								<h2 className="font-medium text-mainBlack dark:text-white">
 									Profile name
@@ -110,7 +110,7 @@ export default function Account({ loaderData }: Route.ComponentProps) {
 								Contact information
 							</h1>
 						</div>
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:px-4 py-6 text-mainGray dark:text-muted-foreground">
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 text-mainGray dark:text-muted-foreground">
 							<div>
 								<h2 className="font-medium text-mainBlack dark:text-white">
 									Email
@@ -162,7 +162,7 @@ export default function Account({ loaderData }: Route.ComponentProps) {
 												Bank details
 											</h1>
 										</div>
-										<div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:px-4 py-6 text-mainGray dark:text-muted-foreground">
+										<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-6 text-mainGray dark:text-muted-foreground">
 											<div>
 												<h2 className="font-medium text-mainBlack dark:text-white">
 													Bank name

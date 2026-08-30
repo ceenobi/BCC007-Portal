@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RiCloseLine, RiUserAddLine } from "@remixicon/react";
+import { RiMailAddLine, RiUserAddLine } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useFetcher } from "react-router";
@@ -7,14 +7,8 @@ import { toast } from "sonner";
 import ActionBtn from "~/components/ui/action-btn";
 import { Button } from "~/components/ui/button";
 import { FormBox } from "~/components/ui/form-box";
+import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetTitle,
-	SheetTrigger,
-} from "~/components/ui/sheet";
 import { sendInviteCodeSchema } from "~/lib/schema";
 import type { SendInviteCodeSchemaType } from "~/types";
 
@@ -71,99 +65,80 @@ export default function InviteMember() {
 	};
 
 	return (
-		<Sheet open={isOpen} onOpenChange={setIsOpen}>
-			<SheetTrigger
-				render={
-					<Button size="sm" className="tracking-tight btn">
-						<RiUserAddLine /> Invite Member
-					</Button>
-				}
-			/>
-			<SheetContent
-				side="right"
-				className="w-full sm:max-w-2xl bg-white dark:bg-lightGray p-0"
-				showCloseButton={false}
-				aria-describedby="drawer"
+		<>
+			<Button
+				size="sm"
+				className="tracking-tight btn"
+				onClick={() => setIsOpen(true)}
 			>
-				<div className="relative flex flex-col h-full py-2">
-					<div className="flex justify-between items-start px-4 py-2">
-						<div>
-							<h1 className="text-foreground font-medium text-base">
-								Invite team members
-							</h1>
-							<p className="text-xs text-balance text-mainGray dark:text-muted-foreground">
-								Send invitations and choose the access each new team member
-								receives.
-							</p>
-						</div>
-						<SheetClose
-							render={
-								<button
-									type="button"
-									aria-label="Close navigation menu"
-									className="w-10 h-10 cursor-pointer"
-								>
-									<RiCloseLine size={18} />
-								</button>
-							}
+				<RiUserAddLine /> Invite Member
+			</Button>
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				title="Invite team members"
+				description="Send invitations and choose the access each new team member
+				receives."
+			>
+				<Separator />
+				<div className="px-2 max-h-[60vh] overflow-y-auto">
+					<fetcher.Form
+						onSubmit={handleSubmit(onFormSubmit)}
+						className="space-y-4"
+						id="invite-member-form"
+					>
+						<FormBox
+							label="Role"
+							type="radio"
+							placeholder="Select member role"
+							id="role"
+							register={register}
+							errors={errors.role}
+							name="role"
+							control={control}
+							options={roleOptions}
 						/>
-					</div>
-					<SheetTitle className="sr-only">Invite member</SheetTitle>
-					<Separator />
-					<div className="p-4">
-						<fetcher.Form
-							onSubmit={handleSubmit(onFormSubmit)}
-							className="mt-6 xl:mt-10 space-y-4"
-							id="invite-member-form"
-						>
-							<FormBox
-								label="Role"
-								type="radio"
-								placeholder="Select member role"
-								id="role"
-								register={register}
-								errors={errors.role}
-								name="role"
-								control={control}
-								options={roleOptions}
-							/>
-							<FormBox
-								label="Add members email addresses"
-								type="textarea"
-								placeholder="name@example.com, name2@example.com, ..."
-								id="email"
-								register={register}
-								errors={errors.email}
-								name="email"
-								control={control}
-							/>
-						</fetcher.Form>
-					</div>
-					<div className="absolute bottom-0 left-0 right-0 border-t py-4">
-						<div className="flex justify-end gap-4 items-center px-4">
-							<Button
-								size="sm"
-								variant="outline"
-								className="tracking-tight"
-								onClick={() => {
-									setIsOpen(false);
-									reset();
-								}}
-							>
-								Cancel
-							</Button>
-							<ActionBtn
-								form="invite-member-form"
-								text="Send Invitation"
-								type="submit"
-								size="sm"
-								loading={isSubmitting}
-								classname="btn"
-							/>
-						</div>
-					</div>
+						<FormBox
+							label="Add members email addresses"
+							type="textarea"
+							placeholder="name@example.com, name2@example.com, ..."
+							id="email"
+							register={register}
+							errors={errors.email}
+							name="email"
+							control={control}
+						/>
+					</fetcher.Form>
 				</div>
-			</SheetContent>
-		</Sheet>
+
+				<div className="flex justify-end gap-3 pt-4">
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={() => {
+							reset();
+							fetcher.reset();
+							setIsOpen(false);
+						}}
+					>
+						Cancel
+					</Button>
+					<ActionBtn
+						form="invite-member-form"
+						text={
+							<>
+								Send Invitation
+								<RiMailAddLine size={14} />
+							</>
+						}
+						type="submit"
+						size="sm"
+						loading={isSubmitting}
+						classname="btn"
+					/>
+				</div>
+			</Modal>
+		</>
 	);
 }
