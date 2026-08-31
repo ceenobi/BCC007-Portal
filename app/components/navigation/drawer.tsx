@@ -1,5 +1,5 @@
 import {
-  RiCloseCircleLine,
+  RiCloseLine,
   RiLogoutBoxRLine,
   RiMenuFill,
 } from "@remixicon/react";
@@ -34,12 +34,12 @@ export default function Drawer({ user }: { user?: SessionUser | null }) {
         }
       />
       <SheetContent
-        side="right"
+        side="bottom"
         className="w-full sm:max-w-md bg-white dark:bg-white/2 border border-white/10 dark:backdrop-blur-3xl border-l-0 p-0"
         showCloseButton={false}
         aria-describedby="drawer"
       >
-        <div className="relative flex flex-col h-full px-4 py-2">
+        <div className="relative flex flex-col h-full px-4 py-8">
           <div className="flex justify-end items-center h-12">
             <SheetClose
               render={
@@ -48,7 +48,7 @@ export default function Drawer({ user }: { user?: SessionUser | null }) {
                   aria-label="Close navigation menu"
                   className="w-10 h-10 cursor-pointer"
                 >
-                  <RiCloseCircleLine size={30} />
+                  <RiCloseLine size={30} />
                 </button>
               }
             />

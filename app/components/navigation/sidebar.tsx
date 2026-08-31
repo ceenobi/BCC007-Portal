@@ -55,6 +55,7 @@ export default function Sidebar({
         })}
       </div>
       <button
+        type="button"
         onClick={toggleSidebar}
         aria-label={isOpenSidebar ? "Collapse sidebar" : "Expand sidebar"}
         className={cn(
