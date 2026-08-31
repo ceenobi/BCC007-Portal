@@ -46,7 +46,7 @@ export default function DashboardIndex({ loaderData }: Route.ComponentProps) {
     <PageWrapper>
       <PageSection index={0} className="space-y-8 px-4 xl:px-8">
         <div className="space-y-2">
-          <h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+          <h1 className="text-xl font-semibold text-balance tracking-tight leading-tight text-foreground">
             Welcome back, {user.name}
           </h1>
           <p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">

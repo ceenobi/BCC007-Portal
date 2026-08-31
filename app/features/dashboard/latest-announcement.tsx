@@ -30,7 +30,7 @@ export default function LatestAnnouncement({
 
   return (
     <Card className={cn("animate-in fade-in slide-in-from-bottom-3", className)}>
-      <CardHeader>
+      <CardHeader className="flex items-center justify-between">
         <CardTitle className="text-sm">Latest Announcement</CardTitle>
         <CardAction>
           <Link
