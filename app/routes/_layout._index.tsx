@@ -152,7 +152,7 @@ export default function HomeRoute() {
 		staggerDelay: 100,
 		startVisible: true,
 	});
-	const heroCtas = useWaveAnimation({ threshold: 0, staggerDelay: 150 });
+	const heroCtas = useWaveAnimation({ threshold: 0, staggerDelay: 150, startVisible: true });
 	const features = useWaveAnimation({ threshold: 0.15, staggerDelay: 100 });
 	const shot = useWaveAnimation({
 		threshold: 0.2,
@@ -252,21 +252,18 @@ export default function HomeRoute() {
 								aria-hidden
 								className="absolute -inset-8 -z-10 rounded-full bg-lightBlue/20 blur-3xl"
 							/>
-							<ImageBox
+							<img
 								src={
-									theme === "dark"
-										? "https://res.cloudinary.com/ceenobi/image/upload/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
-										: "https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
+								 "https://res.cloudinary.com/ceenobi/image/upload/f_auto,q_auto/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"			
 								}
 								width={761}
 								height={420}
 								alt="BCC007 dashboard"
-								containerClassName="rounded-2xl border border-border bg-card p-2 shadow-2xl shadow-lightBlue/10"
-								className="rounded-xl"
+								className="rounded-2xl border border-border bg-card p-2 shadow-2xl shadow-lightBlue/10"
 								decoding="async"
 								// quality="original"
 							/>
-							<div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
+							<div className="absolute -bottom-4 -left-2 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
 								<RiStarFill className="size-4 text-lightBlue" />
 								<span className="font-semibold text-mainBlack dark:text-white">
 									4.9
@@ -427,24 +424,19 @@ export default function HomeRoute() {
 									: "transform-[rotateX(14deg)_translateY(48px)]",
 							)}
 						>
-							<ImageBox
+							<img
 								src={
-									theme === "dark"
-										? "https://res.cloudinary.com/ceenobi/image/upload/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
-										: "https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
+								"https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
 								}
 								width={761}
 								height={420}
 								alt="dashboard"
-								containerClassName="rounded-t-2xl border border-b-none border-border p-1 w-full h-full shadow-2xl shadow-lightBlue/10"
-								className="rounded-t-2xl"
+								className="rounded-t-2xl border border-b-none border-border p-1 w-full h-full shadow-2xl shadow-lightBlue/10"
 								decoding="async"
-								quality="original"
 							/>
 						</div>
 					</div>
 				</div>
-				<hr className="border-border/60" />
 			</div>
 			<div ref={servicesAnim.containerRef} className="relative py-20">
 				<div className="absolute inset-0 z-0 h-full w-full opacity-50 bg-white dark:bg-bgDark bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff14_1px,transparent_1px),linear-gradient(to_bottom,#ffffff14_1px,transparent_1px)] bg-size-[6rem_4rem] animate-grid-drift" />
