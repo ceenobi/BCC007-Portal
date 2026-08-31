@@ -250,7 +250,7 @@ export default function HomeRoute() {
 						>
 							<div
 								aria-hidden
-								className="absolute -inset-8 -z-10 rounded-full bg-lightBlue/20 blur-3xl"
+								className="absolute -inset-16 -z-10 rounded-full bg-lightBlue/20 blur-3xl"
 							/>
 							<img
 								src={
@@ -263,7 +263,7 @@ export default function HomeRoute() {
 								decoding="async"
 								// quality="original"
 							/>
-							<div className="absolute -bottom-4 -left-2 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
+							<div className="absolute -bottom-4 -left-2 md:-left-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm shadow-lg">
 								<RiStarFill className="size-4 text-lightBlue" />
 								<span className="font-semibold text-mainBlack dark:text-white">
 									4.9
