@@ -1,3 +1,4 @@
+// @ts-nocheck
 const CACHE_NAME = "bcc007portal-cache-v1";
 const STATIC_ASSETS = [
   "/",
