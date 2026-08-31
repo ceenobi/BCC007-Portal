@@ -7,6 +7,24 @@ import type { Route } from "./+types/_layout";
 
 export const middleware = [sessionMiddleware];
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js", {
+        scope: "/",
+      })
+      .then((registration) => {
+        console.log(
+          "SW registered: active",
+          registration.active ? "active" : "installing"
+        );
+      })
+      .catch((err) => {
+        console.error("SW registration failed:", err);
+      });
+  });
+}
+
 export const headers: Route.HeadersFunction = () => ({
   "Cache-Control": "private, no-store",
   Vary: "Cookie",
