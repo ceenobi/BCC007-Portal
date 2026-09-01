@@ -4,7 +4,11 @@ import { helpdeskKnowledgeBase } from "~/lib/guide";
 import type { GuideHit } from "./guide-retrieval";
 
 // Single index holds all guide articles; data + metadata enable filtering.
+// Locked to Option A: Dense + Managed Embedding BAAI/bge-m3 (1024 dims, cosine, 8192 tokens)
+// Recreate in Upstash Console: Type Dense (or Hybrid for BM25), Dimension 1024, Metric cosine, Model BAAI/bge-m3
 export const VECTOR_INDEX_NAME = "bcc007-guide";
+export const VECTOR_EMBEDDING_MODEL = "BAAI/bge-m3" as const;
+export const VECTOR_DIMENSION = 1024 as const;
 
 // Lazy singleton — avoids throwing during build when env missing.
 let _index: Index | null = null;
@@ -38,8 +42,8 @@ export type SeedResult = { upserted: number; alreadySeeded: boolean };
 
 /**
  * Upserts helpdeskKnowledgeBase into Vector.
- * Uses `data` field so Vector's managed embedding (bge-m3 etc.) embeds raw text.
- * Idempotent — re-upserting same ids overwrites.
+ * Uses `data` field so Vector's managed embedding (BAAI/bge-m3, 1024d, 8192 tokens) embeds raw text.
+ * Idempotent — re-upserting same ids overwrites. Requires index created with model BAAI/bge-m3.
  */
 export async function seedGuideIndex(opts?: {
 	dryRun?: boolean;
@@ -72,7 +76,7 @@ export async function seedGuideIndex(opts?: {
 		const msg = e instanceof Error ? e.message : String(e);
 		if (msg.includes("Embedding data") || msg.includes("embedding model")) {
 			throw new Error(
-				`Vector index "${VECTOR_INDEX_NAME}" has no managed embedding model. Recreate it in Upstash Console as Dense + Model "BAAI/bge-m3" (1024 dims, cosine) or "BAAI/bge-large-en-v1.5", then rerun. Original: ${msg}`,
+				`Vector index "${VECTOR_INDEX_NAME}" has no managed embedding model. Recreate it in Upstash Console as Dense (or Hybrid) → Model "${VECTOR_EMBEDDING_MODEL}" (${VECTOR_DIMENSION} dims, cosine, 8192 tokens) — Option A locked. Delete old free-blowfish-* index, then yarn seed:vector. Original: ${msg}`,
 			);
 		}
 		throw e;
