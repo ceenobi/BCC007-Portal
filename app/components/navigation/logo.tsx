@@ -10,9 +10,9 @@ export default function Logo({
 	showLogoText?: boolean;
 }) {
 	return (
-		<Link to="/" className="flex gap-1 items-center w-fit" data-tour="logo">
+		<Link to="/" prefetch="intent" className="flex gap-1 items-center w-fit" data-tour="logo">
 			<img
-				src="https://res.cloudinary.com/ceenobi/image/upload/c_crop,g_north_west,h_657,w_772,x_128,y_206/e_enhance/f_webp/f_auto/q_auto/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png"
+				src="/bcc007paylogo.webp"
 				alt="BCC007_Logo"
 				className={`rounded-full ${size ? `w-${size} h-${size}` : ""}`}
 			/>
