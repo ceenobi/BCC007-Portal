@@ -5,7 +5,7 @@ export const SITE_URL = "https://bcc007-portal.vercel.app";
 export const SITE_DESCRIPTION =
   "BCC007 is the alumni community platform that helps members manage payments, transfers and events — and stay connected.";
 export const SITE_LOGO =
-  "https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png";
+  "https://res.cloudinary.com/ceenobi/image/upload/c_crop,g_north_west,h_657,w_772,x_128,y_206/e_enhance/f_webp/f_auto/q_auto/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png";
 
 interface SeoMetaOptions {
   title: string;

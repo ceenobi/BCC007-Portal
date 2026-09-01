@@ -19,7 +19,7 @@ export default function Navbar({ user }: NavbarProps) {
 		<header className="fixed top-0 w-full z-50 bg-white border-b backdrop-blur supports-backdrop-filter:bg-background/5">
 			<div className="max-w-full mx-auto p-2 flex justify-between items-center">
 				<div className="flex gap-2 items-center">
-					<Logo size={8} showLogoText={isMobile ?? false} classname="text-xl" />
+					<Logo size={8} showLogoText={isMobile ?? false} classname="text-2xl lg:text-base" />
 					<div className="hidden md:flex gap-2 items-center">
 						<span>/</span>
 						<h2 className="font-semibold text-sm truncate">
