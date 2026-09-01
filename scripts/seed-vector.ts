@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Seed Upstash Vector with helpdeskKnowledgeBase
-// Usage: node --env-file=.env scripts/seed-vector.ts [--dry-run]
+// Usage: yarn seed:vector [--dry-run]  (requires UPSTASH_VECTOR_REST_URL/TOKEN + existing index e.g. bcc007-guide)
 import { seedGuideIndex } from "../app/.server/ai/vector";
 
 const dryRun = process.argv.includes("--dry-run");

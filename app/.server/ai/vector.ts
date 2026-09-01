@@ -63,9 +63,19 @@ export async function seedGuideIndex(opts?: {
 	}));
 
 	// Batch upsert in chunks of 100 (Vector limit)
-	for (let i = 0; i < vectors.length; i += 100) {
-		const chunk = vectors.slice(i, i + 100);
-		await index.upsert(chunk as never);
+	try {
+		for (let i = 0; i < vectors.length; i += 100) {
+			const chunk = vectors.slice(i, i + 100);
+			await index.upsert(chunk as never);
+		}
+	} catch (e: unknown) {
+		const msg = e instanceof Error ? e.message : String(e);
+		if (msg.includes("Embedding data") || msg.includes("embedding model")) {
+			throw new Error(
+				`Vector index "${VECTOR_INDEX_NAME}" has no managed embedding model. Recreate it in Upstash Console as Dense + Model "BAAI/bge-m3" (1024 dims, cosine) or "BAAI/bge-large-en-v1.5", then rerun. Original: ${msg}`,
+			);
+		}
+		throw e;
 	}
 	return { upserted: vectors.length, alreadySeeded };
 }
