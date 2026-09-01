@@ -89,7 +89,7 @@ export async function sendInviteCode(
 				body: {
 					user,
 					inviteCode,
-					link: `${env.clientUrl}/auth/register?inviteCode=${inviteCode}`,
+					link: `${env.clientUrl}/auth/register?inviteCode=${inviteCode}&role=${role}`,
 				},
 			});
 			sent.push(email);
@@ -116,7 +116,8 @@ export async function signUpWithEmail(
 	payload: SignUpSchemaType,
 ) {
 	return tryCatchWrapper(async () => {
-		await checkRateLimit(request, "strict");
+    await checkRateLimit(request, "strict");
+		const role = request.url.includes("role=admin") ? "admin" : "member";
 		const result = signUpSchema.safeParse(payload);
 		if (!result.success) {
 			logger.error({ result }, "Invalid form data");
@@ -160,6 +161,7 @@ export async function signUpWithEmail(
 				email: result.data.email,
 				password: result.data.password,
 				callbackURL: `${env.clientUrl}/auth/verify-email?email=${result.data.email}`,
+				role,
 			},
 			headers: request.headers,
 			asResponse: true,

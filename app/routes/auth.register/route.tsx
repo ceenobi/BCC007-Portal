@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link, useFetcher } from "react-router";
+import { Link, useFetcher, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { signUpWithEmail } from "~/.server/actions/auth";
 import { PageSection } from "~/components/provider/page-wrapper";
@@ -14,7 +14,8 @@ import { buildSeoMeta } from "~/lib/seo";
 import type { SignUpSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 
-export function meta({}: Route.MetaArgs) {
+
+export function meta(_args: Route.MetaArgs) {
 	return [
 		...buildSeoMeta({
 			title: "Create Account - BCC007",
@@ -36,6 +37,9 @@ export default function Register() {
 	const filterFields = formFields.filter((field) =>
 		["name", "email", "password", "inviteCode"].includes(field.name),
 	);
+	const [searchParams] = useSearchParams();
+	const role = searchParams.get("role");
+
 	const {
 		handleSubmit,
 		register,
@@ -67,7 +71,7 @@ export default function Register() {
 	const onFormSubmit: SubmitHandler<SignUpSchemaType> = (data) => {
 		fetcher.submit(data, {
 			method: "post",
-			action: "/auth/register",
+			action: `/auth/register?role=${role}`,
 			encType: "application/json",
 		});
 	};
