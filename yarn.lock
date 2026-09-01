@@ -2361,6 +2361,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@upstash/vector@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@upstash/vector@npm:1.2.3"
+  checksum: 10c0/59c952ffc0904dfa7791ad7ffaaf9b0b04e04ce2d37921379806088b7857db85855471ec913642e984694760fa07685bc2a4ae5efee923f61a4a11daeba170bf
+  languageName: node
+  linkType: hard
+
 "@upstash/workflow@npm:^1.3.3":
   version: 1.3.3
   resolution: "@upstash/workflow@npm:1.3.3"
@@ -2925,6 +2932,7 @@ __metadata:
     "@types/react-is": "npm:^19"
     "@upstash/ratelimit": "npm:^2.0.8"
     "@upstash/redis": "npm:^1.38.2"
+    "@upstash/vector": "npm:^1.2.3"
     "@upstash/workflow": "npm:^1.3.3"
     "@vercel/analytics": "npm:^2.0.1"
     "@vercel/react-router": "npm:^1.3.4"

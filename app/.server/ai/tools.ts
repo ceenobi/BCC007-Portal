@@ -8,7 +8,7 @@ import {
 import { getUserPayments } from "~/.server/actions/payment";
 import Payment from "~/.server/models/payment";
 import Ticket from "~/.server/models/ticket";
-import { formatGuideHits, searchGuide } from "./guide-retrieval";
+import { formatGuideHits, searchGuideVector } from "./guide-retrieval";
 
 export interface ChatMessageLite {
   role: "user" | "assistant";
@@ -322,7 +322,8 @@ export const tools: AgentTool[] = [
     execute: async (_ctx, args) => {
       const query = String(args.query ?? "");
       if (!query) return "Please provide a query to search the guide.";
-      return formatGuideHits(searchGuide(query, 3));
+      const hits = await searchGuideVector(query, 3);
+      return formatGuideHits(hits);
     },
   },
 ];
