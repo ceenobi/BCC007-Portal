@@ -54,7 +54,7 @@ const createAuth = (db: any, client: any) =>
     },
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: false, // Hardened for production
+      requireEmailVerification: true, // Hardened for production
       sendResetPassword: async ({ user, url }: { user: any; url: string }) => {
         await workflowClient.trigger({
           url: `${env.clientUrl}/api/v1/workflow/password-reset`,
@@ -101,13 +101,13 @@ const createAuth = (db: any, client: any) =>
       },
       deleteUser: {
         enabled: true,
-        beforeDelete: async (user) => {
-          const userId = new mongoose.Types.ObjectId(user.id);
-          // await Cohort.updateMany(
-          //   { members: userId },
-          //   { $pull: { members: userId } },
-          // );
-        },
+        // beforeDelete: async (user) => {
+        //   const userId = new mongoose.Types.ObjectId(user.id);
+        //   await Cohort.updateMany(
+        //     { members: userId },
+        //     { $pull: { members: userId } },
+        //   );
+        // },
         sendDeleteAccountVerification: async ({ user, url }) => {
           await workflowClient.trigger({
             url: `${env.clientUrl}/api/v1/workflow/delete-account-request`,
