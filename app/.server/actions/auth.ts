@@ -159,7 +159,7 @@ export async function signUpWithEmail(
 				name: result.data.name,
 				email: result.data.email,
 				password: result.data.password,
-				callbackURL: `${env.clientUrl}/auth/verify-email`,
+				callbackURL: `${env.clientUrl}/auth/verify-email?email=${result.data.email}`,
 			},
 			headers: request.headers,
 			asResponse: true,
@@ -236,7 +236,7 @@ export async function resendVerifyEmail(request: Request, email: string) {
 		const response = await auth.api.sendVerificationEmail({
 			body: {
 				email,
-				callbackURL: `${env.clientUrl}/auth/verify-email`,
+				callbackURL: `${env.clientUrl}/auth/verify-email?email=${email}`,
 			},
 			headers: request.headers,
 			asResponse: true,

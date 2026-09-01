@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link, useFetcher, useNavigate } from "react-router";
+import { Link, useFetcher } from "react-router";
 import { toast } from "sonner";
 import { signUpWithEmail } from "~/.server/actions/auth";
 import { PageSection } from "~/components/provider/page-wrapper";
@@ -39,13 +39,13 @@ export default function Register() {
 	const {
 		handleSubmit,
 		register,
+		reset,
 		formState: { errors, submitCount },
 	} = useForm<SignUpSchemaType>({
 		resolver: zodResolver(signUpSchema),
 		mode: "onChange",
 	});
 	const fetcher = useFetcher();
-	const navigate = useNavigate();
 	const isSubmitting = fetcher.state === "submitting";
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string; email?: string }
@@ -54,14 +54,15 @@ export default function Register() {
 	useEffect(() => {
 		if (actionData?.success === true) {
 			toast.success(actionData.message);
-			navigate("/auth/verify-email", {
-				replace: true,
-				state: {
-					email: actionData.email,
-				},
-			});
+			reset();
+			// navigate(`/auth/verify-email?email=${actionData.email}`, {
+			// 	replace: true,
+			// 	state: {
+			// 		email: actionData.email,
+			// 	},
+			// });
 		}
-	}, [actionData, navigate]);
+	}, [actionData, reset]);
 
 	const onFormSubmit: SubmitHandler<SignUpSchemaType> = (data) => {
 		fetcher.submit(data, {

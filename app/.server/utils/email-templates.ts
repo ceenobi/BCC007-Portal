@@ -21,264 +21,262 @@ const baseLayout = (
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>${title} - BCC007 Portal</title>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
+          /* App theme — app/app.css */
           :root {
-            --bg: #f8fafc;
+            --bg: #f3f4f6;
             --card: #ffffff;
-            --primary: #1e1b4b;
-            --primary-accent: #6366f1;
-            --muted: #64748b;
+            --ink: #030303;
+            --bgDark: #131413;
+            --mainBlue: #0c2c4a;
+            --lightBlue: #3b82f6;
+            --muted: #696969;
+            --lightGray: #181a18;
+            --border: #e5e7eb;
+            --border-strong: #e2e8f0;
             --text: #0f172a;
-            --border: #e2e8f0;
+            --subtle: #64748b;
             --success: #16a34a;
-            --warning: #f59e0b;
+            --warning: #d97706;
+            --brandOrange: #ff4d00;
           }
-
           body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: var(--bg);
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%;
           }
-
           .wrapper {
             width: 100%;
-            table-layout: fixed;
             background-color: var(--bg);
-            padding: 28px 0;
+            padding: 16px 12px;
           }
-
           .container {
             width: 100%;
-            max-width: 560px;
+            max-width: 520px;
             background-color: var(--card);
             margin: 0 auto;
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07), 0 3px 8px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(3,3,3,0.06), 0 1px 4px rgba(3,3,3,0.04);
           }
-
+          /* compact header — minimal gap to content — hardcoded hex for email clients (no CSS vars) */
           .header {
-            background: linear-gradient(135deg, var(--primary), #2563eb);
-            padding: 36px 24px;
-            text-align: left;
-            position: relative;
-          }
-
-          .header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-          }
-
-          .logo-container {
+            background-color: #0c2c4a;
+            background: linear-gradient(135deg, #030303 0%, #0c2c4a 55%, #3b82f6 100%);
+            padding: 14px 20px 12px;
             text-align: center;
-            margin-bottom: 16px;
           }
-
-          .logo-img {
-            width: 40px;
-            height: 40px;
+          .logo-row {
             margin: 0 auto;
-            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.1));
-          }
-
-          .logo-text {
-            font-size: 20px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .content {
-            padding: 36px 24px;
-            color: var(--text);
-          }
-
-          .title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--text);
-            letter-spacing: -0.01em;
-          }
-
-          .welcome-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: #4f46e5;
-            margin-bottom: 12px;
-          }
-
-          .text {
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: var(--muted);
-          }
-
-          .button-container {
-            margin: 24px 0;
             text-align: center;
           }
-
-          .button {
-            background-color: #4f46e5;
-            color: #ffffff !important;
-            padding: 12px 24px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
+          .logo-img {
+            width: 28px; height: 28px;
+            border-radius: 999px;
             display: inline-block;
-            transition: background-color 0.2s;
-            box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
+            vertical-align: middle;
           }
-
-          .button:hover {
-            background-color: #4338ca;
+          .logo-text {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff !important;
+            line-height: 1;
+            vertical-align: middle;
+            mso-line-height-rule: exactly;
           }
-
+          .logo-sub {
+            font-size: 10px;
+            font-weight: 500;
+            color: #cbd5e1;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 4px;
+          }
+          .content {
+            padding: 18px 20px 14px;
+            color: var(--text);
+          }
+          .eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--lightBlue);
+            margin: 0 0 6px;
+          }
+          .title {
+            font-size: 18px;
+            font-weight: 750;
+            line-height: 1.25;
+            margin: 0 0 8px;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+          }
+          .welcome-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0 0 10px;
+          }
+          .text {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--subtle);
+            margin: 0;
+          }
+          .text p { margin: 0 0 8px; }
+          .text p:last-child { margin-bottom: 0; }
+          .button-container { margin: 16px 0 6px; text-align: center; }
+          .button {
+            background-color: var(--mainBlue);
+            color: #ffffff !important;
+            padding: 10px 20px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.08);
+          }
+          .button:hover { background-color: #0a2440; }
           .expiry-text {
             font-size: 11px;
             color: var(--muted);
-            margin-top: 12px;
-            font-style: italic;
+            margin: 10px 0 0;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 7px 10px;
           }
-
           .divider {
             height: 1px;
-            background-color: var(--border);
-            margin: 24px 0;
+            background: var(--border);
+            margin: 14px 0 12px;
           }
-
-          .footer {
-            padding: 24px 24px 20px;
-            text-align: left;
-            color: var(--muted);
+          .footnote {
             font-size: 11px;
+            line-height: 1.55;
+            color: var(--subtle);
+            margin: 0;
           }
-
-          .footer-links {
-            margin-bottom: 16px;
+          .footer {
+            padding: 12px 20px 14px;
+            background: #fcfcfc;
+            border-top: 1px solid var(--border);
+            text-align: center;
           }
-
+          .footer-links { margin: 0 0 8px; }
           .footer-link {
-            color: #475569;
+            color: var(--muted);
             text-decoration: none;
-            margin-right: 12px;
-            font-weight: 500;
-            transition: color 0.2s;
+            margin: 0 8px;
+            font-size: 11px;
+            font-weight: 600;
           }
-
-          .footer-link:hover {
-            color: #4f46e5;
+          .footer-link:hover { color: var(--mainBlue); }
+          .footer-copy {
+            font-size: 10.5px;
+            line-height: 1.5;
+            color: #94a3b8;
+            margin: 0;
           }
-
+          /* receipt / card blocks — lean */
+          .card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin: 12px 0;
+          }
+          .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 0;
+            border-bottom: 1px solid #eef2f7;
+            align-items: center;
+          }
+          .row:last-child { border-bottom: 0; padding-bottom: 0; }
+          .row:first-child { padding-top: 0; }
+          .label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--subtle); }
+          .value { font-size: 12.5px; font-weight: 650; color: var(--ink); text-align: right; }
+          .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            padding: 5px 10px;
+            border-radius: 999px;
+          }
           @media only screen and (max-width: 480px) {
-            .wrapper {
-              padding: 20px 0;
-            }
-            .container {
-              max-width: 440px;
-              border-radius: 12px;
-            }
-            .header {
-              padding: 28px 20px;
-            }
-            .content {
-              padding: 28px 20px;
-            }
-            .title {
-              font-size: 20px;
-            }
-            .welcome-text {
-              font-size: 12px;
-            }
-            .text {
-              font-size: 13px;
-              line-height: 1.5;
-            }
-            .button {
-              padding: 10px 20px;
-              font-size: 13px;
-            }
-            .expiry-text {
-              font-size: 10px;
-            }
-            .divider {
-              margin: 20px 0;
-            }
-            .footer {
-              padding: 20px 20px 16px;
-              font-size: 10px;
-            }
-            .footer-links {
-              margin-bottom: 12px;
-            }
-            .footer-link {
-              margin-right: 8px;
-              font-size: 10px;
-            }
+            .wrapper { padding: 10px 8px; }
+            .container { border-radius: 12px; }
+            .header { padding: 12px 16px 10px; }
+            .content { padding: 14px 16px 12px; }
+            .footer { padding: 10px 16px 12px; }
+            .title { font-size: 17px; }
+            .text { font-size: 12.5px; }
+            .button { width: 100%; box-sizing: border-box; text-align: center; }
+            .card { padding: 12px; }
           }
         </style>
       </head>
       <body>
         <div class="wrapper">
           <div class="container">
-            <div class="header">
-              <div class="logo-container">
-                <img src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png" alt="BCC007 Portal" class="logo-img" style="width: 40px; height: 40px;">
-                <span class="logo-text">BCC007 Portal</span>
-              </div>
-            </div>
+            <!-- header table for Outlook/Gmail — bgcolor fallback ensures contrast -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <td class="header" align="center" bgcolor="#0c2c4a" style="background-color:#0c2c4a; background:linear-gradient(135deg,#030303 0%,#0c2c4a 55%,#3b82f6 100%); padding:14px 20px 12px; text-align:center;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto; border-collapse:collapse;">
+                    <tr>
+                      <td align="center" style="text-align:center; font-size:0;">
+                        <img src="https://res.cloudinary.com/ceenobi/image/upload/e_background_removal/q_auto:best/v1785307622/bcc007portal/Gemini_Generated_Image_s6h7lfs6h7lfs6h7_pfzmnk.png" alt="BCC007" width="28" height="28" style="width:28px; height:28px; border-radius:999px; border-radius:50%; display:inline-block; vertical-align:middle;" />
+                        <span style="display:inline-block; vertical-align:middle; font-family:Inter,Arial,sans-serif; font-size:13px; font-weight:800; letter-spacing:-0.02em; color:#ffffff !important; line-height:1; margin-left:8px; mso-line-height-rule:exactly;">BCC007 Portal</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="font-family:Inter,Arial,sans-serif; font-size:10px; font-weight:500; color:#cbd5e1; letter-spacing:0.06em; text-transform:uppercase; padding-top:4px;">Alumni &amp; Student Platform</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
             <div class="content">
+              <p class="eyebrow">${title}</p>
               <h1 class="title">${title}</h1>
               <p class="welcome-text">Hello ${name},</p>
               <div class="text">${content}</div>
-
               ${
 								actionLink
 									? `
                 <div class="button-container">
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;">
                     <tr>
-                      <td align="center" bgcolor="#4f46e5" style="border-radius: 10px; background-color: #4f46e5;">
-                        <a href="${absoluteUrl(actionLink)}" target="_blank" class="button" style="display: inline-block; padding: 12px 24px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 14px; font-weight: 600; color: #ffffff !important; text-decoration: none; border-radius: 10px; background-color: #4f46e5;">${actionText || "Confirm Action"}</a>
+                      <td align="center" bgcolor="#0c2c4a" style="border-radius:9px;background-color:#0c2c4a;">
+                        <a href="${absoluteUrl(actionLink)}" target="_blank" class="button" style="display:inline-block;padding:10px 20px;font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:700;color:#ffffff !important;text-decoration:none;border-radius:9px;background-color:#0c2c4a;">${actionText || "Confirm Action"} →</a>
                       </td>
                     </tr>
                   </table>
-                </div>
-              `
+                </div>`
 									: ""
 							}
-
-              ${expiryText ? `<p class="expiry-text">${expiryText}</p>` : ""}
-
+              ${expiryText ? `<p class="expiry-text">⏱ ${expiryText}</p>` : ""}
               <div class="divider"></div>
-
-              <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
-                If you didn't request this email, you can safely ignore it. Your account security is our priority.
-              </p>
+              <p class="footnote">If you didn't request this email, you can safely ignore it. Your account security is our priority.</p>
             </div>
             <div class="footer">
               <div class="footer-links">
-                <a href="${absoluteUrl("/support/guide")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Support</a>
-                <a href="${absoluteUrl("/privacy")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Privacy Policy</a>
-                <a href="${absoluteUrl("/terms")}" class="footer-link" style="color: #475569; text-decoration: none; margin-right: 12px; font-weight: 500;">Terms of Service</a>
+                <a href="${absoluteUrl("/support/guide")}" class="footer-link">Support</a>
+                <a href="${absoluteUrl("/privacy")}" class="footer-link">Privacy</a>
+                <a href="${absoluteUrl("/terms")}" class="footer-link">Terms</a>
               </div>
-              <p style="margin-bottom: 6px;">© ${new Date().getFullYear()} BCC007 Portal. All rights reserved.</p>
-              <p>Crafting unique experiences for BCC007 students.</p>
+              <p class="footer-copy">© ${new Date().getFullYear()} BCC007 Portal · Crafting unique experiences for BCC007 students.</p>
             </div>
           </div>
         </div>
@@ -300,11 +298,11 @@ export const InvitationCodeTemplate = (code: string, link: string) =>
 	baseLayout(
 		"Platform Invite",
 		"Member",
-		`You have been invited to join the BCC007 Alumni Platform. Use the code below during your registration process.<br/><br/>
-     <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; text-align: center; margin: 24px 0;">
-       <span style="font-family: monospace; font-size: 24px; font-weight: 700; color: #0f172a; letter-spacing: 4px;">${code}</span>
-     </div>
-     Click the button below to get started. Code expires after 24 hours.`,
+		`You have been invited to join the BCC007 Alumni Platform. Use the code below during registration.<div class="card" style="text-align:center; padding:14px;">
+       <div style="font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#64748b; margin-bottom:6px;">Invitation Code</div>
+       <div style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:22px; font-weight:800; color:#030303; letter-spacing:4px;">${code}</div>
+       <div style="font-size:11px; color:#94a3b8; margin-top:6px;">Expires in 24 hours</div>
+     </div>`,
 		link,
 		"Join Platform",
 	);
@@ -371,28 +369,14 @@ export const paymentConfirmationTemplate = (
 	});
 
 	const receiptContent = `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Payment Type</span>
-        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${paymentTypeLabel}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Amount</span>
-        <span style="font-size: 16px; font-weight: 700; color: #0f172a;">${formattedAmount}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Reference</span>
-        <span style="font-size: 13px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Date</span>
-        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
-      </div>
-      <div style="text-align: center; margin-top: 14px;">
-        <span style="display: inline-block; background-color: #dcfce7; color: #166534; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 5px;">✓ Payment Confirmed</span>
-      </div>
+    <div class="card">
+      <div class="row"><span class="label">Payment Type</span><span class="value">${paymentTypeLabel}</span></div>
+      <div class="row"><span class="label">Amount</span><span class="value" style="font-size:15px; color:#0c2c4a;">${formattedAmount}</span></div>
+      <div class="row"><span class="label">Reference</span><span class="value" style="font-family:ui-monospace,monospace; font-size:11.5px;">${data.reference}</span></div>
+      <div class="row"><span class="label">Date</span><span class="value">${formattedDate}</span></div>
+      <div style="text-align:center; margin-top:10px;"><span class="badge" style="background:#dcfce7; color:#166534;">✓ Payment Confirmed</span></div>
     </div>
-    Your payment has been received and confirmed successfully. Thank you for your support — every contribution helps the BCC007 community.
+    <p style="margin:0; font-size:12.5px; color:#64748b; line-height:1.6;">Your payment has been received and confirmed. Thank you for supporting the BCC007 community.</p>
   `;
 
 	return baseLayout(
@@ -440,28 +424,17 @@ export const transferNotificationTemplate = (
 	const badgeText = isSuccess ? "✓ Transfer Completed" : "Transfer Update";
 
 	const content = `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 20px 0;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Amount</span>
-        <span style="font-size: 18px; font-weight: 700; color: #0f172a;">${formattedAmount}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Reference</span>
-        <span style="font-size: 13px; font-weight: 600; color: #0f172a; font-family: monospace;">${data.reference}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 12px; gap: 6px">
-        <span style="font-size: 13px; color: #64748b;">Date</span>
-        <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${formattedDate}</span>
-      </div>
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; text-align: center;">
-        <span style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 5px;">${badgeText}</span>
-      </div>
+    <div class="card">
+      <div class="row"><span class="label">Amount</span><span class="value" style="font-size:15px; color:#0c2c4a;">${formattedAmount}</span></div>
+      <div class="row"><span class="label">Reference</span><span class="value" style="font-family:ui-monospace,monospace; font-size:11.5px;">${data.reference}</span></div>
+      <div class="row"><span class="label">Date</span><span class="value">${formattedDate}</span></div>
+      <div style="text-align:center; margin-top:10px;"><span class="badge" style="background:${badgeBg}; color:${badgeColor};">${badgeText}</span></div>
     </div>
-    ${
+    <p style="margin:0; font-size:12.5px; color:#64748b; line-height:1.6;">${
 			isSuccess
 				? "Your transfer has been processed and sent to your bank account successfully."
 				: "There was an issue processing your transfer. Please check your bank account or contact support."
-		}
+		}</p>
   `;
 
 	return baseLayout(
@@ -480,21 +453,12 @@ export const contactOwnerTemplate = (data: {
 	message: string;
 }) => {
 	const content = `
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin: 16px 0;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">From</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${data.fullname}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Email</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${data.email}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px; gap: 8px">
-        <span style="font-size: 14px; color: #64748b;">Subject</span>
-        <span style="font-size: 14px; font-weight: 600; color: #0f172a;">${data.subject}</span>
-      </div>
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 16px;">
-        <p style="font-size: 14px; color: #334155; line-height: 1.6; margin: 0; white-space: pre-line;">${data.message}</p>
+    <div class="card" style="padding:12px 14px;">
+      <div class="row"><span class="label">From</span><span class="value">${data.fullname}</span></div>
+      <div class="row"><span class="label">Email</span><span class="value" style="font-size:12px;">${data.email}</span></div>
+      <div class="row"><span class="label">Subject</span><span class="value">${data.subject}</span></div>
+      <div style="margin-top:10px; padding-top:10px; border-top:1px solid #eef2f7;">
+        <p style="font-size:13px; color:#334155; line-height:1.65; margin:0; white-space:pre-line;">${data.message}</p>
       </div>
     </div>
   `;
@@ -527,14 +491,14 @@ export const ticketConfirmationTemplate = (
 	baseLayout(
 		"Support Ticket Confirmation",
 		name,
-		`Your support ticket has been created successfully. Here's a summary of your request:<br/><br/>
-     <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
-       <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
-       <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
-       <p style="margin: 4px 0;"><strong>Priority:</strong> ${priority}</p>
-       <p style="margin: 4px 0;"><strong>Description:</strong> ${description}</p>
+		`Your support ticket has been created successfully.
+     <div class="card">
+       <div class="row"><span class="label">Ticket ID</span><span class="value" style="font-family:ui-monospace,monospace; font-size:11.5px;">${ticketId}</span></div>
+       <div class="row"><span class="label">Title</span><span class="value" style="font-size:12px;">${title}</span></div>
+       <div class="row"><span class="label">Priority</span><span class="value"><span class="badge" style="background:#fef3c7; color:#92400e; font-size:10px; padding:3px 7px;">${priority}</span></span></div>
+       <div style="margin-top:10px; padding-top:10px; border-top:1px solid #eef2f7;"><p style="margin:0; font-size:12.5px; color:#334155; line-height:1.6;">${description}</p></div>
      </div>
-     Our support team will review your ticket and get back to you as soon as possible. You can track the status of your ticket in the Help Desk section.`,
+     <p style="margin:0; font-size:12.5px; color:#64748b; line-height:1.6;">Our support team will review your ticket and get back to you as soon as possible. Track status in Help Desk.</p>`,
 	);
 
 export const ticketAssignedTemplate = (
@@ -545,12 +509,12 @@ export const ticketAssignedTemplate = (
 	baseLayout(
 		"Ticket Assigned",
 		name,
-		`A support ticket has been assigned to you. Here's the details:<br/><br/>
-     <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
-       <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
-       <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
+		`A support ticket has been assigned to you.
+     <div class="card">
+       <div class="row"><span class="label">Ticket ID</span><span class="value" style="font-family:ui-monospace,monospace; font-size:11.5px;">${ticketId}</span></div>
+       <div class="row"><span class="label">Title</span><span class="value" style="font-size:12px;">${title}</span></div>
      </div>
-     Please review and take the appropriate action.`,
+     <p style="margin:0; font-size:12.5px; color:#64748b;">Please review and take the appropriate action.</p>`,
 	);
 
 export const ticketResolvedTemplate = (
@@ -561,12 +525,13 @@ export const ticketResolvedTemplate = (
 	baseLayout(
 		"Ticket Resolved",
 		name,
-		`Your support ticket has been marked as resolved. Here's a summary:<br/><br/>
-     <div style="background-color: #f1f5f9; padding: 16px; border-radius: 8px; margin: 24px 0; text-align: left;">
-       <p style="margin: 4px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
-       <p style="margin: 4px 0;"><strong>Title:</strong> ${title}</p>
+		`Your support ticket has been marked as resolved.
+     <div class="card">
+       <div class="row"><span class="label">Ticket ID</span><span class="value" style="font-family:ui-monospace,monospace; font-size:11.5px;">${ticketId}</span></div>
+       <div class="row"><span class="label">Title</span><span class="value" style="font-size:12px;">${title}</span></div>
+       <div style="text-align:center; margin-top:10px;"><span class="badge" style="background:#dcfce7; color:#166534;">✓ Resolved</span></div>
      </div>
-     If you have any further questions, please create a new ticket.`,
+     <p style="margin:0; font-size:12.5px; color:#64748b;">If you have further questions, please create a new ticket.</p>`,
 	);
 
 export const deleteAccountRequestTemplate = (name: string, link: string) =>

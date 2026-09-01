@@ -52,7 +52,8 @@ export default function InviteMember() {
 		if (actionData?.success === true) {
 			toast.success(actionData.message);
 			fetcher.reset();
-			reset({ email: "", role: "member" });
+      reset({ email: "", role: "member" });
+			setIsOpen(false)
 		}
 	}, [actionData, fetcher, reset]);
 

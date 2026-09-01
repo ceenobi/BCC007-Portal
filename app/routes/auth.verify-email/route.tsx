@@ -3,7 +3,7 @@ import {
 	RiMailSendFill,
 	RiSpam2Fill,
 } from "@remixicon/react";
-import { Link, useFetcher, useNavigate } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
 import { resendVerifyEmail } from "~/.server/actions/auth";
 import { PageSection } from "~/components/provider/page-wrapper";
 import ActionBtn from "~/components/ui/action-btn";
@@ -27,9 +27,10 @@ export function meta(_args: Route.MetaArgs) {
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
+	const url = new URL(request.url);
+	const email = url.searchParams.get("email");
 	const user = context.get(userContext);
-	const email = user?.email ?? "";
-	return await resendVerifyEmail(request, email);
+	return await resendVerifyEmail(request, email ?? user?.email ?? "");
 }
 
 export async function loader({ context }: Route.LoaderArgs) {
@@ -56,7 +57,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 		| undefined;
 
 	return (
-		<PageSection index={0} className="w-full max-w-full px-6">
+		<PageSection index={0} className="w-full max-w-100 mx-auto px-6">
 			{user?.emailVerified ? (
 				<div className="p-8 sm:p-12 text-center space-y-6">
 					<div className="relative inline-block">
@@ -81,7 +82,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 						<ActionBtn
 							text="Go to Dashboard"
 							type="button"
-							classname="w-full sm:w-auto px-10 rounded-md font-medium btn"
+							classname="w-full sm:w-auto px-10 h-10.5 rounded-md font-medium btn"
 							onClick={() => navigate("/dashboard")}
 						/>
 					</div>
@@ -159,12 +160,6 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 									classname="w-full h-11 rounded-md font-bold btn"
 								/>
 							</fetcher.Form>
-							<Link
-								to="/auth/login"
-								className="text-sm font-medium text-muted-foreground hover:underline transition-colors"
-							>
-								Back to Login
-							</Link>
 						</div>
 					</div>
 				</div>
