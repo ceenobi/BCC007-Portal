@@ -27,6 +27,8 @@ const ENV_VARS: EnvSpec[] = [
   { key: "AI_API_KEY", required: false },
   { key: "AI_BASE_URL", required: false },
   { key: "AI_MODEL", required: false },
+  { key: "UPSTASH_VECTOR_REST_URL", required: false },
+  { key: "UPSTASH_VECTOR_REST_TOKEN", required: false },
   { key: "SENTRY_DSN", required: false },
   { key: "SENTRY_AUTH_TOKEN", required: false },
   { key: "SENTRY_ORG", required: false },
@@ -122,6 +124,10 @@ interface Env {
   readonly aiApiKey: string;
   readonly aiBaseUrl: string;
   readonly aiModel: string;
+  readonly upstashVector: {
+    restUrl: string;
+    restToken: string;
+  };
   readonly sentryDsn: string;
   readonly sentryAuthToken: string;
   readonly sentryOrg: string;
@@ -157,6 +163,10 @@ export const env: Env = {
   aiApiKey: getEnvVar()["AI_API_KEY"] || getEnvVar()["OPENCODE_ZEN_API_KEY"],
   aiBaseUrl: getEnvVar()["AI_BASE_URL"] || "https://opencode.ai/zen/v1",
   aiModel: getEnvVar()["AI_MODEL"] || "deepseek-v4-flash-free",
+  upstashVector: {
+    restUrl: getEnvVar()["UPSTASH_VECTOR_REST_URL"] || "",
+    restToken: getEnvVar()["UPSTASH_VECTOR_REST_TOKEN"] || "",
+  },
   sentryDsn: getEnvVar()["SENTRY_DSN"],
   sentryAuthToken: getEnvVar()["SENTRY_AUTH_TOKEN"],
   sentryOrg: getEnvVar()["SENTRY_ORG"],
