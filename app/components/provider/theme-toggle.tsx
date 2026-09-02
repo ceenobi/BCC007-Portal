@@ -23,7 +23,7 @@ export function ThemeToggle() {
 			aria-label={"Toggle theme"}
 			onClick={handleThemeToggle}
 			className={cn(
-				"fixed bottom-16 right-4 z-40 size-12 bg-lightBlue rounded-full shadow-lg transition-transform md:bottom-20 md:right-6",
+				"fixed bottom-30 right-4 z-40 size-12 bg-lightBlue rounded-full shadow-lg transition-transform md:bottom-20 md:right-6",
 				"text-white",
 			)}
 		>
