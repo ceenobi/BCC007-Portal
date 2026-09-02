@@ -47,7 +47,7 @@ export default function HomeNav({ user }: { user?: SessionUser | null }) {
 				{user ? (
 					<div className="flex gap-3 items-center">
 						<Link to="/dashboard">
-							<Button size="sm" className="hidden md:block btn">
+							<Button size="sm" className="btn">
 								Dashboard
 							</Button>
 						</Link>

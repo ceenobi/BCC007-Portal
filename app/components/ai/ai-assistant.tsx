@@ -92,7 +92,7 @@ function ChatWidget() {
 				aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
 				onClick={toggleChat}
 				className={cn(
-					"fixed bottom-4 right-4 z-40 size-12 rounded-full shadow-lg transition-transform md:bottom-6 md:right-6",
+					"fixed bottom-16 right-4 z-40 size-12 rounded-full shadow-lg transition-transform md:bottom-6 md:right-6",
 					BRAND_ACCENT,
 				)}
 			>
