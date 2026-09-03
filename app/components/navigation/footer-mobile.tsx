@@ -14,14 +14,14 @@ export default function FooterMobile({ user }: { user: SessionUser }) {
 
 	return (
 		<div className="md:hidden fixed z-50 w-full bottom-0 border-t bg-white dark:bg-bgDark">
-			<div className="max-w-full mx-auto flex justify-between items-center py-2 px-4">
+			<div className="max-w-full mx-auto flex justify-between items-center py-2 px-6">
 				<Button
 					variant="ghost"
 					size="lg"
 					className={isActive("/dashboard") ? "text-lightBlue" : ""}
 					render={<Link to="/dashboard" />}
 				>
-					<RiHomeFill />
+						<RiHomeFill className="size-6" />
 					{isActive("/dashboard") && <span className="sr-only">Active</span>}
 				</Button>
 				<Button
@@ -34,7 +34,7 @@ export default function FooterMobile({ user }: { user: SessionUser }) {
 					}
 					render={<Link to="/dashboard/payments" />}
 				>
-					<RiWalletFill />
+					<RiWalletFill className="size-6" />
 					{isActive("/dashboard/payments") && (
 						<span className="sr-only">Active</span>
 					)}
@@ -47,7 +47,7 @@ export default function FooterMobile({ user }: { user: SessionUser }) {
 					}
 					render={<Link to="/dashboard/announcements" />}
 				>
-					<RiMegaphoneFill />
+					<RiMegaphoneFill className="size-6" />
 					{isActive("/dashboard/announcements") && (
 						<span className="sr-only">Active</span>
 					)}
