@@ -34,6 +34,20 @@ jobs:
       - run: yarn install --immutable
       - run: yarn typecheck
 
+  biome-check:
+    runs-on: ubuntu-latest
+    needs: typecheck
+    steps:
+      - uses: actions/checkout@v7
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+      - run: yarn install --immutable
+      - run: biome check --write --unsafe || true
+
   test:
     runs-on: ubuntu-latest
     steps:
