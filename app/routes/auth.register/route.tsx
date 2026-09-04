@@ -14,7 +14,6 @@ import { buildSeoMeta } from "~/lib/seo";
 import type { SignUpSchemaType } from "~/types";
 import type { Route } from "./+types/route";
 
-
 export function meta(_args: Route.MetaArgs) {
 	return [
 		...buildSeoMeta({
@@ -39,6 +38,7 @@ export default function Register() {
 	);
 	const [searchParams] = useSearchParams();
 	const role = searchParams.get("role");
+	const inviteCodeFromUrl = searchParams.get("inviteCode")?.toUpperCase().trim() ?? "";
 
 	const {
 		handleSubmit,
@@ -48,6 +48,9 @@ export default function Register() {
 	} = useForm<SignUpSchemaType>({
 		resolver: zodResolver(signUpSchema),
 		mode: "onChange",
+		defaultValues: {
+			inviteCode: inviteCodeFromUrl,
+		},
 	});
 	const fetcher = useFetcher();
 	const isSubmitting = fetcher.state === "submitting";

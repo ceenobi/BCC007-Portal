@@ -70,8 +70,9 @@ export async function sendInviteCode(
 		inviteCodeExpires.setHours(inviteCodeExpires.getHours() + 24);
 
 		const sent = [];
-		for (const email of emails) {
-			const inviteCode = generateInviteCode();
+		for (const rawEmail of emails) {
+			const email = rawEmail.toLowerCase().trim();
+			const inviteCode = generateInviteCode().toUpperCase().trim();
 
 			await InviteCode.findOneAndUpdate(
 				{ email },
@@ -116,8 +117,10 @@ export async function signUpWithEmail(
 	payload: SignUpSchemaType,
 ) {
 	return tryCatchWrapper(async () => {
-    await checkRateLimit(request, "strict");
-		const role = request.url.includes("role=admin") ? "admin" : "member";
+		await checkRateLimit(request, "strict");
+		const url = new URL(request.url);
+		const roleParam = url.searchParams.get("role");
+		const role = roleParam === "admin" ? "admin" : "member";
 		const result = signUpSchema.safeParse(payload);
 		if (!result.success) {
 			logger.error({ result }, "Invalid form data");
@@ -131,9 +134,11 @@ export async function signUpWithEmail(
 			);
 		}
 
+		const normalizedEmail = result.data.email.toLowerCase().trim();
+		const normalizedInviteCode = result.data.inviteCode.toUpperCase().trim();
 		const verifyInviteCode = await InviteCode.findOne({
-			inviteCode: result.data.inviteCode,
-			email: result.data.email,
+			inviteCode: normalizedInviteCode,
+			email: normalizedEmail,
 		}).lean();
 		if (!verifyInviteCode) {
 			return Response.json(
@@ -158,9 +163,9 @@ export async function signUpWithEmail(
 		const response = await auth.api.signUpEmail({
 			body: {
 				name: result.data.name,
-				email: result.data.email,
+				email: normalizedEmail,
 				password: result.data.password,
-				callbackURL: `${env.clientUrl}/auth/verify-email?email=${result.data.email}`,
+				callbackURL: `${env.clientUrl}/auth/verify-email?email=${normalizedEmail}`,
 				role,
 			},
 			headers: request.headers,
@@ -172,7 +177,7 @@ export async function signUpWithEmail(
 			return response;
 		}
 
-		await InviteCode.findOneAndDelete({ inviteCode: payload.inviteCode });
+		await InviteCode.findOneAndDelete({ inviteCode: normalizedInviteCode, email: normalizedEmail });
 
 		const headers = new Headers();
 		for (const [k, v] of response.headers.entries()) {
@@ -187,15 +192,15 @@ export async function signUpWithEmail(
 		await AuditLogService.record(request, {
 			action: "USER_SIGNUP",
 			category: "auth",
-			description: `New account created for ${payload.email}`,
-			details: { email: payload.email, name: result.data.name },
+			description: `New account created for ${normalizedEmail}`,
+			details: { email: normalizedEmail, name: result.data.name },
 		});
 		return Response.json(
 			{
 				success: true,
 				message:
 					"Account created successfully. Please check your email to verify your account.",
-				email: payload.email,
+				email: normalizedEmail,
 			},
 			{
 				headers,
@@ -288,9 +293,10 @@ export async function signInWithEmail(
 			);
 		}
 
+		const normalizedEmail = result.data.email.toLowerCase().trim();
 		const response = await auth.api.signInEmail({
 			body: {
-				email: result.data.email,
+				email: normalizedEmail,
 				password: result.data.password,
 				callbackURL: `${env.clientUrl}`,
 			},
@@ -300,14 +306,14 @@ export async function signInWithEmail(
 
 		if (!response.ok) {
 			if (response.status === 403) {
-				const errorData = await response.json();
-				logger.debug({ errorData }, "Better Auth 403 error data");
+				const errorData = await response.json().catch(() => null);
+				logger.warn({ errorData, email: normalizedEmail }, "Better Auth 403 error data");
 			}
 
 			// 1. Check for account suspension / failed attempts
 			if (response.status === 401) {
 				const user = await User.findOneAndUpdate(
-					{ email: result.data.email },
+					{ email: normalizedEmail },
 					{ $inc: { failedLoginAttempts: 1 } },
 					{ returnDocument: "after" },
 				);
@@ -335,7 +341,7 @@ export async function signInWithEmail(
 							action: "ACCOUNT_LOCKED",
 							category: "security",
 							description: "Account locked after 5 failed login attempts",
-							details: { email: result.data.email },
+							details: { email: normalizedEmail },
 						});
 
 						NotificationService.send({
@@ -364,18 +370,18 @@ export async function signInWithEmail(
 
 		// 3. Reset failed attempts on success
 		await User.updateOne(
-			{ email: result.data.email },
-			{ failedLoginAttempts: 0 },
+			{ email: normalizedEmail },
+			{ $set: { failedLoginAttempts: 0 } },
 		);
 
 		await AuditLogService.record(request, {
 			action: "USER_LOGIN",
 			category: "auth",
-			description: `User ${result.data.email} logged in`,
-			details: { email: result.data.email },
+			description: `User ${normalizedEmail} logged in`,
+			details: { email: normalizedEmail },
 		});
 
-		const loggedInUser = await User.findOne({ email: result.data.email })
+		const loggedInUser = await User.findOne({ email: normalizedEmail })
 			.select("_id")
 			.lean();
 		if (loggedInUser) {
