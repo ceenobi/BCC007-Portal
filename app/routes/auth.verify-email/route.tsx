@@ -57,7 +57,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 		| undefined;
 
 	return (
-		<PageSection index={0} className="w-full max-w-100 mx-auto px-6">
+		<PageSection index={0} className="w-full max-w-130 mx-auto px-4">
 			{user?.emailVerified ? (
 				<div className="p-8 sm:p-12 text-center space-y-6">
 					<div className="relative inline-block">
@@ -90,14 +90,14 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 			) : (
 				<div className="relative">
 					{/* Status Banner */}
-					<div className="px-6 py-3 flex items-center justify-center gap-2">
+					<div className="px-4 py-3 flex items-center justify-center gap-2">
 						<div className="w-2 h-2 rounded-full bg-warning animate-pulse" />
 						<span className="text-xs font-bold uppercase tracking-wider text-warning">
 							Action Required
 						</span>
 					</div>
 
-					<div className="p-3 sm:px-12 space-y-4">
+					<div className="p-3 sm:px-6 space-y-4 w-full">
 						{/* Alert Handling */}
 						<div className="min-h-6">
 							{actionData && (
@@ -133,7 +133,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 							</div>
 						</div>
 
-						<div className="bg-muted border dark:border-mainGold dark:bg-mainGold/20 rounded-md p-6 space-y-4">
+						<div className="bg-muted border rounded-md p-6 space-y-4">
 							<div className="flex gap-4">
 								<div className="shrink-0 w-10 h-10 rounded-md bg-card border border-border dark:border-mainGold flex items-center justify-center">
 									<RiSpam2Fill size={20} className="text-foreground" />
@@ -169,7 +169,7 @@ export default function VerifyEmail({ loaderData }: Route.ComponentProps) {
 			<p className="mt-4 text-center text-sm text-muted-foreground">
 				Need help?{" "}
 				<a
-					href="mailto:support@bcc007.com"
+					href="mailto:info@bcc007-group.org"
 					className="font-medium text-mainBlue dark:text-lightBlue hover:underline"
 				>
 					Contact Support

@@ -38,7 +38,8 @@ export default function Register() {
 	);
 	const [searchParams] = useSearchParams();
 	const role = searchParams.get("role");
-	const inviteCodeFromUrl = searchParams.get("inviteCode")?.toUpperCase().trim() ?? "";
+	const inviteCodeFromUrl =
+		searchParams.get("inviteCode")?.toUpperCase().trim() ?? "";
 
 	const {
 		handleSubmit,
@@ -61,7 +62,9 @@ export default function Register() {
 	useEffect(() => {
 		if (actionData?.success === true) {
 			toast.success(actionData.message);
-			reset();
+			reset({
+				inviteCode: "",
+			});
 			// navigate(`/auth/verify-email?email=${actionData.email}`, {
 			// 	replace: true,
 			// 	state: {
