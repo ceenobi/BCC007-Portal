@@ -1,4 +1,4 @@
-import { permissions, type Permission, type Role } from "./constants";
+import { type Permission, permissions, type Role } from "./constants";
 
 /**
  * Checks if a user has the required permission based on their role.
@@ -7,13 +7,13 @@ import { permissions, type Permission, type Role } from "./constants";
  * @returns boolean
  */
 export function hasPermission(
-  userRole: string | undefined,
-  permission: Permission,
+	userRole: string | undefined,
+	permission: Permission,
 ): boolean {
-  if (!userRole) return false;
+	if (!userRole) return false;
 
-  const allowedRoles = permissions[permission] as readonly string[];
-  return allowedRoles.includes(userRole);
+	const allowedRoles = permissions[permission] as readonly string[];
+	return allowedRoles.includes(userRole);
 }
 
 /**
@@ -23,6 +23,6 @@ export function hasPermission(
  * @returns boolean
  */
 export function hasRole(userRole: string | undefined, roles: Role[]): boolean {
-  if (!userRole) return false;
-  return roles.includes(userRole as Role);
+	if (!userRole) return false;
+	return roles.includes(userRole as Role);
 }

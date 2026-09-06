@@ -7,16 +7,16 @@ let mongod: MongoMemoryServer | undefined;
  * test workers via `provide`, read back in `vitest.setup.ts` with `inject`.
  */
 export default async function setup({
-  provide,
+	provide,
 }: {
-  provide: (key: string, value: unknown) => void;
+	provide: (key: string, value: unknown) => void;
 }) {
-  mongod = await MongoMemoryServer.create({
-    instance: { storageEngine: "wiredTiger" },
-  });
-  provide("mongoUri", mongod.getUri());
+	mongod = await MongoMemoryServer.create({
+		instance: { storageEngine: "wiredTiger" },
+	});
+	provide("mongoUri", mongod.getUri());
 
-  return async () => {
-    await mongod?.stop();
-  };
+	return async () => {
+		await mongod?.stop();
+	};
 }

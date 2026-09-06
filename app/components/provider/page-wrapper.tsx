@@ -1,61 +1,61 @@
-import { type FC, type ReactNode, createContext, useContext } from "react";
+import { createContext, type FC, type ReactNode, useContext } from "react";
 import { useWaveAnimation } from "~/hooks/usePageAnimation";
 
 interface PageWrapperProps {
-  children: ReactNode;
-  className?: string;
+	children: ReactNode;
+	className?: string;
 }
 
 interface AnimationContextType {
-  getItemStyle: (index: number) => React.CSSProperties;
-  getItemClassName: (baseClasses?: string) => string;
+	getItemStyle: (index: number) => React.CSSProperties;
+	getItemClassName: (baseClasses?: string) => string;
 }
 
 const AnimationContext = createContext<AnimationContextType | null>(null);
 
 export const PageWrapper: FC<PageWrapperProps> = ({
-  children,
-  className = "",
+	children,
+	className = "",
 }) => {
-  const { containerRef, getItemStyle, getItemClassName } = useWaveAnimation({
-    staggerDelay: 50,
-    duration: 600,
-  });
+	const { containerRef, getItemStyle, getItemClassName } = useWaveAnimation({
+		staggerDelay: 50,
+		duration: 600,
+	});
 
-  return (
-    <AnimationContext.Provider value={{ getItemStyle, getItemClassName }}>
-      <div
-        ref={containerRef}
-        className={`${className} container mx-auto overflow-y-auto py-20`}
-      >
-        {children}
-      </div>
-    </AnimationContext.Provider>
-  );
+	return (
+		<AnimationContext.Provider value={{ getItemStyle, getItemClassName }}>
+			<div
+				ref={containerRef}
+				className={`${className} container mx-auto overflow-y-auto pt-10 pb-30 md:py-20`}
+			>
+				{children}
+			</div>
+		</AnimationContext.Provider>
+	);
 };
 
 interface PageSectionProps {
-  children: ReactNode;
-  index: number;
-  className?: string;
+	children: ReactNode;
+	index: number;
+	className?: string;
 }
 
 export const PageSection: FC<PageSectionProps> = ({
-  children,
-  index,
-  className = "",
+	children,
+	index,
+	className = "",
 }) => {
-  const context = useContext(AnimationContext);
+	const context = useContext(AnimationContext);
 
-  if (!context) {
-    throw new Error("PageSection must be used within a PageWrapper");
-  }
+	if (!context) {
+		throw new Error("PageSection must be used within a PageWrapper");
+	}
 
-  const { getItemStyle, getItemClassName } = context;
+	const { getItemStyle, getItemClassName } = context;
 
-  return (
-    <div style={getItemStyle(index)} className={getItemClassName(className)}>
-      {children}
-    </div>
-  );
+	return (
+		<div style={getItemStyle(index)} className={getItemClassName(className)}>
+			{children}
+		</div>
+	);
 };

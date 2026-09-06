@@ -6,80 +6,74 @@ import { Button } from "~/components/ui/button";
 import type { EventData } from "~/types";
 
 export default function InterestToggle({
-  event,
-  currentUserId,
+	event,
+	currentUserId,
 }: {
-  event: EventData;
-  currentUserId: string;
+	event: EventData;
+	currentUserId: string;
 }) {
-  const members = Array.isArray(event.interestedMembers)
-    ? event.interestedMembers
-    : [];
-  const isInitiallyInterested = members.some(
-    (m) => String((m as { _id?: string })?._id ?? m) === currentUserId,
-  );
-  const [interested, setInterested] = useState(isInitiallyInterested);
-  const [count, setCount] = useState(members.length);
-  const capacity = event.capacity;
-  const isFull = Boolean(
-    capacity && !interested && count >= capacity,
-  );
-  const fetcher = useFetcher();
+	const members = Array.isArray(event.interestedMembers)
+		? event.interestedMembers
+		: [];
+	const isInitiallyInterested = members.some(
+		(m) => String((m as { _id?: string })?._id ?? m) === currentUserId,
+	);
+	const [interested, setInterested] = useState(isInitiallyInterested);
+	const [count, setCount] = useState(members.length);
+	const capacity = event.capacity;
+	const isFull = Boolean(capacity && !interested && count >= capacity);
+	const fetcher = useFetcher();
 
-  const actionData = fetcher.data as
-    | { success?: boolean; message?: string; body?: { interested: boolean; count: number } }
-    | undefined;
+	const actionData = fetcher.data as
+		| {
+				success?: boolean;
+				message?: string;
+				body?: { interested: boolean; count: number };
+		  }
+		| undefined;
 
-  useEffect(() => {
-    setInterested(isInitiallyInterested);
-    setCount(members.length);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event._id]);
+	useEffect(() => {
+		setInterested(isInitiallyInterested);
+		setCount(members.length);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [members.length, isInitiallyInterested]);
 
-  useEffect(() => {
-    if (!actionData) return;
-    if (actionData.success && actionData.body) {
-      setInterested(actionData.body.interested);
-      setCount(actionData.body.count);
-    } else {
-      toast.error(actionData.message || "Something went wrong");
-    }
-  }, [actionData]);
+	useEffect(() => {
+		if (!actionData) return;
+		if (actionData.success && actionData.body) {
+			setInterested(actionData.body.interested);
+			setCount(actionData.body.count);
+		} else {
+			toast.error(actionData.message || "Something went wrong");
+		}
+	}, [actionData]);
 
-  const toggle = () => {
-    fetcher.submit(
-      { intent: "toggle-interest", eventId: event._id },
-      {
-        method: "post",
-        encType: "application/json",
-        action: `/dashboard/events/${event._id}`,
-      },
-    );
-  };
+	const toggle = () => {
+		fetcher.submit(
+			{ intent: "toggle-interest", eventId: event._id },
+			{
+				method: "post",
+				encType: "application/json",
+				action: `/dashboard/events/${event._id}`,
+			},
+		);
+	};
 
-  return (
-    <Button
-      variant={interested ? "default" : "outline"}
-      size="sm"
-      onClick={toggle}
-      disabled={fetcher.state === "submitting" || isFull}
-      aria-pressed={interested}
-      title={
-        isFull
-          ? "This event is at full capacity"
-          : undefined
-      }
-    >
-      {interested ? <RiHeart3Fill /> : <RiHeart3Line />}
-      {isFull
-        ? "Event full"
-        : interested
-          ? "Interested"
-          : "I'm interested"}
-      <span className="text-xs opacity-70">
-        {count}
-        {capacity ? `/${capacity}` : ""}
-      </span>
-    </Button>
-  );
+	return (
+		<Button
+			variant={interested ? "default" : "outline"}
+			size="sm"
+			onClick={toggle}
+			disabled={fetcher.state === "submitting" || isFull}
+			aria-pressed={interested}
+			title={isFull ? "This event is at full capacity" : undefined}
+		>
+			{interested ? <RiHeart3Fill /> : <RiHeart3Line />}
+			{isFull ? "Event full" : interested ? "Interested" : "I'm interested"}
+			<span className="text-xs opacity-70">
+				{count}
+				{capacity ? `/${capacity}` : ""}
+			</span>
+		</Button>
+	);
 }

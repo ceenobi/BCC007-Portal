@@ -6,7 +6,5 @@ import * as jestDom from "@testing-library/jest-dom/vitest";
 import { expect } from "vitest";
 
 if (typeof document !== "undefined") {
-  expect.extend(jestDom);
+	expect.extend(jestDom);
 }
-
-export {};

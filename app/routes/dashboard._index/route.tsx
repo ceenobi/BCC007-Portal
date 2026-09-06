@@ -11,55 +11,55 @@ import DashboardView from "../../features/dashboard/dashboard-view";
 import type { Route } from "./+types/route";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Dashboard - BCC007 Team payments" },
-    {
-      name: "description",
-      content: "Overview of your organization at a glance",
-    },
-  ];
+	return [
+		{ title: "Dashboard - BCC007 Team payments" },
+		{
+			name: "description",
+			content: "Overview of your organization at a glance",
+		},
+	];
 }
 
 export async function loader({ request, context }: Route.LoaderArgs) {
-  const user = context.get(userContext);
-  if (!user) {
-    throw Response.json(
-      { success: false, message: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+	const user = context.get(userContext);
+	if (!user) {
+		throw Response.json(
+			{ success: false, message: "Unauthorized" },
+			{ status: 401 },
+		);
+	}
 
-  const queryClient = getQueryClientRsc();
-  const dashboard = queryClient.ensureQueryData(getDashboardQuery(request));
+	const queryClient = getQueryClientRsc();
+	const dashboard = queryClient.ensureQueryData(getDashboardQuery(request));
 
-  return {
-    dashboard,
-    user,
-    dehydratedState: dehydrate(queryClient),
-  };
+	return {
+		dashboard,
+		user,
+		dehydratedState: dehydrate(queryClient),
+	};
 }
 
 export default function DashboardIndex({ loaderData }: Route.ComponentProps) {
-  const { dashboard, user } = loaderData;
+	const { dashboard, user } = loaderData;
 
-  return (
-    <PageWrapper>
-      <PageSection index={0} className="space-y-8 px-4 xl:px-8">
-        <div className="space-y-2">
-          <h1 className="text-xl font-semibold text-balance tracking-tight leading-tight text-foreground">
-            Welcome back, {user.name}
-          </h1>
-          <p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
-            Here's what's happening in your organization.
-          </p>
-        </div>
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold text-balance tracking-tight leading-tight text-foreground">
+						Welcome back, {user.name}
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						Here's what's happening in your organization.
+					</p>
+				</div>
 
-        <Suspense fallback={<DashboardSkeleton />}>
-          <Await resolve={dashboard} errorElement={<DataError />}>
-            {(resolved) => <DashboardView data={resolved} />}
-          </Await>
-        </Suspense>
-      </PageSection>
-    </PageWrapper>
-  );
+				<Suspense fallback={<DashboardSkeleton />}>
+					<Await resolve={dashboard} errorElement={<DataError />}>
+						{(resolved) => <DashboardView data={resolved} />}
+					</Await>
+				</Suspense>
+			</PageSection>
+		</PageWrapper>
+	);
 }

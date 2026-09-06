@@ -8,26 +8,26 @@ import type { Route } from "./+types/_layout";
 export const middleware = [sessionMiddleware];
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/sw.js", {
-        scope: "/",
-      })
-      .then((registration) => {
-        console.log(
-          "SW registered: active",
-          registration.active ? "active" : "installing"
-        );
-      })
-      .catch((err) => {
-        console.error("SW registration failed:", err);
-      });
-  });
+	window.addEventListener("load", () => {
+		navigator.serviceWorker
+			.register("/sw.js", {
+				scope: "/",
+			})
+			.then((registration) => {
+				console.log(
+					"SW registered: active",
+					registration.active ? "active" : "installing",
+				);
+			})
+			.catch((err) => {
+				console.error("SW registration failed:", err);
+			});
+	});
 }
 
 export const headers: Route.HeadersFunction = () => ({
-  "Cache-Control": "private, no-store",
-  Vary: "Cookie",
+	"Cache-Control": "private, no-store",
+	Vary: "Cookie",
 });
 
 export async function loader({ context }: Route.LoaderArgs) {
@@ -35,12 +35,15 @@ export async function loader({ context }: Route.LoaderArgs) {
 	return { user };
 }
 
+import { CookieBanner } from "~/components/cookie-banner/cookie-banner";
+
 export default function HomeLayout({ loaderData }: Route.ComponentProps) {
 	const { user } = loaderData as { user: SessionUser | null };
 	return (
 		<>
 			<HomeNav user={user} />
-			<main className="min-h-[calc(100vh-50px)]">
+			<CookieBanner />
+			<main className="min-h-[calc(100vh-70px)]">
 				<Outlet context={{ user }} />
 			</main>
 			<Footer />

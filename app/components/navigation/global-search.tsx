@@ -162,7 +162,7 @@ export default function GlobalSearch({ user }: GlobalSearchProps) {
 
 	useEffect(() => {
 		setActiveIndex(0);
-	}, [flatItems]);
+	}, []);
 
 	const handleOpenChange = (open: boolean) => {
 		setIsOpen(open);

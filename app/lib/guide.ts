@@ -1,29 +1,29 @@
 export type KnowledgeBaseArticle = {
-  id: string;
-  title: string;
-  category: string;
-  icon: string;
-  content: string;
-  keywords: string[];
+	id: string;
+	title: string;
+	category: string;
+	icon: string;
+	content: string;
+	keywords: string[];
 };
 
 export const helpdeskKnowledgeBase: KnowledgeBaseArticle[] = [
-  {
-    id: "account-registration",
-    title: "Create Your Account",
-    category: "Getting Started",
-    icon: "RiUserAddLine",
-    keywords: [
-      "sign up",
-      "register",
-      "create account",
-      "verify email",
-      "login",
-      "sign in",
-      "forgot password",
-      "reset password",
-    ],
-    content: `
+	{
+		id: "account-registration",
+		title: "Create Your Account",
+		category: "Getting Started",
+		icon: "RiUserAddLine",
+		keywords: [
+			"sign up",
+			"register",
+			"create account",
+			"verify email",
+			"login",
+			"sign in",
+			"forgot password",
+			"reset password",
+		],
+		content: `
 ## Creating an account
 
 Before you can use BC007 Portal you need an account. Go to the sign-up page, enter your full name, email address and a strong password, then submit.
@@ -46,23 +46,23 @@ Before you can use BC007 Portal you need an account. Go to the sign-up page, ent
 - Follow the link, choose a new password and confirm it.
 - After resetting, sign in with your new password.
 `,
-  },
-  {
-    id: "onboarding",
-    title: "Complete Your Onboarding",
-    category: "Getting Started",
-    icon: "RiUserSettingsLine",
-    keywords: [
-      "onboarding",
-      "profile",
-      "date of birth",
-      "avatar",
-      "bank details",
-      "bank account",
-      "account name",
-      "first login",
-    ],
-    content: `
+	},
+	{
+		id: "onboarding",
+		title: "Complete Your Onboarding",
+		category: "Getting Started",
+		icon: "RiUserSettingsLine",
+		keywords: [
+			"onboarding",
+			"profile",
+			"date of birth",
+			"avatar",
+			"bank details",
+			"bank account",
+			"account name",
+			"first login",
+		],
+		content: `
 ## First login setup
 
 After your account is verified, you will be taken through a two-stage onboarding flow. You cannot access the dashboard until both stages are complete.
@@ -84,25 +84,25 @@ After your account is verified, you will be taken through a two-stage onboarding
 - Once complete, you are marked as onboarded and taken to the dashboard.
 - You can update these details later under **Settings → Account**.
 `,
-  },
-  {
-    id: "dashboard-overview",
-    title: "Dashboard Overview",
-    category: "Dashboard",
-    icon: "RiDashboardLine",
-    keywords: [
-      "dashboard",
-      "overview",
-      "welcome",
-      "revenue",
-      "balance",
-      "tickets",
-      "quick actions",
-      "activity",
-      "birthdays",
-      "events",
-    ],
-    content: `
+	},
+	{
+		id: "dashboard-overview",
+		title: "Dashboard Overview",
+		category: "Dashboard",
+		icon: "RiDashboardLine",
+		keywords: [
+			"dashboard",
+			"overview",
+			"welcome",
+			"revenue",
+			"balance",
+			"tickets",
+			"quick actions",
+			"activity",
+			"birthdays",
+			"events",
+		],
+		content: `
 ## The home screen
 
 The dashboard gives you a snapshot of everything happening in the group.
@@ -130,24 +130,24 @@ The dashboard gives you a snapshot of everything happening in the group.
 
 Click any widget title or "View/All" button to jump straight to the full page.
 `,
-  },
-  {
-    id: "members-overview",
-    title: "Members & Roles",
-    category: "Members",
-    icon: "RiGroupLine",
-    keywords: [
-      "members",
-      "roles",
-      "admin",
-      "member",
-      "super admin",
-      "permissions",
-      "search",
-      "filter",
-      "modify role",
-    ],
-    content: `
+	},
+	{
+		id: "members-overview",
+		title: "Members & Roles",
+		category: "Members",
+		icon: "RiGroupLine",
+		keywords: [
+			"members",
+			"roles",
+			"admin",
+			"member",
+			"super admin",
+			"permissions",
+			"search",
+			"filter",
+			"modify role",
+		],
+		content: `
 ## The members directory
 
 The Members page lists everyone in the group. You can search and filter the list to find specific people.
@@ -168,21 +168,21 @@ The Members page lists everyone in the group. You can search and filter the list
 
 Use the search box to find members by name or email, and the filters to narrow by role or onboarding status.
 `,
-  },
-  {
-    id: "invite-members",
-    title: "Inviting Members",
-    category: "Members",
-    icon: "RiUserAddFill",
-    keywords: [
-      "invite",
-      "invitation",
-      "invite code",
-      "add member",
-      "email invite",
-      "sign up link",
-    ],
-    content: `
+	},
+	{
+		id: "invite-members",
+		title: "Inviting Members",
+		category: "Members",
+		icon: "RiUserAddFill",
+		keywords: [
+			"invite",
+			"invitation",
+			"invite code",
+			"add member",
+			"email invite",
+			"sign up link",
+		],
+		content: `
 ## How invitations work
 
 To grow the group, use the **Invite Member** button on the Members page.
@@ -203,22 +203,22 @@ To grow the group, use the **Invite Member** button on the Members page.
 - If an invite code is lost, generate a fresh invitation.
 - Only members with member-management permissions can send invites.
 `,
-  },
-  {
-    id: "birthday-reminders",
-    title: "Birthday Reminders",
-    category: "Members",
-    icon: "RiCake3Line",
-    keywords: [
-      "birthday",
-      "reminder",
-      "remind",
-      "birth date",
-      "celebration",
-      "age",
-      "notify",
-    ],
-    content: `
+	},
+	{
+		id: "birthday-reminders",
+		title: "Birthday Reminders",
+		category: "Members",
+		icon: "RiCake3Line",
+		keywords: [
+			"birthday",
+			"reminder",
+			"remind",
+			"birth date",
+			"celebration",
+			"age",
+			"notify",
+		],
+		content: `
 ## How birthdays work
 
 The dashboard shows members with birthdays in the next **14 days**. Members can choose to hide their birth date in their privacy settings — hidden birthdays never appear.
@@ -238,24 +238,24 @@ The dashboard shows members with birthdays in the next **14 days**. Members can 
 
 If no birthdays show, either nobody has a birthday in the window, or every member in that window has disabled their birth date.
 `,
-  },
-  {
-    id: "events-overview",
-    title: "Events",
-    category: "Events",
-    icon: "RiCalendarEventLine",
-    keywords: [
-      "events",
-      "list",
-      "meeting",
-      "party",
-      "birthday",
-      "other",
-      "filter",
-      "location",
-      "organizer",
-    ],
-    content: `
+	},
+	{
+		id: "events-overview",
+		title: "Events",
+		category: "Events",
+		icon: "RiCalendarEventLine",
+		keywords: [
+			"events",
+			"list",
+			"meeting",
+			"party",
+			"birthday",
+			"other",
+			"filter",
+			"location",
+			"organizer",
+		],
+		content: `
 ## The events page
 
 The Events page lists all group events, newest and nearest first. Click any event to open its detail page.
@@ -275,24 +275,24 @@ Each event card shows the type, date and time, location, a short description, th
 
 Use the filters to narrow events by type and status, and search for a specific title. Results are paginated — use the pagination controls at the bottom.
 `,
-  },
-  {
-    id: "create-manage-events",
-    title: "Create & Manage Events",
-    category: "Events",
-    icon: "RiCalendarCheckLine",
-    keywords: [
-      "create event",
-      "edit event",
-      "delete event",
-      "cancel event",
-      "featured image",
-      "location",
-      "organizer",
-      "date",
-      "time",
-    ],
-    content: `
+	},
+	{
+		id: "create-manage-events",
+		title: "Create & Manage Events",
+		category: "Events",
+		icon: "RiCalendarCheckLine",
+		keywords: [
+			"create event",
+			"edit event",
+			"delete event",
+			"cancel event",
+			"featured image",
+			"location",
+			"organizer",
+			"date",
+			"time",
+		],
+		content: `
 ## Creating an event
 
 Click **Create Event** on the Events page and fill in:
@@ -323,23 +323,23 @@ Open the event and use **Edit** to change any detail. Past events stay editable 
 - Images upload to Cloudinary when you save.
 - If you remove or cancel before saving, the uploaded file is cleaned up automatically.
 `,
-  },
-  {
-    id: "event-statuses",
-    title: "Event Statuses & Interest",
-    category: "Events",
-    icon: "RiCheckboxCircleLine",
-    keywords: [
-      "status",
-      "upcoming",
-      "ongoing",
-      "completed",
-      "cancelled",
-      "interested",
-      "notifications",
-      "rsvp",
-    ],
-    content: `
+	},
+	{
+		id: "event-statuses",
+		title: "Event Statuses & Interest",
+		category: "Events",
+		icon: "RiCheckboxCircleLine",
+		keywords: [
+			"status",
+			"upcoming",
+			"ongoing",
+			"completed",
+			"cancelled",
+			"interested",
+			"notifications",
+			"rsvp",
+		],
+		content: `
 ## Event lifecycle
 
 Every event moves through statuses:
@@ -363,24 +363,24 @@ Statuses are updated automatically as dates pass — you do not need to change t
 - When an event changes to ongoing or completed, the organizer and everyone interested receive a notification.
 - When an event is cancelled, the same group is notified.
 `,
-  },
-  {
-    id: "payments-overview",
-    title: "Making Payments",
-    category: "Payments",
-    icon: "RiWallet3Line",
-    keywords: [
-      "pay",
-      "payment",
-      "membership dues",
-      "donation",
-      "event payment",
-      "one-time",
-      "recurring",
-      "amount",
-      "monthly",
-    ],
-    content: `
+	},
+	{
+		id: "payments-overview",
+		title: "Making Payments",
+		category: "Payments",
+		icon: "RiWallet3Line",
+		keywords: [
+			"pay",
+			"payment",
+			"membership dues",
+			"donation",
+			"event payment",
+			"one-time",
+			"recurring",
+			"amount",
+			"monthly",
+		],
+		content: `
 ## Payment types
 
 From the Payments page click **Make Payment** and choose what you are paying for:
@@ -406,23 +406,23 @@ From the Payments page click **Make Payment** and choose what you are paying for
 - Completed payments generate a receipt you can download.
 - Your dues progress on the reports page reflects paid months.
 `,
-  },
-  {
-    id: "payment-statuses-receipts",
-    title: "Payment Statuses & Receipts",
-    category: "Payments",
-    icon: "RiReceiptLine",
-    keywords: [
-      "status",
-      "pending",
-      "completed",
-      "failed",
-      "receipt",
-      "invoice",
-      "download",
-      "history",
-    ],
-    content: `
+	},
+	{
+		id: "payment-statuses-receipts",
+		title: "Payment Statuses & Receipts",
+		category: "Payments",
+		icon: "RiReceiptLine",
+		keywords: [
+			"status",
+			"pending",
+			"completed",
+			"failed",
+			"receipt",
+			"invoice",
+			"download",
+			"history",
+		],
+		content: `
 ## Understanding statuses
 
 Each payment shows one of three states:
@@ -441,21 +441,21 @@ Each payment shows one of three states:
 
 The Payments page keeps a full history of everything you have paid, with filters for status and type. Group admins can also see group-wide payment records.
 `,
-  },
-  {
-    id: "group-payments",
-    title: "Group Payments",
-    category: "Payments",
-    icon: "RiTeamLine",
-    keywords: [
-      "group",
-      "group payments",
-      "all members",
-      "admin",
-      "overview",
-      "records",
-    ],
-    content: `
+	},
+	{
+		id: "group-payments",
+		title: "Group Payments",
+		category: "Payments",
+		icon: "RiTeamLine",
+		keywords: [
+			"group",
+			"group payments",
+			"all members",
+			"admin",
+			"overview",
+			"records",
+		],
+		content: `
 ## What group payments show
 
 Members with payment-management permissions can view payments across the whole group, not just their own.
@@ -474,23 +474,23 @@ Use the **Group** toggle on the Payments page (it appears only if you have the p
 
 Group payment records are only visible to authorized admins. Regular members only ever see their own payments.
 `,
-  },
-  {
-    id: "payment-reports",
-    title: "Payment Reports",
-    category: "Payments",
-    icon: "RiLineChartLine",
-    keywords: [
-      "reports",
-      "revenue",
-      "trends",
-      "dues progress",
-      "monthly",
-      "statistics",
-      "payment types",
-      "period",
-    ],
-    content: `
+	},
+	{
+		id: "payment-reports",
+		title: "Payment Reports",
+		category: "Payments",
+		icon: "RiLineChartLine",
+		keywords: [
+			"reports",
+			"revenue",
+			"trends",
+			"dues progress",
+			"monthly",
+			"statistics",
+			"payment types",
+			"period",
+		],
+		content: `
 ## The reports page
 
 Under **Payments → Reports** you get a full picture of revenue and dues.
@@ -512,23 +512,23 @@ Under **Payments → Reports** you get a full picture of revenue and dues.
 
 Use the period toggle to zoom into a week, month, six months, year, or all-time revenue.
 `,
-  },
-  {
-    id: "transfers-overview",
-    title: "Initiating Transfers",
-    category: "Transfers",
-    icon: "RiExchangeFundsLine",
-    keywords: [
-      "transfer",
-      "send money",
-      "recipient",
-      "bank",
-      "amount",
-      "OTP",
-      "confirm",
-      "withdraw",
-    ],
-    content: `
+	},
+	{
+		id: "transfers-overview",
+		title: "Initiating Transfers",
+		category: "Transfers",
+		icon: "RiExchangeFundsLine",
+		keywords: [
+			"transfer",
+			"send money",
+			"recipient",
+			"bank",
+			"amount",
+			"OTP",
+			"confirm",
+			"withdraw",
+		],
+		content: `
 ## How transfers work
 
 The Transfers page lets the group move money from the organization wallet to a bank account.
@@ -554,23 +554,23 @@ The OTP is a security step that prevents unauthorized money movement. Always con
 - Transfers are permission-gated — only members with transfer permissions can send money.
 - Always double-check the recipient's account details before confirming.
 `,
-  },
-  {
-    id: "transfer-reports",
-    title: "Transfer Reports",
-    category: "Transfers",
-    icon: "RiFundsLine",
-    keywords: [
-      "transfer reports",
-      "sent",
-      "received",
-      "trend",
-      "status",
-      "monthly",
-      "fees",
-      "analytics",
-    ],
-    content: `
+	},
+	{
+		id: "transfer-reports",
+		title: "Transfer Reports",
+		category: "Transfers",
+		icon: "RiFundsLine",
+		keywords: [
+			"transfer reports",
+			"sent",
+			"received",
+			"trend",
+			"status",
+			"monthly",
+			"fees",
+			"analytics",
+		],
+		content: `
 ## The transfers reports page
 
 Under **Transfers → Reports** you can analyze the group's money movement.
@@ -590,24 +590,24 @@ Transfer reports are available to members with transfer-management permissions, 
 
 Use the period toggle to compare short- and long-term trends, and watch the status breakdown for anything stuck pending.
 `,
-  },
-  {
-    id: "help-center",
-    title: "Help Center & Tickets",
-    category: "Help Center",
-    icon: "RiCustomerService2Line",
-    keywords: [
-      "help center",
-      "ticket",
-      "support",
-      "issue",
-      "category",
-      "priority",
-      "status",
-      "assign",
-      "report problem",
-    ],
-    content: `
+	},
+	{
+		id: "help-center",
+		title: "Help Center & Tickets",
+		category: "Help Center",
+		icon: "RiCustomerService2Line",
+		keywords: [
+			"help center",
+			"ticket",
+			"support",
+			"issue",
+			"category",
+			"priority",
+			"status",
+			"assign",
+			"report problem",
+		],
+		content: `
 ## Getting help
 
 The Help Center is where you report issues or ask questions. Open **Help Center** and click **Create Ticket**.
@@ -636,26 +636,26 @@ Support admins can assign tickets to themselves or other agents. A ticket that r
 
 Always include the affected feature, what you expected, and what happened instead. For payment issues, mention the payment reference if you have one.
 `,
-  },
-  {
-    id: "account-settings",
-    title: "Profile & Account Settings",
-    category: "Settings",
-    icon: "RiUserSettingsLine",
-    keywords: [
-      "profile",
-      "account",
-      "avatar",
-      "photo",
-      "update profile",
-      "bank info",
-      "privacy",
-      "phone",
-      "gender",
-      "occupation",
-      "location",
-    ],
-    content: `
+	},
+	{
+		id: "account-settings",
+		title: "Profile & Account Settings",
+		category: "Settings",
+		icon: "RiUserSettingsLine",
+		keywords: [
+			"profile",
+			"account",
+			"avatar",
+			"photo",
+			"update profile",
+			"bank info",
+			"privacy",
+			"phone",
+			"gender",
+			"occupation",
+			"location",
+		],
+		content: `
 ## Where to manage your profile
 
 Go to **Settings → Account** to manage your personal details.
@@ -678,23 +678,23 @@ Go to **Settings → Account** to manage your personal details.
 
 Most changes save instantly and reflect everywhere immediately. Verify the current password when changing security-sensitive fields.
 `,
-  },
-  {
-    id: "security-settings",
-    title: "Security",
-    category: "Settings",
-    icon: "RiShieldCheckLine",
-    keywords: [
-      "security",
-      "password",
-      "change email",
-      "sessions",
-      "log out",
-      "delete account",
-      "revoke",
-      "device",
-    ],
-    content: `
+	},
+	{
+		id: "security-settings",
+		title: "Security",
+		category: "Settings",
+		icon: "RiShieldCheckLine",
+		keywords: [
+			"security",
+			"password",
+			"change email",
+			"sessions",
+			"log out",
+			"delete account",
+			"revoke",
+			"device",
+		],
+		content: `
 ## The Security settings page
 
 Under **Settings → Security** you manage everything that protects your account.
@@ -725,22 +725,22 @@ Under **Settings → Security** you manage everything that protects your account
 - Review your sessions regularly.
 - If you see a session you do not recognize, revoke it and change your password.
 `,
-  },
-  {
-    id: "subscription",
-    title: "Membership Subscription",
-    category: "Settings",
-    icon: "RiLoopLeftLine",
-    keywords: [
-      "subscription",
-      "membership dues",
-      "recurring",
-      "cancel",
-      "plan",
-      "monthly",
-      "billing",
-    ],
-    content: `
+	},
+	{
+		id: "subscription",
+		title: "Membership Subscription",
+		category: "Settings",
+		icon: "RiLoopLeftLine",
+		keywords: [
+			"subscription",
+			"membership dues",
+			"recurring",
+			"cancel",
+			"plan",
+			"monthly",
+			"billing",
+		],
+		content: `
 ## About subscriptions
 
 Membership dues can be set up as a recurring monthly subscription so you never miss a payment.
@@ -763,25 +763,25 @@ Open **Settings → Subscription** to see:
 - Cancelling does not delete your account or payment history.
 - If you re-subscribe, the automatic billing resumes.
 `,
-  },
-  {
-    id: "audit-logs",
-    title: "Audit Logs",
-    category: "Settings",
-    icon: "RiFileHistoryLine",
-    keywords: [
-      "audit",
-      "logs",
-      "activity",
-      "history",
-      "auth",
-      "payment",
-      "settings",
-      "security",
-      "support",
-      "track",
-    ],
-    content: `
+	},
+	{
+		id: "audit-logs",
+		title: "Audit Logs",
+		category: "Settings",
+		icon: "RiFileHistoryLine",
+		keywords: [
+			"audit",
+			"logs",
+			"activity",
+			"history",
+			"auth",
+			"payment",
+			"settings",
+			"security",
+			"support",
+			"track",
+		],
+		content: `
 ## What audit logs are
 
 Audit logs are a record of important actions taken on the platform — who did what and when.
@@ -812,5 +812,5 @@ Open **Settings → Audit Logs**. Each entry shows:
 
 If something looks wrong (an unexpected sign-in or payment), the audit log is the first place to check.
 `,
-  },
+	},
 ];
