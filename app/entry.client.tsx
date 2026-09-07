@@ -1,24 +1,24 @@
 import * as Sentry from "@sentry/react-router";
-import { startTransition, StrictMode } from "react";
+import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 
 Sentry.init({
-  dsn: import.meta.env.VITE_SENTRY_DSN as string | undefined,
-  environment: import.meta.env.MODE,
-  integrations: [Sentry.reactRouterTracingIntegration()],
-  tracesSampleRate: import.meta.env.MODE === "production" ? 0.2 : 1.0,
-  tracePropagationTargets: [/^\//],
+	dsn: import.meta.env.VITE_SENTRY_DSN as string | undefined,
+	environment: import.meta.env.MODE,
+	integrations: [Sentry.reactRouterTracingIntegration()],
+	tracesSampleRate: import.meta.env.MODE === "production" ? 0.2 : 1.0,
+	tracePropagationTargets: [/^\//],
 });
 
 startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <HydratedRouter
-        instrumentations={[Sentry.createSentryClientInstrumentation()]}
-        onError={Sentry.sentryOnError}
-      />
-    </StrictMode>,
-  );
+	hydrateRoot(
+		document,
+		<StrictMode>
+			<HydratedRouter
+				instrumentations={[Sentry.createSentryClientInstrumentation()]}
+				onError={Sentry.sentryOnError}
+			/>
+		</StrictMode>,
+	);
 });

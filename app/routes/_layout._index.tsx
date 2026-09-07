@@ -149,7 +149,11 @@ export default function HomeRoute() {
 		staggerDelay: 100,
 		startVisible: true,
 	});
-	const heroCtas = useWaveAnimation({ threshold: 0, staggerDelay: 150, startVisible: true });
+	const heroCtas = useWaveAnimation({
+		threshold: 0,
+		staggerDelay: 150,
+		startVisible: true,
+	});
 	const features = useWaveAnimation({ threshold: 0.15, staggerDelay: 100 });
 	const shot = useWaveAnimation({
 		threshold: 0.2,
@@ -251,7 +255,7 @@ export default function HomeRoute() {
 							/>
 							<img
 								src={
-								 "https://res.cloudinary.com/ceenobi/image/upload/f_auto,q_auto/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"			
+									"https://res.cloudinary.com/ceenobi/image/upload/f_auto,q_auto/v1785358288/bcc007portal/Macbook-Air-bcc007pay.vercel.app_2_ckhb97.webp"
 								}
 								width={761}
 								height={420}
@@ -423,7 +427,7 @@ export default function HomeRoute() {
 						>
 							<img
 								src={
-								"https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
+									"https://res.cloudinary.com/ceenobi/image/upload/q_auto/v1786282563/bcc007portal/MacBook_Pro-1786280914344_svcihz.webp"
 								}
 								width={761}
 								height={420}

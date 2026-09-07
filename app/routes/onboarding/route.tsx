@@ -526,8 +526,7 @@ export default function Onboarding({ loaderData }: Route.ComponentProps) {
 											setResolvedName("");
 										}}
 										onBlur={() => {
-											if (!isResolving && !resolvedName)
-												void verifyAccount();
+											if (!isResolving && !resolvedName) void verifyAccount();
 										}}
 									/>
 									<p className="text-xs text-muted-foreground">

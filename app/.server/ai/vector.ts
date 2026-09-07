@@ -1,6 +1,6 @@
 import { Index } from "@upstash/vector";
-import { env } from "../config/keys";
 import { helpdeskKnowledgeBase } from "~/lib/guide";
+import { env } from "../config/keys";
 import type { GuideHit } from "./guide-retrieval";
 
 // Single index holds all guide articles; data + metadata enable filtering.
@@ -16,9 +16,7 @@ let _enabled: boolean | null = null;
 
 export function isVectorEnabled(): boolean {
 	if (_enabled !== null) return _enabled;
-	_enabled = Boolean(
-		env.upstashVector.restUrl && env.upstashVector.restToken,
-	);
+	_enabled = Boolean(env.upstashVector.restUrl && env.upstashVector.restToken);
 	return _enabled;
 }
 
@@ -49,10 +47,17 @@ export async function seedGuideIndex(opts?: {
 	dryRun?: boolean;
 }): Promise<SeedResult> {
 	const index = getVectorIndex();
-	if (!index) throw new Error("Vector not configured — missing UPSTASH_VECTOR_REST_URL/TOKEN");
+	if (!index)
+		throw new Error(
+			"Vector not configured — missing UPSTASH_VECTOR_REST_URL/TOKEN",
+		);
 
-	const info = await (index as unknown as { info: () => Promise<{ vectorCount?: number }> }).info?.();
-	const alreadySeeded = Boolean(info && (info.vectorCount ?? 0) >= helpdeskKnowledgeBase.length);
+	const info = await (
+		index as unknown as { info: () => Promise<{ vectorCount?: number }> }
+	).info?.();
+	const alreadySeeded = Boolean(
+		info && (info.vectorCount ?? 0) >= helpdeskKnowledgeBase.length,
+	);
 
 	if (opts?.dryRun) return { upserted: 0, alreadySeeded };
 

@@ -104,7 +104,7 @@ export function formatPaymentDate(date: Date | string) {
 }
 
 export const receiptInvoice = async (payment: PaymentData) => {
-	if (!payment || payment.paymentStatus !== "completed") return;
+	if (payment?.paymentStatus !== "completed") return;
 
 	const doc = new jsPDF({ unit: "pt", format: "a4" });
 	const pageWidth = doc.internal.pageSize.getWidth();
@@ -233,7 +233,7 @@ export const receiptInvoice = async (payment: PaymentData) => {
 };
 
 export const transferReceiptInvoice = async (transfer: TransferData) => {
-	if (!transfer || transfer.status !== "success") return;
+	if (transfer?.status !== "success") return;
 
 	const doc = new jsPDF({ unit: "pt", format: "a4" });
 	const pageWidth = doc.internal.pageSize.getWidth();

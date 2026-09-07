@@ -103,7 +103,13 @@ export default function BankInfo({
 			clearTimeout(timer);
 			controller.abort();
 		};
-	}, [accountNumber, bankCode, verifyAccount]);
+	}, [
+		accountNumber,
+		bankCode,
+		verifyAccount,
+		initialBankCode,
+		initialAccountNumber,
+	]);
 
 	const onFormSubmit = () => {
 		const bankName =

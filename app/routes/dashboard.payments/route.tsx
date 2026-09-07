@@ -1,37 +1,37 @@
 import { dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import {
-    Await,
-    Outlet,
-    useLocation,
-    useNavigate,
-    useOutletContext,
+	Await,
+	Outlet,
+	useLocation,
+	useNavigate,
+	useOutletContext,
 } from "react-router";
 import { getUpcomingEvents } from "~/.server/actions/event-data";
 import {
-    cancelSubscription,
-    initializePayment,
-    verifyPayment,
+	cancelSubscription,
+	initializePayment,
+	verifyPayment,
 } from "~/.server/actions/payment";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "~/components/ui/select";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { getUserPaymentsQuery } from "~/queries/payments";
 import type {
-    CancelSubscriptionSchemaType,
-    InitializePaymentSchemaType,
-    SessionUser,
-    VerifyPaymentSchemaType,
+	CancelSubscriptionSchemaType,
+	InitializePaymentSchemaType,
+	SessionUser,
+	VerifyPaymentSchemaType,
 } from "~/types";
 import Filter from "../../features/payments/filter";
 import NewPayment from "../../features/payments/new-payment";

@@ -8,8 +8,8 @@ import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { userContext } from "~/middleware/auth.middleware";
 import {
-    getGroupPaymentReportsQuery,
-    getUserPaymentReportsQuery,
+	getGroupPaymentReportsQuery,
+	getUserPaymentReportsQuery,
 } from "~/queries/payments";
 import ReportsSkeleton from "../../features/reports/reports-skeleton";
 import ReportsView from "../../features/reports/reports-view";
