@@ -71,7 +71,7 @@ jobs:
           set -o pipefail
           # Vitest 4 hangs during teardown due to open mongoose handles.
           # Run with a generous timeout; parse results from output if killed.
-          timeout 300 yarn test --reporter=verbose > /tmp/vitest-out.txt 2>&1 || EXIT=$?
+          timeout 540 yarn test --reporter=verbose > /tmp/vitest-out.txt 2>&1 || EXIT=$?
           tail -60 /tmp/vitest-out.txt
           if [ "${EXIT:-0}" -eq 124 ]; then
             # Killed by timeout — check if all tests actually passed
@@ -104,7 +104,7 @@ jobs:
       - run: yarn install --immutable
       - name: Run tests with coverage
         run: |
-          timeout 420 yarn test:coverage > /tmp/coverage-out.txt 2>&1 || EXIT=$?
+          timeout 600 yarn test:coverage > /tmp/coverage-out.txt 2>&1 || EXIT=$?
           if [ "${EXIT:-0}" -eq 124 ]; then
             if grep -qE 'Tests\s+[0-9]+ passed' /tmp/coverage-out.txt && ! grep -qE 'Tests\s+[0-9]+ failed' /tmp/coverage-out.txt; then
               echo "::notice::All tests passed (vitest teardown timed out — safe to ignore)"
