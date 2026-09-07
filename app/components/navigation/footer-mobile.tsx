@@ -8,27 +8,31 @@ import { Button } from "../ui/button";
 export default function FooterMobile({ user }: { user: SessionUser }) {
 	const location = useLocation();
 	const isActive = (path: string | string[]) => {
-		const paths = Array.isArray(path) ? path : [path]
-		return paths.some((p) => location.pathname === p)
+		const paths = Array.isArray(path) ? path : [path];
+		return paths.some((p) => location.pathname === p);
 	};
 
 	return (
-		<div className="md:hidden fixed z-50 w-full bottom-0 border-t bg-white dark:bg-bgDark">
-			<div className="max-w-full mx-auto flex justify-between items-center py-2 px-6">
+		<div className="md:hidden fixed w-[50%] z-50 left-1/2 -translate-x-1/2 bottom-6 border rounded-full bg-white dark:bg-bgDark  backdrop-blur supports-backdrop-filter:bg-white/90 shadow-lg">
+			<div className="max-w-full mx-auto flex justify-around items-center py-2 pr-3">
 				<Button
 					variant="ghost"
 					size="lg"
 					className={isActive("/dashboard") ? "text-lightBlue" : ""}
 					render={<Link to="/dashboard" />}
 				>
-						<RiHomeFill className="size-6" />
+					<RiHomeFill className="size-6" />
 					{isActive("/dashboard") && <span className="sr-only">Active</span>}
 				</Button>
 				<Button
 					variant="ghost"
 					size="lg"
 					className={
-						isActive(["/dashboard/payments", "/dashboard/payments/group", "/dashboard/payments/reports"])
+						isActive([
+							"/dashboard/payments",
+							"/dashboard/payments/group",
+							"/dashboard/payments/reports",
+						])
 							? "text-lightBlue"
 							: ""
 					}

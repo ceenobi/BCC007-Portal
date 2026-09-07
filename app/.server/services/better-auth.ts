@@ -235,8 +235,8 @@ export const auth = new Proxy({} as AuthInstance, {
 	},
 });
 
-// Ensure the proxy holds a live instance before first use (eager init).
-await getAuth();
+// The proxy lazily builds `authInstance` on first property access via `getAuth()`.
+
 export type Session = typeof auth.$Infer.Session;
 
 export type User = typeof auth.$Infer.Session.user;

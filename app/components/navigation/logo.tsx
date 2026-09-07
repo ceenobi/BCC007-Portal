@@ -10,7 +10,12 @@ export default function Logo({
 	showLogoText?: boolean;
 }) {
 	return (
-		<Link to="/" prefetch="intent" className="flex gap-1 items-center w-fit" data-tour="logo">
+		<Link
+			to="/"
+			prefetch="intent"
+			className="flex gap-1 items-center w-fit"
+			data-tour="logo"
+		>
 			<img
 				src="/bcc007paylogo.webp"
 				alt="BCC007_Logo"

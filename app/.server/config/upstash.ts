@@ -1,13 +1,13 @@
-import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 import { env } from "./keys";
 
 /**
  * Initialize Upstash Redis client
  */
 export const redis = new Redis({
-  url: env.upstash.redisUrl,
-  token: env.upstash.redisToken,
+	url: env.upstash.redisUrl,
+	token: env.upstash.redisToken,
 });
 
 /**
@@ -17,16 +17,16 @@ export const redis = new Redis({
  * @param prefix Redis key prefix
  */
 export const createRatelimit = (
-  tokens: number,
-  window: string,
-  prefix: string = "ratelimit"
+	tokens: number,
+	window: string,
+	prefix: string = "ratelimit",
 ) => {
-  return new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(tokens, window as any),
-    analytics: true,
-    prefix: `@bcc007/${prefix}`,
-  });
+	return new Ratelimit({
+		redis,
+		limiter: Ratelimit.slidingWindow(tokens, window as any),
+		analytics: true,
+		prefix: `@bcc007/${prefix}`,
+	});
 };
 
 // General API ratelimiter: 100 requests per 60 seconds

@@ -1,9 +1,9 @@
 import { inject } from "vitest";
 
 declare module "vitest" {
-  interface ProvidedContext {
-    mongoUri: string;
-  }
+	interface ProvidedContext {
+		mongoUri: string;
+	}
 }
 
 /**
@@ -41,11 +41,11 @@ process.env.BREVO_API_KEY = "test-brevo";
 // `connectToDB` (which passes dbName: env.databaseName) lands in the same DB.
 const workerId = process.env.VITEST_WORKER_ID ?? String(process.pid);
 process.env.TEST_DB_NAME = `bc007_test_${workerId}_${Math.random()
-  .toString(36)
-  .slice(2, 8)}`;
+	.toString(36)
+	.slice(2, 8)}`;
 process.env.DATABASE_NAME = process.env.TEST_DB_NAME;
 
 const mongoUri = inject("mongoUri");
 if (mongoUri) {
-  process.env.DATABASE_URL = mongoUri;
+	process.env.DATABASE_URL = mongoUri;
 }

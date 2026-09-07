@@ -1,4 +1,4 @@
-import { WorkflowContext } from "@upstash/workflow";
+import type { WorkflowContext } from "@upstash/workflow";
 import logger from "../config/logger.js";
 import getRedisClient from "../config/redis.js";
 import { invalidateCache } from "../utils/cache.js";
@@ -13,17 +13,17 @@ const LAST_REFRESH_TTL = 60 * 60 * 24 * 7;
  * TTL so it is skipped here.
  */
 const DASHBOARD_CACHE_PATTERNS = [
-  "events:upcoming",
-  "payments:group:reports:*",
-  "transfers:group:reports:*",
-  "audit-logs:all:*",
-  "tickets:*",
+	"events:upcoming",
+	"payments:group:reports:*",
+	"transfers:group:reports:*",
+	"audit-logs:all:*",
+	"tickets:*",
 ] as const;
 
 type DashboardRefreshResult = {
-  patternsInvalidated: Array<{ pattern: string; deleted: number }>;
-  totalDeleted: number;
-  lastRefreshed: string;
+	patternsInvalidated: Array<{ pattern: string; deleted: number }>;
+	totalDeleted: number;
+	lastRefreshed: string;
 };
 
 /**
@@ -34,47 +34,47 @@ type DashboardRefreshResult = {
  * cadence stops the dashboard from showing stale numbers between runs.
  */
 export const runDashboardRefreshWorkflow = async (
-  context: WorkflowContext,
+	context: WorkflowContext,
 ): Promise<DashboardRefreshResult> => {
-  const result = await context.run("refresh-dashboard-cache", async () => {
-    const patternsInvalidated: Array<{
-      pattern: string;
-      deleted: number;
-    }> = [];
+	const result = await context.run("refresh-dashboard-cache", async () => {
+		const patternsInvalidated: Array<{
+			pattern: string;
+			deleted: number;
+		}> = [];
 
-    for (const pattern of DASHBOARD_CACHE_PATTERNS) {
-      const deleted = await invalidateCache(pattern);
-      patternsInvalidated.push({ pattern, deleted });
-    }
+		for (const pattern of DASHBOARD_CACHE_PATTERNS) {
+			const deleted = await invalidateCache(pattern);
+			patternsInvalidated.push({ pattern, deleted });
+		}
 
-    const now = new Date();
-    const redis = getRedisClient();
-    if (redis) {
-      try {
-        await redis.setex(
-          LAST_REFRESH_KEY,
-          LAST_REFRESH_TTL,
-          now.toISOString(),
-        );
-      } catch (error) {
-        logger.error(
-          error,
-          "Dashboard refresh: failed to record last-refreshed marker",
-        );
-      }
-    }
+		const now = new Date();
+		const redis = getRedisClient();
+		if (redis) {
+			try {
+				await redis.setex(
+					LAST_REFRESH_KEY,
+					LAST_REFRESH_TTL,
+					now.toISOString(),
+				);
+			} catch (error) {
+				logger.error(
+					error,
+					"Dashboard refresh: failed to record last-refreshed marker",
+				);
+			}
+		}
 
-    const summary: DashboardRefreshResult = {
-      patternsInvalidated,
-      totalDeleted: patternsInvalidated.reduce(
-        (sum, entry) => sum + entry.deleted,
-        0,
-      ),
-      lastRefreshed: now.toISOString(),
-    };
-    logger.info({ ...summary, message: "Dashboard cache refresh complete" });
-    return summary;
-  });
+		const summary: DashboardRefreshResult = {
+			patternsInvalidated,
+			totalDeleted: patternsInvalidated.reduce(
+				(sum, entry) => sum + entry.deleted,
+				0,
+			),
+			lastRefreshed: now.toISOString(),
+		};
+		logger.info({ ...summary, message: "Dashboard cache refresh complete" });
+		return summary;
+	});
 
-  return result;
+	return result;
 };
