@@ -5,6 +5,7 @@ import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent } from "~/components/ui/card";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getInitials } from "~/lib/utils";
 import { getUserBankAccountQuery } from "~/queries/bank";
 import type { BankDetails, SessionUser } from "~/types";
 import type { Route } from "./+types/route";
@@ -50,9 +51,7 @@ export default function Account({ loaderData }: Route.ComponentProps) {
 				<div className="flex gap-2 items-center">
 					<Avatar size="lg">
 						<AvatarImage src={user.image} />
-						<AvatarFallback>
-							{user.name.split("")[0] + user.name.split("")[1]}
-						</AvatarFallback>
+						<AvatarFallback>{getInitials(user.name)}</AvatarFallback>
 					</Avatar>
 					<h2 className="text-base font-semibold tracking-tight leading-tight text-foreground">
 						{user.name}

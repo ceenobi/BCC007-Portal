@@ -77,7 +77,7 @@ export function CookieBanner() {
 
 	return showBanner ? (
 		<div
-			className="fixed bottom-4 left-0 right-0 z-50 bg-white border-b border-border p-4 sm:p-6 shadow-lg outline outline-2 outline-offset-2 outline-lightBlue"
+			className="fixed bottom-4 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-border p-4 sm:p-6 shadow-lg outline outline-2 outline-offset-2 outline-lightBlue"
 			aria-live="polite"
 			aria-atomic="true"
 		>
