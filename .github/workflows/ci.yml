@@ -74,9 +74,10 @@ jobs:
           timeout 540 yarn test --reporter=verbose > /tmp/vitest-out.txt 2>&1 || EXIT=$?
           tail -60 /tmp/vitest-out.txt
           if [ "${EXIT:-0}" -eq 124 ]; then
-            # Killed by timeout — check if any test actually failed.
-            # The summary line may not exist if vitest was killed mid-teardown.
-            if grep -qiE '(FAIL|✗|×\s|failed\s+\d)' /tmp/vitest-out.txt; then
+            # Killed by timeout — check for vitest-specific failure markers.
+            # "FAIL " (with trailing space) marks failed test files.
+            # "Tests  N failed" is the summary line if present.
+            if grep -qE '^(FAIL |.*Tests\s+[0-9]+ failed)' /tmp/vitest-out.txt; then
               echo "::error::Some tests failed"
               exit 1
             fi
@@ -107,7 +108,7 @@ jobs:
           timeout 600 yarn test:coverage > /tmp/coverage-out.txt 2>&1 || EXIT=$?
           tail -60 /tmp/coverage-out.txt
           if [ "${EXIT:-0}" -eq 124 ]; then
-            if grep -qiE '(FAIL|✗|×\s|failed\s+\d)' /tmp/coverage-out.txt; then
+            if grep -qE '^(FAIL |.*Tests\s+[0-9]+ failed)' /tmp/coverage-out.txt; then
               echo "::error::Some tests failed"
               exit 1
             fi
