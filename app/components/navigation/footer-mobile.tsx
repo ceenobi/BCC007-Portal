@@ -13,7 +13,7 @@ export default function FooterMobile({ user }: { user: SessionUser }) {
 	};
 
 	return (
-		<div className="md:hidden fixed w-[50%] z-50 left-1/2 -translate-x-1/2 bottom-6 border rounded-full bg-white dark:bg-bgDark  backdrop-blur supports-backdrop-filter:bg-white/90 shadow-lg">
+		<div className="md:hidden fixed w-[55%] z-50 left-1/2 -translate-x-1/2 bottom-6 border rounded-full bg-white dark:bg-bgDark backdrop-blur supports-backdrop-filter:bg-background/90 shadow-lg">
 			<div className="max-w-full mx-auto flex justify-around items-center py-2 pr-3">
 				<Button
 					variant="ghost"
@@ -61,23 +61,22 @@ export default function FooterMobile({ user }: { user: SessionUser }) {
 					className="cursor-pointer relative h-8 w-8 p-0 rounded-full border border-mainGray/70"
 					aria-label="Profile menu"
 					data-tour="profile"
+					render={<Link to="/dashboard/account" />}
 				>
-					<Link to="/dashboard/account">
-						{user?.image ? (
-							<img
-								className="h-8 w-8 object-cover transition-colors rounded-full border border-mainGray/70"
-								src={getOptimizedImageUrl(user?.image, 32)}
-								alt={`${user?.name}'s avatar`}
-								loading="lazy"
-								width={32}
-								height={32}
-							/>
-						) : (
-							<span className="w-8 h-8 transition-colors border border-mainGray/70 dark:border-darkBlue flex items-center justify-center rounded-full bg-white dark:bg-black">
-								{getInitials(user?.name)}
-							</span>
-						)}
-					</Link>
+					{user?.image ? (
+						<img
+							className="h-8 w-8 object-cover transition-colors rounded-full border border-mainGray/70"
+							src={getOptimizedImageUrl(user?.image, 32)}
+							alt={`${user?.name}'s avatar`}
+							loading="lazy"
+							width={32}
+							height={32}
+						/>
+					) : (
+						<span className="w-8 h-8 transition-colors border border-mainGray/70 dark:border-darkBlue flex items-center justify-center rounded-full bg-white dark:bg-black">
+							{getInitials(user?.name)}
+						</span>
+					)}
 				</Button>
 			</div>
 		</div>
