@@ -109,7 +109,6 @@ const TransferSchema = new Schema(
 );
 
 TransferSchema.index({ userId: 1, createdAt: -1 });
-TransferSchema.index({ reference: 1 });
 TransferSchema.index({ status: 1 });
 TransferSchema.index({ paymentId: 1 });
 // Unique idempotency key: only one Transfer row may claim a given
