@@ -9,7 +9,7 @@ import {
 	it,
 	vi,
 } from "vitest";
-import { connectToDB } from "~/.server/config/database";
+import { connectTestDB } from "~/test/helpers/db";
 import User from "~/.server/models/user";
 import { runBirthdayRemindersWorkflow } from "~/.server/workflows/birthday.workflow";
 import { workflowClient } from "~/.server/workflows/client";
@@ -36,7 +36,7 @@ describe("runBirthdayRemindersWorkflow (integration)", () => {
 	let triggerSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeAll(async () => {
-		await connectToDB();
+		await connectTestDB();
 	});
 
 	afterEach(async () => {

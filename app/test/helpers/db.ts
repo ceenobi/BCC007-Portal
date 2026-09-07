@@ -25,6 +25,7 @@ export async function connectTestDB(): Promise<void> {
 
 export async function disconnectTestDB(): Promise<void> {
 	if (mongoose.connection.readyState !== 0) {
+		mongoose.connection.removeAllListeners();
 		await mongoose.disconnect();
 	}
 }

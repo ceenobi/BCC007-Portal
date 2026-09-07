@@ -11,12 +11,11 @@ export default async function setup({
 }: {
 	provide: (key: string, value: unknown) => void;
 }) {
-	mongod = await MongoMemoryServer.create({
-		instance: { storageEngine: "wiredTiger" },
-	});
+	process.env.NODE_ENV = "test";
+	mongod = await MongoMemoryServer.create();
 	provide("mongoUri", mongod.getUri());
 
 	return async () => {
-		await mongod?.stop();
+		await mongod?.stop({ force: true });
 	};
 }

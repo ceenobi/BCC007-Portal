@@ -10,7 +10,7 @@ import {
 	it,
 	vi,
 } from "vitest";
-import { connectToDB } from "~/.server/config/database";
+import { connectTestDB } from "~/test/helpers/db";
 import Event from "~/.server/models/event";
 import Notification from "~/.server/models/notification";
 import User from "~/.server/models/user";
@@ -39,7 +39,7 @@ describe("runStatusUpdatesWorkflow (integration)", () => {
 	let interested: mongoose.Document;
 
 	beforeAll(async () => {
-		await connectToDB();
+		await connectTestDB();
 	});
 
 	afterEach(async () => {

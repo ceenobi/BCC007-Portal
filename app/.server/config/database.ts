@@ -41,6 +41,9 @@ export const connectToDB = async (): Promise<void> => {
 
 	if (dbConnection.retryCount >= dbConnection.maxRetries) {
 		logger.error("❌ Max MongoDB connection retries reached");
+		if (process.env.NODE_ENV === "test") {
+			throw new Error("Max MongoDB connection retries reached");
+		}
 		process.exit(1);
 	}
 
@@ -71,20 +74,20 @@ export const connectToDB = async (): Promise<void> => {
 				});
 			}
 
-			if (mongoose.connection.listenerCount("disconnected") === 0) {
-				mongoose.connection.on("disconnected", () => {
-					logger.info("ℹ️  MongoDB disconnected");
-					dbConnection.isConnected = false;
-					// Attempt to reconnect
-					if (dbConnection.retryCount < dbConnection.maxRetries) {
-						dbConnection.retryCount++;
-						logger.info(
-							`ℹ️  Attempting to reconnect (${dbConnection.retryCount}/${dbConnection.maxRetries})...`,
-						);
-						setTimeout(connectToDB, 5000);
-					}
-				});
-			}
+		if (mongoose.connection.listenerCount("disconnected") === 0) {
+			mongoose.connection.on("disconnected", () => {
+				logger.info("ℹ️  MongoDB disconnected");
+				dbConnection.isConnected = false;
+				if (process.env.NODE_ENV === "test") return;
+				if (dbConnection.retryCount < dbConnection.maxRetries) {
+					dbConnection.retryCount++;
+					logger.info(
+						`ℹ️  Attempting to reconnect (${dbConnection.retryCount}/${dbConnection.maxRetries})...`,
+					);
+					setTimeout(connectToDB, 5000);
+				}
+			});
+		}
 		}
 	} catch (error: unknown) {
 		dbConnection.retryCount++;
@@ -95,11 +98,14 @@ export const connectToDB = async (): Promise<void> => {
 			`❌ MongoDB connection failed (attempt ${dbConnection.retryCount}/${dbConnection.maxRetries}):`,
 		);
 
-		if (dbConnection.retryCount < dbConnection.maxRetries) {
+		if (process.env.NODE_ENV !== "test" && dbConnection.retryCount < dbConnection.maxRetries) {
 			logger.info(`ℹ️  Retrying in 5 seconds...`);
 			setTimeout(connectToDB, 5000);
 		} else {
 			console.error("❌ Max retries reached. Exiting...");
+			if (process.env.NODE_ENV === "test") {
+				throw new Error("Max MongoDB connection retries reached");
+			}
 			process.exit(1);
 		}
 	}
@@ -116,15 +122,19 @@ export const gracefulShutdown = async (): Promise<void> => {
 		}
 
 		logger.info("✅ Server shutdown complete");
-		process.exit(0);
+		if (process.env.NODE_ENV !== "test") {
+			process.exit(0);
+		}
 	} catch (error) {
 		logger.error(error, "❌ Error during shutdown:");
-		process.exit(1);
+		if (process.env.NODE_ENV !== "test") {
+			process.exit(1);
+		}
 	}
 };
 
 // Handle uncaught exceptions and unhandled rejections
-if (process.listenerCount("uncaughtException") === 0) {
+if (process.env.NODE_ENV !== "test" && process.listenerCount("uncaughtException") === 0) {
 	process.on("uncaughtException", (error: Error) => {
 		logger.error("\n❌ UNCAUGHT EXCEPTION! Shutting down...");
 		logger.error({ stack: error.stack }, `${error.name}: ${error.message}`);
@@ -133,26 +143,24 @@ if (process.listenerCount("uncaughtException") === 0) {
 			console.error(error);
 		}
 
-		// Attempt to close server gracefully
 		gracefulShutdown().finally(() => process.exit(1));
 	});
 }
 
-if (process.listenerCount("unhandledRejection") === 0) {
+if (process.env.NODE_ENV !== "test" && process.listenerCount("unhandledRejection") === 0) {
 	process.on("unhandledRejection", (reason: any) => {
 		logger.error("\n❌ UNHANDLED REJECTION! Shutting down...");
 		logger.error({ reason }, "Unhandled Promise Rejection");
 
-		// Attempt to close server gracefully
 		gracefulShutdown().finally(() => process.exit(1));
 	});
 }
 
 // Handle termination signals
-if (process.listenerCount("SIGINT") === 0) {
+if (process.env.NODE_ENV !== "test" && process.listenerCount("SIGINT") === 0) {
 	process.on("SIGINT", () => gracefulShutdown());
 }
 
-if (process.listenerCount("SIGTERM") === 0) {
+if (process.env.NODE_ENV !== "test" && process.listenerCount("SIGTERM") === 0) {
 	process.on("SIGTERM", () => gracefulShutdown());
 }

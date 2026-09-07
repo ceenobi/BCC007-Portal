@@ -21,8 +21,10 @@ export default defineConfig({
 		// Start a single in-memory MongoDB for the whole run and share its URI.
 		globalSetup: ["./vitest.global-setup.ts"],
 		setupFiles: ["./vitest.setup.ts", "./vitest.dom-setup.ts"],
+		pool: "forks",
 		testTimeout: 20_000,
 		hookTimeout: 30_000,
+		teardownTimeout: 10_000,
 		coverage: {
 			provider: "v8",
 			include: [
