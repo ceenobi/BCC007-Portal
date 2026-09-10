@@ -7,10 +7,12 @@ import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { userContext } from "~/middleware/auth.middleware";
+import { getAuthCache } from "~/middleware/client-auth";
 import {
 	getGroupPaymentReportsQuery,
 	getUserPaymentReportsQuery,
 } from "~/queries/payments";
+import type { PaymentReportData } from "~/queries/payments";
 import ReportsSkeleton from "../../features/reports/reports-skeleton";
 import ReportsView from "../../features/reports/reports-view";
 import type { Route } from "./+types/route";
@@ -57,6 +59,48 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 		groupReport,
 		isAdmin,
 		dehydratedState: dehydrate(queryClient),
+	};
+}
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{
+	userReport: PaymentReportData;
+	groupReport: PaymentReportData | null;
+	isAdmin: boolean;
+}> {
+	const user = getAuthCache();
+	const isAdmin = user != null && hasPermission(user.role, "MANAGE_PAYMENTS");
+	const url = new URL(request.url);
+	const params = url.searchParams.toString();
+	const [userRes, groupRes] = await Promise.all([
+		fetch(`/api/payment/user/report/get?${params}`, {
+			headers: { Accept: "application/json" },
+		}),
+		isAdmin
+			? fetch(`/api/payment/group/report/get?${params}`, {
+					headers: { Accept: "application/json" },
+				})
+			: Promise.resolve<Response | null>(null),
+	]);
+	if (!userRes.ok) {
+		throw new Response("Failed to load payment reports", {
+			status: userRes.status,
+		});
+	}
+	const [userData, groupData] = await Promise.all([
+		userRes.json(),
+		groupRes !== null
+			? groupRes.json().catch(() => ({}))
+			: Promise.resolve({}),
+	]);
+	return {
+		userReport: userData.body as PaymentReportData,
+		groupReport:
+			groupRes !== null && groupData.success
+				? (groupData.body as PaymentReportData)
+				: null,
+		isAdmin,
 	};
 }
 

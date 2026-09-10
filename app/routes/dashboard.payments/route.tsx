@@ -26,9 +26,12 @@ import {
 } from "~/components/ui/select";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
+import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
 import { getUserPaymentsQuery } from "~/queries/payments";
+import type { PaymentQueryResult } from "~/queries/payments";
 import type {
 	CancelSubscriptionSchemaType,
+	EventData,
 	InitializePaymentSchemaType,
 	SessionUser,
 	VerifyPaymentSchemaType,
@@ -48,6 +51,10 @@ export function meta(_args: Route.MetaArgs) {
 		},
 	];
 }
+
+export const clientMiddleware = [clientAuthenticatedMiddleware];
+
+type PaymentEvents = EventData[];
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const eventsRes = await getUpcomingEvents(request);
@@ -91,12 +98,36 @@ export async function action({ request }: Route.ActionArgs) {
 				request,
 				payload as unknown as CancelSubscriptionSchemaType,
 			);
-		default:
-			return Response.json(
-				{ success: false, message: "Invalid request" },
-				{ status: 400 },
-			);
+default:
+		return Response.json(
+			{ success: false, message: "Invalid request" },
+			{ status: 400 },
+		);
 	}
+}
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+	const searchParams = new URLSearchParams(new URL(request.url).search);
+	const eventsRes = await fetch("/api/event/upcoming/get", {
+		headers: { Accept: "application/json" },
+	});
+	const eventsData = await eventsRes.json().catch(() => ({}));
+	const events: PaymentEvents = eventsData.success ? eventsData.body : [];
+
+	const paymentsRes = await fetch(
+		`/api/payment/user/get?${searchParams.toString()}`,
+		{
+			headers: { Accept: "application/json" },
+		},
+	);
+	if (!paymentsRes.ok) {
+		throw new Response("Failed to load payments", {
+			status: paymentsRes.status,
+		});
+	}
+	const payments: PaymentQueryResult = await paymentsRes.json();
+
+	return { events, payments };
 }
 
 export default function Payments({ loaderData }: Route.ComponentProps) {

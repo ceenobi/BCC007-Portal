@@ -6,7 +6,9 @@ import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { requirePermission } from "~/middleware/auth.middleware";
+import { clientRequirePermission } from "~/middleware/client-auth";
 import { getGroupPaymentsQuery } from "~/queries/payments";
+import type { PaymentQueryResult } from "~/queries/payments";
 import PaymentsList from "../../features/payments/payment-list";
 import PaymentsSkeleton from "../../features/payments/payments-skeleton";
 import type { Route } from "./+types/route";
@@ -23,6 +25,8 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
+export const clientMiddleware = [clientRequirePermission("MANAGE_PAYMENTS")];
+
 export async function loader({ request }: Route.LoaderArgs) {
 	const queryClient = getQueryClientRsc();
 	const payments = queryClient.ensureQueryData(getGroupPaymentsQuery(request));
@@ -30,6 +34,24 @@ export async function loader({ request }: Route.LoaderArgs) {
 		dehydratedState: dehydrate(queryClient),
 		payments,
 	};
+}
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+	const searchParams = new URLSearchParams(new URL(request.url).search);
+	const res = await fetch(
+		`/api/payment/group/get?${searchParams.toString()}`,
+		{
+			headers: { Accept: "application/json" },
+		},
+	);
+	if (!res.ok) {
+		throw new Response("Failed to load group payments", {
+			status: res.status,
+		});
+	}
+	const payments: PaymentQueryResult = await res.json();
+
+	return { payments };
 }
 
 export default function GroupPayment({ loaderData }: Route.ComponentProps) {
