@@ -31,8 +31,31 @@ vi.mock("~/.server/services/paystack.service", () => ({
 	},
 }));
 
+vi.mock("~/.server/actions/payment", () => ({
+	getUserPayments: vi.fn(),
+	getGroupPayments: vi.fn(),
+	getUserPaymentReports: vi.fn(),
+	getGroupPaymentReports: vi.fn(),
+}));
+
+vi.mock("~/.server/actions/announcement-data", () => ({
+	getAnnouncements: vi.fn(),
+}));
+
+vi.mock("~/.server/actions/event-data", () => ({
+	getUpcomingEvents: vi.fn(),
+}));
+
+import { getAnnouncements } from "~/.server/actions/announcement-data";
 import { resolveBankAccount } from "~/.server/actions/bank-data";
+import { getUpcomingEvents } from "~/.server/actions/event-data";
 import { globalSearch } from "~/.server/actions/global-search";
+import {
+	getGroupPaymentReports,
+	getGroupPayments,
+	getUserPaymentReports,
+	getUserPayments,
+} from "~/.server/actions/payment";
 import { auth } from "~/.server/services/better-auth";
 import { NotificationService } from "~/.server/services/notification.service";
 import { PaystackService } from "~/.server/services/paystack.service";
@@ -45,11 +68,23 @@ import {
 	loader as notificationsLoader,
 } from "~/routes/api.notifications.$";
 import { action as webhookAction } from "~/routes/api.paystack.webhook";
+import { loader as paymentUserLoader } from "~/routes/api.payment.user.get";
+import { loader as paymentGroupLoader } from "~/routes/api.payment.group.get";
+import { loader as paymentUserReportLoader } from "~/routes/api.payment.user.report.get";
+import { loader as paymentGroupReportLoader } from "~/routes/api.payment.group.report.get";
+import { loader as announcementLoader } from "~/routes/api.announcement.get";
+import { loader as upcomingEventsLoader } from "~/routes/api.event.upcoming.get";
 
 const getSessionMock = vi.mocked(auth.api.getSession);
 const getHealthStatusMock = vi.mocked(getHealthStatus);
 const globalSearchMock = vi.mocked(globalSearch);
 const resolveBankAccountMock = vi.mocked(resolveBankAccount);
+const getUserPaymentsMock = vi.mocked(getUserPayments);
+const getGroupPaymentsMock = vi.mocked(getGroupPayments);
+const getUserPaymentReportsMock = vi.mocked(getUserPaymentReports);
+const getGroupPaymentReportsMock = vi.mocked(getGroupPaymentReports);
+const getAnnouncementsMock = vi.mocked(getAnnouncements);
+const getUpcomingEventsMock = vi.mocked(getUpcomingEvents);
 
 const session = () => ({
 	user: { id: "u1", name: "Ada", email: "ada@example.com" },
@@ -298,5 +333,271 @@ describe("POST /api/paystack/webhook (api.paystack.webhook action)", () => {
 		const res = await webhookAction({ request: req } as never);
 		expect(res.status).toBe(200);
 		expect(PaystackService.handleWebhook).toHaveBeenCalled();
+	});
+});
+
+describe("GET /api/payment/user (api.payment.user.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await paymentUserLoader({
+			request: new Request("http://localhost/api/payment/user", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates with default page and limit when no params are given", async () => {
+		getUserPaymentsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/payment/user");
+		const res = await paymentUserLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getUserPaymentsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 1,
+			limit: 10,
+			query: undefined,
+			paymentStatus: undefined,
+			paymentType: undefined,
+			startDate: undefined,
+			endDate: undefined,
+		});
+	});
+
+	it("forwards query params to the delegate", async () => {
+		getUserPaymentsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request(
+			"http://localhost/api/payment/user?page=2&limit=25&query=owo&paymentStatus=paid&paymentType=onetime&startDate=2024-01-01&endDate=2024-12-31",
+		);
+		const res = await paymentUserLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getUserPaymentsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 2,
+			limit: 25,
+			query: "owo",
+			paymentStatus: "paid",
+			paymentType: "onetime",
+			startDate: "2024-01-01",
+			endDate: "2024-12-31",
+		});
+	});
+});
+
+describe("GET /api/payment/group (api.payment.group.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await paymentGroupLoader({
+			request: new Request("http://localhost/api/payment/group", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates with default page and limit when no params are given", async () => {
+		getGroupPaymentsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/payment/group");
+		const res = await paymentGroupLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getGroupPaymentsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 1,
+			limit: 10,
+			query: undefined,
+			paymentStatus: undefined,
+			paymentType: undefined,
+			startDate: undefined,
+			endDate: undefined,
+		});
+	});
+
+	it("forwards query params to the delegate", async () => {
+		getGroupPaymentsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request(
+			"http://localhost/api/payment/group?page=2&limit=25&query=owo&paymentStatus=paid&paymentType=onetime&startDate=2024-01-01&endDate=2024-12-31",
+		);
+		const res = await paymentGroupLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getGroupPaymentsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 2,
+			limit: 25,
+			query: "owo",
+			paymentStatus: "paid",
+			paymentType: "onetime",
+			startDate: "2024-01-01",
+			endDate: "2024-12-31",
+		});
+	});
+});
+
+describe("GET /api/payment/user/report (api.payment.user.report.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await paymentUserReportLoader({
+			request: new Request("http://localhost/api/payment/user/report", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates with undefined filters when no params are given", async () => {
+		getUserPaymentReportsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/payment/user/report");
+		const res = await paymentUserReportLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getUserPaymentReportsMock).toHaveBeenCalledWith({
+			request: req,
+			period: undefined,
+			paymentStatus: undefined,
+			paymentType: undefined,
+		});
+	});
+
+	it("forwards query params to the delegate", async () => {
+		getUserPaymentReportsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request(
+			"http://localhost/api/payment/user/report?period=monthly&paymentStatus=paid&paymentType=onetime",
+		);
+		const res = await paymentUserReportLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getUserPaymentReportsMock).toHaveBeenCalledWith({
+			request: req,
+			period: "monthly",
+			paymentStatus: "paid",
+			paymentType: "onetime",
+		});
+	});
+});
+
+describe("GET /api/payment/group/report (api.payment.group.report.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await paymentGroupReportLoader({
+			request: new Request("http://localhost/api/payment/group/report", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates with undefined filters when no params are given", async () => {
+		getGroupPaymentReportsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/payment/group/report");
+		const res = await paymentGroupReportLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getGroupPaymentReportsMock).toHaveBeenCalledWith({
+			request: req,
+			period: undefined,
+			paymentStatus: undefined,
+			paymentType: undefined,
+		});
+	});
+
+	it("forwards query params to the delegate", async () => {
+		getGroupPaymentReportsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request(
+			"http://localhost/api/payment/group/report?period=monthly&paymentStatus=paid&paymentType=onetime",
+		);
+		const res = await paymentGroupReportLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getGroupPaymentReportsMock).toHaveBeenCalledWith({
+			request: req,
+			period: "monthly",
+			paymentStatus: "paid",
+			paymentType: "onetime",
+		});
+	});
+});
+
+describe("GET /api/announcements (api.announcement.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await announcementLoader({
+			request: new Request("http://localhost/api/announcements", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates with default page and limit when no params are given", async () => {
+		getAnnouncementsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/announcements");
+		const res = await announcementLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getAnnouncementsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 1,
+			limit: 10,
+			query: undefined,
+			status: undefined,
+		});
+	});
+
+	it("forwards query params to the delegate", async () => {
+		getAnnouncementsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request(
+			"http://localhost/api/announcements?page=2&limit=25&query=owo&status=published",
+		);
+		const res = await announcementLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getAnnouncementsMock).toHaveBeenCalledWith({
+			request: req,
+			page: 2,
+			limit: 25,
+			query: "owo",
+			status: "published",
+		});
+	});
+});
+
+describe("GET /api/events/upcoming (api.event.upcoming.get loader)", () => {
+	afterEach(() => vi.clearAllMocks());
+
+	it("rejects non-GET methods with 405", async () => {
+		const res = await upcomingEventsLoader({
+			request: new Request("http://localhost/api/events/upcoming", {
+				method: "POST",
+			}),
+		} as never);
+		expect(res.status).toBe(405);
+	});
+
+	it("delegates the request directly to getUpcomingEvents", async () => {
+		getUpcomingEventsMock.mockResolvedValue(
+			Response.json({ success: true, message: "ok", body: {} }),
+		);
+		const req = new Request("http://localhost/api/events/upcoming");
+		const res = await upcomingEventsLoader({ request: req } as never);
+		expect(res.status).toBe(200);
+		expect(getUpcomingEventsMock).toHaveBeenCalledWith(req);
 	});
 });
