@@ -13,7 +13,9 @@ import Search from "~/components/ui/search";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
+import { clientRequirePermission } from "~/middleware/client-auth";
 import { getAnnouncementsQuery } from "~/queries/announcements";
+import type { AnnouncementQueryResult } from "~/queries/announcements";
 import type {
 	CreateAnnouncementSchemaType,
 	SessionUser,
@@ -26,6 +28,10 @@ import Filter from "../../features/announcements/filter";
 import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_ANNOUNCEMENTS", "action")];
+
+export const clientMiddleware = [
+	clientRequirePermission("MANAGE_ANNOUNCEMENTS", "action"),
+];
 
 export function meta(_args: Route.MetaArgs) {
 	return [
@@ -45,6 +51,25 @@ export async function loader({ request }: Route.LoaderArgs) {
 	return {
 		dehydratedState: dehydrate(queryClient),
 		announcements,
+	};
+}
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{ announcements: AnnouncementQueryResult }> {
+	const url = new URL(request.url);
+	const announcementsRes = await fetch(
+		`/api/announcement/get?${url.searchParams.toString()}`,
+		{ headers: { Accept: "application/json" } },
+	);
+	if (!announcementsRes.ok) {
+		throw new Response("Failed to load announcements", {
+			status: announcementsRes.status,
+		});
+	}
+	const announcementsData = await announcementsRes.json();
+	return {
+		announcements: announcementsData.body as AnnouncementQueryResult,
 	};
 }
 
