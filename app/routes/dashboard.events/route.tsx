@@ -10,8 +10,19 @@ import Search from "~/components/ui/search";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
-import { getEventsQuery } from "~/queries/events";
+import {
+	clientAuthenticatedMiddleware,
+	clientRequirePermission,
+} from "~/middleware/client-auth";
+import { getEventsQuery, type EventQueryResult } from "~/queries/events";
 import type { CreateEventSchemaType, SessionUser } from "~/types";
+
+type MemberForSelect = {
+	_id: string;
+	name: string;
+	email: string;
+	image?: string | null;
+};
 import CreateEvent from "../../features/events/create-event";
 import EventsList from "../../features/events/events-list";
 import EventsSkeleton from "../../features/events/events-skeleton";
@@ -39,6 +50,39 @@ export async function loader({ request }: Route.LoaderArgs) {
 		members: membersData.success ? membersData.body : [],
 		dehydratedState: dehydrate(queryClient),
 		events,
+	};
+}
+
+export const clientMiddleware = [
+	clientAuthenticatedMiddleware,
+	clientRequirePermission("MANAGE_EVENTS", "action"),
+];
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{
+	members: MemberForSelect[];
+	events: EventQueryResult;
+}> {
+	const url = new URL(request.url);
+	const [eventsRes, membersRes] = await Promise.all([
+		fetch(`/api/event/get?${url.searchParams.toString()}`, {
+			headers: { Accept: "application/json" },
+		}),
+		fetch("/api/member/select", {
+			headers: { Accept: "application/json" },
+		}),
+	]);
+	if (!eventsRes.ok) {
+		throw new Response("Failed to load events", {
+			status: eventsRes.status,
+		});
+	}
+	const eventData = await eventsRes.json();
+	const memberData = await membersRes.json().catch(() => ({}));
+	return {
+		members: memberData.success ? (memberData.body as MemberForSelect[]) : [],
+		events: eventData.body as EventQueryResult,
 	};
 }
 

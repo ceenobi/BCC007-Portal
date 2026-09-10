@@ -8,10 +8,20 @@ import TransferList from "~/features/transfers/transfer-list";
 import TransferSkeleton from "~/features/transfers/transfer-skeleton";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { requirePermission } from "~/middleware/auth.middleware";
+import {
+	clientAuthenticatedMiddleware,
+	clientRequirePermission,
+} from "~/middleware/client-auth";
 import { getGroupTransfersQuery } from "~/queries/transfers";
+import type { TransferQueryResult } from "~/queries/transfers";
 import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_TRANSFERS")];
+
+export const clientMiddleware = [
+	clientAuthenticatedMiddleware,
+	clientRequirePermission("MANAGE_TRANSFERS"),
+];
 
 export function meta(_args: Route.MetaArgs) {
 	return [
@@ -32,6 +42,25 @@ export async function loader({ request }: Route.LoaderArgs) {
 		dehydratedState: dehydrate(queryClient),
 		transfers,
 	};
+}
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{ transfers: TransferQueryResult }> {
+	const url = new URL(request.url);
+	const response = await fetch(
+		`/api/transfer/all/get?${url.searchParams.toString()}`,
+		{
+			headers: { Accept: "application/json" },
+		},
+	);
+	if (!response.ok) {
+		throw new Response("Failed to load transfers", {
+			status: response.status,
+		});
+	}
+	const data = await response.json();
+	return { transfers: data.body as TransferQueryResult };
 }
 
 export default function TransfersGroup({ loaderData }: Route.ComponentProps) {

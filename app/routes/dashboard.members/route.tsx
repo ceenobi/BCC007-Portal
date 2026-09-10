@@ -10,7 +10,12 @@ import { MembersSkeleton } from "~/components/ui/skeleton-ui";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
+import {
+	clientAuthenticatedMiddleware,
+	clientRequirePermission,
+} from "~/middleware/client-auth";
 import { getMembersQuery } from "~/queries/members";
+import type { MembersQueryResult } from "~/queries/members";
 import type { SendInviteCodeSchemaType, SessionUser } from "~/types";
 import InviteMember from "../../features/members/invite-member";
 import MembersList from "../../features/members/members-list";
@@ -35,6 +40,30 @@ export async function loader({ request }: Route.LoaderArgs) {
 		dehydratedState: dehydrate(queryClient),
 		members,
 	};
+}
+
+export const clientMiddleware = [
+	clientAuthenticatedMiddleware,
+	clientRequirePermission("MANAGE_MEMBERS", "action"),
+];
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{ members: MembersQueryResult }> {
+	const url = new URL(request.url);
+	const response = await fetch(
+		`/api/member/get?${url.searchParams.toString()}`,
+		{
+			headers: { Accept: "application/json" },
+		},
+	);
+	if (!response.ok) {
+		throw new Response("Failed to load members", {
+			status: response.status,
+		});
+	}
+	const data = await response.json();
+	return { members: data.body as MembersQueryResult };
 }
 
 export async function action({ request }: Route.ActionArgs) {

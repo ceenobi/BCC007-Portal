@@ -31,7 +31,9 @@ import TransferList from "~/features/transfers/transfer-list";
 import TransferSkeleton from "~/features/transfers/transfer-skeleton";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
+import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
 import { getUserTransfersQuery } from "~/queries/transfers";
+import type { TransferQueryResult } from "~/queries/transfers";
 import type {
 	CreateTransferSchemaType,
 	FinalizeTransferSchemaType,
@@ -39,6 +41,16 @@ import type {
 	SessionUser,
 } from "~/types";
 import type { Route } from "./+types/route";
+
+export const clientMiddleware = [clientAuthenticatedMiddleware];
+
+type MemberOption = { _id: string; name: string; image?: string };
+type Balance = {
+	total: number;
+	pending: number;
+	balance: number;
+	currency: string;
+};
 
 export function meta(_args: Route.MetaArgs) {
 	return [
@@ -111,6 +123,44 @@ export async function action({ request }: Route.ActionArgs) {
 		{ success: false, message: "Invalid request" },
 		{ status: 400 },
 	);
+}
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{
+	members: MemberOption[];
+	balance: Balance;
+	transfers: TransferQueryResult;
+}> {
+	const url = new URL(request.url);
+	const [membersRes, balanceRes, transfersRes] = await Promise.all([
+		fetch(`/api/member/select`, {
+			headers: { Accept: "application/json" },
+		}),
+		fetch(`/api/transfer/balance/get`, {
+			headers: { Accept: "application/json" },
+		}),
+		fetch(`/api/transfer/user/get?${url.searchParams.toString()}`, {
+			headers: { Accept: "application/json" },
+		}),
+	]);
+	const [membersData, balanceData] = await Promise.all([
+		membersRes.json().catch(() => ({})),
+		balanceRes.json().catch(() => ({})),
+	]);
+	if (!transfersRes.ok) {
+		throw new Response("Failed to load transfers", {
+			status: transfersRes.status,
+		});
+	}
+	const transfersData = await transfersRes.json();
+	return {
+		members: membersData.success ? membersData.body : [],
+		balance: balanceData.success
+			? (balanceData.body as Balance)
+			: { total: 0, pending: 0, balance: 0, currency: "NGN" },
+		transfers: transfersData.body as TransferQueryResult,
+	};
 }
 
 export default function Transfers({ loaderData }: Route.ComponentProps) {
