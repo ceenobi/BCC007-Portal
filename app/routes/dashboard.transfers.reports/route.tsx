@@ -8,9 +8,14 @@ import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { userContext } from "~/middleware/auth.middleware";
 import {
+	clientAuthenticatedMiddleware,
+	getAuthCache,
+} from "~/middleware/client-auth";
+import {
 	getGroupTransferReportsQuery,
 	getUserTransferReportsQuery,
 } from "~/queries/transfers";
+import type { TransferReportData } from "~/queries/transfers";
 import ReportsSkeleton from "../../features/reports/reports-skeleton";
 import TransferReportsView from "../../features/reports/transfer-reports-view";
 import type { Route } from "./+types/route";
@@ -36,6 +41,8 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
+export const clientMiddleware = [clientAuthenticatedMiddleware];
+
 export async function loader({ request, context }: Route.LoaderArgs) {
 	const user = context.get(userContext);
 	if (!user) {
@@ -57,6 +64,59 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 		groupReport,
 		isAdmin,
 		dehydratedState: dehydrate(queryClient),
+	};
+}
+
+export async function clientLoader({
+	request,
+}: Route.ClientLoaderArgs): Promise<{
+	userReport: TransferReportData;
+	groupReport: TransferReportData | null;
+	isAdmin: boolean;
+}> {
+	const url = new URL(request.url);
+	const params = url.searchParams.toString();
+	const user = getAuthCache();
+	const isAdmin = user ? hasPermission(user.role, "MANAGE_TRANSFERS") : false;
+
+	const userReportResponse = await fetch(
+		`/api/transfer/user/report/get?${params}`,
+		{ headers: { Accept: "application/json" } },
+	);
+	if (!userReportResponse.ok) {
+		throw new Response("Failed to load transfer report", {
+			status: userReportResponse.status,
+		});
+	}
+	const userReportData = (await userReportResponse.json()) as {
+		body: TransferReportData;
+	};
+
+	if (!isAdmin) {
+		return {
+			userReport: userReportData.body,
+			groupReport: null,
+			isAdmin,
+		};
+	}
+
+	const groupReportResponse = await fetch(
+		`/api/transfer/group/report/get?${params}`,
+		{ headers: { Accept: "application/json" } },
+	);
+	if (!groupReportResponse.ok) {
+		throw new Response("Failed to load group transfer report", {
+			status: groupReportResponse.status,
+		});
+	}
+	const groupReportData = (await groupReportResponse.json()) as {
+		body: TransferReportData;
+	};
+
+	return {
+		userReport: userReportData.body,
+		groupReport: groupReportData.body,
+		isAdmin,
 	};
 }
 

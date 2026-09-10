@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useActionData, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { logoutUser } from "~/.server/actions/auth";
+import { clearAuthCache } from "~/middleware/client-auth";
 import { clearAiChatHistory } from "~/lib/ai/storage";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import type { Route } from "./+types/logout";
@@ -18,6 +19,7 @@ export default function LogoutPage() {
 	useEffect(() => {
 		if (actionData?.success) {
 			queryClient.clear();
+			clearAuthCache();
 			clearAiChatHistory();
 			toast.success(`Successfully logged out`, {
 				id: "logout",

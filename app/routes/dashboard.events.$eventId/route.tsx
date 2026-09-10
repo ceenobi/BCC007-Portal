@@ -37,6 +37,11 @@ import { statusConfig, typeConfig } from "~/lib/constants";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { cn, formatEventDate, formatEventTime, getInitials } from "~/lib/utils";
 import { requirePermission, userContext } from "~/middleware/auth.middleware";
+import {
+	clientAuthenticatedMiddleware,
+	clientRequirePermission,
+	getAuthCache,
+} from "~/middleware/client-auth";
 import { getEventQuery } from "~/queries/events";
 import type { EventData, UpdateEventSchemaType } from "~/types";
 import CancelEvent from "../../features/events/cancel-event";
@@ -47,6 +52,11 @@ import InterestToggle from "../../features/events/interest-toggle";
 import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_EVENTS", "action")];
+
+export const clientMiddleware = [
+	clientAuthenticatedMiddleware,
+	clientRequirePermission("MANAGE_EVENTS", "action"),
+];
 
 export function meta({ loaderData }: Route.MetaArgs) {
 	const event = loaderData?.event;
@@ -77,6 +87,31 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
 		event,
 		members: membersData.success ? membersData.body : [],
 		currentUserId: currentUser?._id ?? null,
+	};
+}
+
+export async function clientLoader({
+	params,
+}: Route.ClientLoaderArgs): Promise<{
+	event: EventData | null;
+	members: Array<{ _id: string; name: string; image?: string }>;
+	currentUserId: string | null;
+}> {
+	const { eventId } = params;
+	const [eventRes, membersRes] = await Promise.all([
+		fetch(`/api/event/detail?eventId=${eventId}`, {
+			headers: { Accept: "application/json" },
+		}),
+		fetch("/api/member/select", {
+			headers: { Accept: "application/json" },
+		}),
+	]);
+	const eventData = await eventRes.json().catch(() => ({ success: false }));
+	const memberData = await membersRes.json().catch(() => ({}));
+	return {
+		event: eventData.success ? (eventData.body as EventData) : null,
+		members: memberData.success ? memberData.body : [],
+		currentUserId: getAuthCache()?._id ?? null,
 	};
 }
 

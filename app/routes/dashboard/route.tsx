@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { completeTour } from "~/.server/actions/tour";
 import FooterMobile from "~/components/navigation/footer-mobile";
@@ -9,6 +10,7 @@ import {
 	authenticatedMiddleware,
 	userContext,
 } from "~/middleware/auth.middleware";
+import { seedAuthCache } from "~/middleware/client-auth";
 import type { Route } from "./+types/route";
 export const middleware = [authenticatedMiddleware];
 const SIDEBAR_COOKIE = "sbarBcc007";
@@ -59,6 +61,10 @@ export async function action({ request }: Route.ActionArgs) {
 export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
 	const { user, sidebarOpen } = loaderData;
 	const { isOpenSidebar, setIsOpenSidebar } = useSidebar(sidebarOpen);
+
+	useEffect(() => {
+		seedAuthCache(user);
+	}, [user]);
 
 	return (
 		<TourProvider user={user}>
