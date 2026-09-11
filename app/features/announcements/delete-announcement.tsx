@@ -6,6 +6,8 @@ import ActionBtn from "~/components/ui/action-btn";
 import { Button } from "~/components/ui/button";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { ANNOUNCEMENTS_KEY } from "~/queries/client-announcements";
 import type { AnnouncementData } from "~/types";
 
 export default function DeleteAnnouncement({
@@ -20,6 +22,11 @@ export default function DeleteAnnouncement({
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string }
 		| undefined;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [ANNOUNCEMENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success) {

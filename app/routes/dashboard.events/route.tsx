@@ -3,21 +3,20 @@ import { createEvent } from "~/.server/actions/event-data";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import {
 	clientAuthenticatedMiddleware,
 	clientRequirePermission,
 } from "~/middleware/client-auth";
-import type { EventQueryResult } from "~/queries/events";
+import {
+	type EventQueryResult,
+	type MemberForSelect,
+	getEventsQuery,
+	getMembersSelectQuery,
+} from "~/queries/client-events";
 import type { CreateEventSchemaType, SessionUser } from "~/types";
-
-type MemberForSelect = {
-	_id: string;
-	name: string;
-	email: string;
-	image?: string;
-};
 import CreateEvent from "../../features/events/create-event";
 import EventsList from "../../features/events/events-list";
 import EventsSkeleton from "../../features/events/events-skeleton";
@@ -49,30 +48,18 @@ export async function clientLoader({
 	events: EventQueryResult;
 }> {
 	const url = new URL(request.url);
-	const [eventsRes, membersRes] = await Promise.all([
-		fetch(`/api/event/get?${url.searchParams.toString()}`, {
-			headers: { Accept: "application/json" },
-		}),
-		fetch("/api/member/select", {
-			headers: { Accept: "application/json" },
-		}),
+	const queryClient = getQueryClient();
+	await Promise.all([
+		queryClient.prefetchQuery(getEventsQuery(url.searchParams)),
+		queryClient.prefetchQuery(getMembersSelectQuery()),
 	]);
-	if (!eventsRes.ok) {
-		throw new Response("Failed to load events", {
-			status: eventsRes.status,
-		});
-	}
-	const eventData = await eventsRes.json();
-	const memberData = await membersRes.json().catch(() => ({}));
-	const rawMembers = (await memberData.body) as MemberForSelect[];
-	const members = rawMembers.map((m) => ({
-		...m,
-		image: m.image ?? undefined,
-	}));
-	return {
-		members,
-		events: eventData.body as EventQueryResult,
-	};
+	const events = queryClient.getQueryData(
+		getEventsQuery(url.searchParams).queryKey,
+	) as EventQueryResult;
+	const members = (queryClient.getQueryData(
+		getMembersSelectQuery().queryKey,
+	) ?? []) as MemberForSelect[];
+	return { members, events };
 }
 
 export async function action({ request }: Route.ActionArgs) {

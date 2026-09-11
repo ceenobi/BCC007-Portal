@@ -4,8 +4,10 @@ import { useFetcher } from "react-router";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { getOptimizedImageUrl } from "~/lib/cloudinary";
 import { getInitials } from "~/lib/utils";
+import { EVENTS_KEY } from "~/queries/client-events";
 import type { EventData } from "~/types";
 
 export default function CheckInPanel({ event }: { event: EventData }) {
@@ -28,6 +30,10 @@ export default function CheckInPanel({ event }: { event: EventData }) {
 				body?: { checkedIn: boolean; count: number };
 		  }
 		| undefined;
+
+	useInvalidateOnSuccess(fetcher.data as { success?: boolean } | undefined, [
+		{ queryKey: [EVENTS_KEY] },
+	]);
 
 	useEffect(() => {
 		setCheckedInIds(initialCheckedIn);

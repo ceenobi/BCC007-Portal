@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useOutletContext } from "react-router";
 import {
 	createAnnouncement,
@@ -7,10 +8,14 @@ import {
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import { clientRequirePermission } from "~/middleware/client-auth";
-import type { AnnouncementQueryResult } from "~/queries/announcements";
+import {
+	type AnnouncementQueryResult,
+	getAnnouncementsQuery,
+} from "~/queries/client-announcements";
 import type {
 	CreateAnnouncementSchemaType,
 	SessionUser,
@@ -43,19 +48,12 @@ export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{ announcements: AnnouncementQueryResult }> {
 	const url = new URL(request.url);
-	const announcementsRes = await fetch(
-		`/api/announcement/get?${url.searchParams.toString()}`,
-		{ headers: { Accept: "application/json" } },
+	const queryClient = getQueryClient();
+	await queryClient.prefetchQuery(getAnnouncementsQuery(url.searchParams));
+	const data = queryClient.getQueryData(
+		getAnnouncementsQuery(url.searchParams).queryKey,
 	);
-	if (!announcementsRes.ok) {
-		throw new Response("Failed to load announcements", {
-			status: announcementsRes.status,
-		});
-	}
-	const announcementsData = await announcementsRes.json();
-	return {
-		announcements: announcementsData.body as AnnouncementQueryResult,
-	};
+	return { announcements: data as AnnouncementQueryResult };
 }
 
 export async function action({ request }: Route.ActionArgs) {

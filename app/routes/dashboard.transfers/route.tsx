@@ -19,13 +19,21 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { getQueryClient } from "~/lib/getQueryClient";
 import Filter from "~/features/transfers/filter";
 import InitiateTransfer from "~/features/transfers/initiate-transfer";
 import TransferList from "~/features/transfers/transfer-list";
 import TransferSkeleton from "~/features/transfers/transfer-skeleton";
 import { hasPermission } from "~/lib/rbac";
 import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
-import type { TransferQueryResult } from "~/queries/transfers";
+import {
+	type TransferQueryResult,
+	type TransferBalance,
+	type TransferMemberOption,
+	getTransfersQuery,
+	getTransferBalanceQuery,
+	getMembersSelectForTransfersQuery,
+} from "~/queries/client-transfers";
 import type {
 	CreateTransferSchemaType,
 	FinalizeTransferSchemaType,
@@ -35,14 +43,6 @@ import type {
 import type { Route } from "./+types/route";
 
 export const clientMiddleware = [clientAuthenticatedMiddleware];
-
-type MemberOption = { _id: string; name: string; image?: string };
-type Balance = {
-	total: number;
-	pending: number;
-	balance: number;
-	currency: string;
-};
 
 export function meta(_args: Route.MetaArgs) {
 	return [
@@ -95,39 +95,27 @@ export async function action({ request }: Route.ActionArgs) {
 export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{
-	members: MemberOption[];
-	balance: Balance;
+	members: TransferMemberOption[];
+	balance: TransferBalance;
 	transfers: TransferQueryResult;
 }> {
 	const url = new URL(request.url);
-	const [membersRes, balanceRes, transfersRes] = await Promise.all([
-		fetch(`/api/member/select`, {
-			headers: { Accept: "application/json" },
-		}),
-		fetch(`/api/transfer/balance/get`, {
-			headers: { Accept: "application/json" },
-		}),
-		fetch(`/api/transfer/user/get?${url.searchParams.toString()}`, {
-			headers: { Accept: "application/json" },
-		}),
+	const queryClient = getQueryClient();
+	await Promise.all([
+		queryClient.prefetchQuery(getTransfersQuery(url.searchParams)),
+		queryClient.prefetchQuery(getTransferBalanceQuery()),
+		queryClient.prefetchQuery(getMembersSelectForTransfersQuery()),
 	]);
-	const [membersData, balanceData] = await Promise.all([
-		membersRes.json().catch(() => ({})),
-		balanceRes.json().catch(() => ({})),
-	]);
-	if (!transfersRes.ok) {
-		throw new Response("Failed to load transfers", {
-			status: transfersRes.status,
-		});
-	}
-	const transfersData = await transfersRes.json();
-	return {
-		members: membersData.success ? membersData.body : [],
-		balance: balanceData.success
-			? (balanceData.body as Balance)
-			: { total: 0, pending: 0, balance: 0, currency: "NGN" },
-		transfers: transfersData.body as TransferQueryResult,
-	};
+	const transfers = queryClient.getQueryData(
+		getTransfersQuery(url.searchParams).queryKey,
+	) as TransferQueryResult;
+	const balance = queryClient.getQueryData(
+		getTransferBalanceQuery().queryKey,
+	) as TransferBalance;
+	const members = (queryClient.getQueryData(
+		getMembersSelectForTransfersQuery().queryKey,
+	) ?? []) as TransferMemberOption[];
+	return { members, balance, transfers };
 }
 
 export function HydrateFallback() {

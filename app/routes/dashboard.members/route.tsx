@@ -4,13 +4,17 @@ import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import { MembersSkeleton } from "~/components/ui/skeleton-ui";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import {
 	clientAuthenticatedMiddleware,
 	clientRequirePermission,
 } from "~/middleware/client-auth";
-import type { MembersQueryResult } from "~/queries/members";
+import {
+	type MembersQueryResult,
+	getMembersQuery,
+} from "~/queries/client-members";
 import type { SendInviteCodeSchemaType, SessionUser } from "~/types";
 import InviteMember from "../../features/members/invite-member";
 import MembersList from "../../features/members/members-list";
@@ -38,19 +42,12 @@ export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{ members: MembersQueryResult }> {
 	const url = new URL(request.url);
-	const response = await fetch(
-		`/api/member/get?${url.searchParams.toString()}`,
-		{
-			headers: { Accept: "application/json" },
-		},
+	const queryClient = getQueryClient();
+	await queryClient.prefetchQuery(getMembersQuery(url.searchParams));
+	const data = queryClient.getQueryData(
+		getMembersQuery(url.searchParams).queryKey,
 	);
-	if (!response.ok) {
-		throw new Response("Failed to load members", {
-			status: response.status,
-		});
-	}
-	const data = await response.json();
-	return { members: data.body as MembersQueryResult };
+	return { members: data as MembersQueryResult };
 }
 
 export async function action({ request }: Route.ActionArgs) {

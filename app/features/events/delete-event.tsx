@@ -6,6 +6,8 @@ import ActionBtn from "~/components/ui/action-btn";
 import { Button } from "~/components/ui/button";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { EVENTS_KEY } from "~/queries/client-events";
 import type { EventData } from "~/types";
 
 export default function DeleteEvent({
@@ -30,6 +32,11 @@ export default function DeleteEvent({
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string }
 		| undefined;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [EVENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success) {

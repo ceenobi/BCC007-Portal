@@ -17,8 +17,10 @@ import { FormBox } from "~/components/ui/form-box";
 import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
 import { updateAnnouncementSchema } from "~/lib/schema";
+import { ANNOUNCEMENTS_KEY } from "~/queries/client-announcements";
 import type { AnnouncementData, UpdateAnnouncementSchemaType } from "~/types";
 
 const statusOptions = [
@@ -127,6 +129,11 @@ export default function EditAnnouncement({
 		(errors as Record<string, { message?: string } | undefined>)[""]?.message;
 
 	const hasToasted = useRef(false);
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [ANNOUNCEMENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (hasToasted.current) return;

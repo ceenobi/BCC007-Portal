@@ -11,8 +11,10 @@ import { FormBox } from "~/components/ui/form-box";
 import { Input } from "~/components/ui/input";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { createTransferSchema } from "~/lib/schema";
 import { formatMoney } from "~/lib/utils";
+import { TRANSFERS_USER_KEY } from "~/queries/client-transfers";
 import type { CreateTransferSchemaType } from "~/types";
 
 type MemberOption = {
@@ -86,6 +88,11 @@ export default function InitiateTransfer({
 		setPhase("form");
 		setIdempotencyKey(crypto.randomUUID());
 	};
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [TRANSFERS_USER_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (!actionData) return;

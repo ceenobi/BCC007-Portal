@@ -10,6 +10,8 @@ import { FormBox } from "~/components/ui/form-box";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { sendInviteCodeSchema } from "~/lib/schema";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { MEMBERS_KEY } from "~/queries/client-members";
 import type { SendInviteCodeSchemaType } from "~/types";
 
 const roleOptions = [
@@ -47,6 +49,11 @@ export default function InviteMember() {
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string; email?: string }
 		| undefined;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [MEMBERS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success === true) {

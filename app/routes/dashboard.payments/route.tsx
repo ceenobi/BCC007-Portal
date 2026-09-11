@@ -19,9 +19,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
-import type { PaymentQueryResult } from "~/queries/payments";
+import {
+	type PaymentQueryResult,
+	getPaymentsQuery,
+	getUpcomingEventsQuery,
+} from "~/queries/client-payments";
 import type {
 	CancelSubscriptionSchemaType,
 	EventData,
@@ -89,26 +94,18 @@ default:
 }
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
-	const searchParams = new URLSearchParams(new URL(request.url).search);
-	const eventsRes = await fetch("/api/event/upcoming/get", {
-		headers: { Accept: "application/json" },
-	});
-	const eventsData = await eventsRes.json().catch(() => ({}));
-	const events: PaymentEvents = eventsData.success ? eventsData.body : [];
-
-	const paymentsRes = await fetch(
-		`/api/payment/user/get?${searchParams.toString()}`,
-		{
-			headers: { Accept: "application/json" },
-		},
-	);
-	if (!paymentsRes.ok) {
-		throw new Response("Failed to load payments", {
-			status: paymentsRes.status,
-		});
-	}
-	const payments: PaymentQueryResult = await paymentsRes.json();
-
+	const url = new URL(request.url);
+	const queryClient = getQueryClient();
+	await Promise.all([
+		queryClient.prefetchQuery(getPaymentsQuery(url.searchParams)),
+		queryClient.prefetchQuery(getUpcomingEventsQuery()),
+	]);
+	const payments = queryClient.getQueryData(
+		getPaymentsQuery(url.searchParams).queryKey,
+	) as PaymentQueryResult;
+	const events = (queryClient.getQueryData(
+		getUpcomingEventsQuery().queryKey,
+	) ?? []) as PaymentEvents;
 	return { events, payments };
 }
 
