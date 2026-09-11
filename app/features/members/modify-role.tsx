@@ -13,6 +13,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { canModifyRole } from "~/lib/constants";
 import { hasPermission } from "~/lib/rbac";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { MEMBERS_KEY } from "~/queries/client-members";
 import type { SessionUser } from "~/types";
 import { RoleBadge } from "./role-badge";
 
@@ -29,6 +31,11 @@ export default function ModifyRole({ row }: ComponentNameProps) {
 	const actionData = fetcher.data as
 		| { success?: boolean; message?: string; body?: any }
 		| undefined;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [MEMBERS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData && !actionData?.success) {

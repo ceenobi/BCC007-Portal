@@ -1,21 +1,20 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { Await, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 import { sendInviteCode, updateMemberRole } from "~/.server/actions/auth";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import { MembersSkeleton } from "~/components/ui/skeleton-ui";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import {
 	clientAuthenticatedMiddleware,
 	clientRequirePermission,
 } from "~/middleware/client-auth";
-import { getMembersQuery } from "~/queries/members";
-import type { MembersQueryResult } from "~/queries/members";
+import {
+	type MembersQueryResult,
+	getMembersQuery,
+} from "~/queries/client-members";
 import type { SendInviteCodeSchemaType, SessionUser } from "~/types";
 import InviteMember from "../../features/members/invite-member";
 import MembersList from "../../features/members/members-list";
@@ -33,14 +32,6 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const queryClient = getQueryClientRsc();
-	const members = queryClient.ensureQueryData(getMembersQuery(request));
-	return {
-		dehydratedState: dehydrate(queryClient),
-		members,
-	};
-}
 
 export const clientMiddleware = [
 	clientAuthenticatedMiddleware,
@@ -51,19 +42,12 @@ export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{ members: MembersQueryResult }> {
 	const url = new URL(request.url);
-	const response = await fetch(
-		`/api/member/get?${url.searchParams.toString()}`,
-		{
-			headers: { Accept: "application/json" },
-		},
+	const queryClient = getQueryClient();
+	await queryClient.prefetchQuery(getMembersQuery(url.searchParams));
+	const data = queryClient.getQueryData(
+		getMembersQuery(url.searchParams).queryKey,
 	);
-	if (!response.ok) {
-		throw new Response("Failed to load members", {
-			status: response.status,
-		});
-	}
-	const data = await response.json();
-	return { members: data.body as MembersQueryResult };
+	return { members: data as MembersQueryResult };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -73,6 +57,33 @@ export async function action({ request }: Route.ActionArgs) {
 	} else {
 		return await sendInviteCode(request, payload as SendInviteCodeSchemaType);
 	}
+}
+
+export function HydrateFallback() {
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Members
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						Current members and their roles.
+					</p>
+				</div>
+				<div className="flex justify-between items-center gap-4">
+					<Search
+						id="search-members"
+						placeholder="Search members..."
+						classname="w-fit"
+					/>
+				</div>
+			</PageSection>
+			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+				<MembersSkeleton />
+			</PageSection>
+		</PageWrapper>
+	);
 }
 
 export default function Members({ loaderData }: Route.ComponentProps) {
@@ -101,22 +112,14 @@ export default function Members({ loaderData }: Route.ComponentProps) {
 				</div>
 			</PageSection>
 			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-				<Suspense fallback={<MembersSkeleton />}>
-					<Await resolve={members} errorElement={<DataError />}>
-						{(resolvedMembers) => (
-							<>
-								{resolvedMembers?.members.length === 0 ? (
-									<NotFound
-										title="No members found"
-										message="Members have not been added yet. Come back later."
-									/>
-								) : (
-									<MembersList members={resolvedMembers} />
-								)}
-							</>
-						)}
-					</Await>
-				</Suspense>
+				{members?.members.length === 0 ? (
+					<NotFound
+						title="No members found"
+						message="Members have not been added yet. Come back later."
+					/>
+				) : (
+					<MembersList members={members} />
+				)}
 			</PageSection>
 		</PageWrapper>
 	);

@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { TRANSFERS_USER_KEY } from "~/queries/client-transfers";
 import type { TransferData } from "~/types";
 
 type RetryTransferProps = {
@@ -18,6 +20,10 @@ export default function RetryTransfer({
 }: RetryTransferProps) {
 	const fetcher = useFetcher();
 	const isSubmitting = fetcher.state === "submitting";
+
+	useInvalidateOnSuccess(fetcher.data as { success?: boolean } | undefined, [
+		{ queryKey: [TRANSFERS_USER_KEY] },
+	]);
 
 	useEffect(() => {
 		if (!fetcher.data) return;

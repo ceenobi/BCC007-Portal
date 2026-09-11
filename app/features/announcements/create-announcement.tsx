@@ -17,8 +17,10 @@ import { FormBox } from "~/components/ui/form-box";
 import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
 import { createAnnouncementSchema } from "~/lib/schema";
+import { ANNOUNCEMENTS_KEY } from "~/queries/client-announcements";
 import type { CreateAnnouncementSchemaType } from "~/types";
 
 export default function CreateAnnouncement() {
@@ -96,6 +98,11 @@ export default function CreateAnnouncement() {
 		if (!open) resetModal(true);
 		setIsOpen(open);
 	};
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [ANNOUNCEMENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success) {

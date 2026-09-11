@@ -14,7 +14,9 @@ import { Button } from "~/components/ui/button";
 import { FormBox } from "~/components/ui/form-box";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { initializePaymentSchema } from "~/lib/schema";
+import { PAYMENTS_USER_KEY } from "~/queries/client-payments";
 import type { EventData, InitializePaymentSchemaType } from "~/types";
 
 type NewPaymentProps = {
@@ -95,6 +97,11 @@ export default function NewPayment({ events }: NewPaymentProps) {
 	const rootErrorMessage =
 		(Array.isArray(rootError) ? rootError[0]?.message : rootError?.message) ??
 		(errors as Record<string, { message?: string } | undefined>)[""]?.message;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [PAYMENTS_USER_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (!actionData) return;

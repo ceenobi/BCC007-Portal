@@ -9,11 +9,11 @@ import TransferSkeleton from "~/features/transfers/transfer-skeleton";
 import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { requirePermission } from "~/middleware/auth.middleware";
 import {
-	clientAuthenticatedMiddleware,
-	clientRequirePermission,
+    clientAuthenticatedMiddleware,
+    clientRequirePermission,
 } from "~/middleware/client-auth";
-import { getGroupTransfersQuery } from "~/queries/transfers";
 import type { TransferQueryResult } from "~/queries/transfers";
+import { getGroupTransfersQuery } from "~/queries/transfers";
 import type { Route } from "./+types/route";
 
 export const middleware = [requirePermission("MANAGE_TRANSFERS")];

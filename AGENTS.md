@@ -3,8 +3,10 @@
 ## Git workflow
 
 - Push changes to the `test` branch (not `main`).
+- When adding and committing, check if the user has made changes to the codebase in addition to yours and include them.
 - Create a PR from `test` to `main`.
 - Wait for all CI checks to pass (typecheck, test, e2e, coverage; CodeQL + GitGuardian + Vercel also report).
+- Seek user approval before merging the PR into `main`.
 - Once checks pass, merge the PR to `main`.
 - Sync local `main` after merge.
 - Dependabot opens PRs on the `test` branch for npm and GitHub Actions updates — review and merge them promptly.

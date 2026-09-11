@@ -19,8 +19,10 @@ import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { createEventSchema } from "~/lib/schema";
 import { cn } from "~/lib/utils";
+import { EVENTS_KEY } from "~/queries/client-events";
 import type { CreateEventSchemaType } from "~/types";
 
 const eventTypeOptions = [
@@ -106,6 +108,11 @@ export default function CreateEvent({ members }: { members: MemberOption[] }) {
 		if (!open) resetModal(true);
 		setIsOpen(open);
 	};
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [EVENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success) {

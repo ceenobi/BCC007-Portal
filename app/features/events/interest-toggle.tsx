@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
+import { EVENTS_KEY } from "~/queries/client-events";
 import type { EventData } from "~/types";
 
 export default function InterestToggle({
@@ -31,6 +33,10 @@ export default function InterestToggle({
 				body?: { interested: boolean; count: number };
 		  }
 		| undefined;
+
+	useInvalidateOnSuccess(fetcher.data as { success?: boolean } | undefined, [
+		{ queryKey: [EVENTS_KEY] },
+	]);
 
 	useEffect(() => {
 		setInterested(isInitiallyInterested);

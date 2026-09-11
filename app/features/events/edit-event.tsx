@@ -18,8 +18,10 @@ import { Label } from "~/components/ui/label";
 import Modal from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { useEventImageUpload } from "~/hooks/useEventImageUpload";
+import { useInvalidateOnSuccess } from "~/hooks/useInvalidateOnSuccess";
 import { updateEventSchema } from "~/lib/schema";
 import { cn } from "~/lib/utils";
+import { EVENTS_KEY } from "~/queries/client-events";
 import type { EventData, UpdateEventSchemaType } from "~/types";
 
 const eventTypeOptions = [
@@ -144,6 +146,11 @@ export default function EditEvent({
 	const rootErrorMessage =
 		(Array.isArray(rootError) ? rootError[0]?.message : rootError?.message) ??
 		(errors as Record<string, { message?: string } | undefined>)[""]?.message;
+
+	useInvalidateOnSuccess(actionData, [
+		{ queryKey: [EVENTS_KEY] },
+		{ queryKey: ["dashboard"] },
+	]);
 
 	useEffect(() => {
 		if (actionData?.success) {

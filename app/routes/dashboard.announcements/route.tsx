@@ -1,21 +1,21 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { Await, useOutletContext } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useOutletContext } from "react-router";
 import {
 	createAnnouncement,
 	deleteAnnouncement,
 	updateAnnouncement,
 } from "~/.server/actions/announcement-data";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import { clientRequirePermission } from "~/middleware/client-auth";
-import { getAnnouncementsQuery } from "~/queries/announcements";
-import type { AnnouncementQueryResult } from "~/queries/announcements";
+import {
+	type AnnouncementQueryResult,
+	getAnnouncementsQuery,
+} from "~/queries/client-announcements";
 import type {
 	CreateAnnouncementSchemaType,
 	SessionUser,
@@ -43,34 +43,17 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const queryClient = getQueryClientRsc();
-	const announcements = queryClient.ensureQueryData(
-		getAnnouncementsQuery(request),
-	);
-	return {
-		dehydratedState: dehydrate(queryClient),
-		announcements,
-	};
-}
 
 export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{ announcements: AnnouncementQueryResult }> {
 	const url = new URL(request.url);
-	const announcementsRes = await fetch(
-		`/api/announcement/get?${url.searchParams.toString()}`,
-		{ headers: { Accept: "application/json" } },
+	const queryClient = getQueryClient();
+	await queryClient.prefetchQuery(getAnnouncementsQuery(url.searchParams));
+	const data = queryClient.getQueryData(
+		getAnnouncementsQuery(url.searchParams).queryKey,
 	);
-	if (!announcementsRes.ok) {
-		throw new Response("Failed to load announcements", {
-			status: announcementsRes.status,
-		});
-	}
-	const announcementsData = await announcementsRes.json();
-	return {
-		announcements: announcementsData.body as AnnouncementQueryResult,
-	};
+	return { announcements: data as AnnouncementQueryResult };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -111,6 +94,36 @@ export async function action({ request }: Route.ActionArgs) {
 	);
 }
 
+export function HydrateFallback() {
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Announcements
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						Broadcast messages to all group members.
+					</p>
+				</div>
+				<div className="flex justify-between items-center gap-4">
+					<Search
+						id="search-announcements"
+						placeholder="Search announcements..."
+						classname="w-fit"
+					/>
+					<div className="flex items-center gap-2">
+						<Filter />
+					</div>
+				</div>
+			</PageSection>
+			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+				<AnnouncementsSkeleton />
+			</PageSection>
+		</PageWrapper>
+	);
+}
+
 export default function Announcements({ loaderData }: Route.ComponentProps) {
 	const { announcements } = loaderData;
 	const { user } = useOutletContext() as { user: SessionUser };
@@ -140,25 +153,17 @@ export default function Announcements({ loaderData }: Route.ComponentProps) {
 				</div>
 			</PageSection>
 			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-				<Suspense fallback={<AnnouncementsSkeleton />}>
-					<Await resolve={announcements} errorElement={<DataError />}>
-						{(resolvedAnnouncements) => (
-							<>
-								{resolvedAnnouncements?.announcements.length === 0 ? (
-									<NotFound
-										title="No announcements found"
-										message="Announcements have not been added yet. Come back later."
-									/>
-								) : (
-									<AnnouncementsList
-										announcements={resolvedAnnouncements}
-										canManage={isPermitted}
-									/>
-								)}
-							</>
-						)}
-					</Await>
-				</Suspense>
+				{announcements?.announcements.length === 0 ? (
+					<NotFound
+						title="No announcements found"
+						message="Announcements have not been added yet. Come back later."
+					/>
+				) : (
+					<AnnouncementsList
+						announcements={announcements}
+						canManage={isPermitted}
+					/>
+				)}
 			</PageSection>
 		</PageWrapper>
 	);
