@@ -1,27 +1,22 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { Await, Outlet, useLocation, useOutletContext } from "react-router";
+import { Outlet, useLocation, useOutletContext } from "react-router";
 import { createEvent } from "~/.server/actions/event-data";
-import { getMembersForSelect } from "~/.server/actions/member";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { requirePermission } from "~/middleware/auth.middleware";
 import {
 	clientAuthenticatedMiddleware,
 	clientRequirePermission,
 } from "~/middleware/client-auth";
-import { getEventsQuery, type EventQueryResult } from "~/queries/events";
+import type { EventQueryResult } from "~/queries/events";
 import type { CreateEventSchemaType, SessionUser } from "~/types";
 
 type MemberForSelect = {
 	_id: string;
 	name: string;
 	email: string;
-	image?: string | null;
+	image?: string;
 };
 import CreateEvent from "../../features/events/create-event";
 import EventsList from "../../features/events/events-list";
@@ -41,17 +36,6 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const membersRes = await getMembersForSelect(request);
-	const membersData = await membersRes.json().catch(() => ({}));
-	const queryClient = getQueryClientRsc();
-	const events = queryClient.ensureQueryData(getEventsQuery(request));
-	return {
-		members: membersData.success ? membersData.body : [],
-		dehydratedState: dehydrate(queryClient),
-		events,
-	};
-}
 
 export const clientMiddleware = [
 	clientAuthenticatedMiddleware,
@@ -80,8 +64,13 @@ export async function clientLoader({
 	}
 	const eventData = await eventsRes.json();
 	const memberData = await membersRes.json().catch(() => ({}));
+	const rawMembers = (await memberData.body) as MemberForSelect[];
+	const members = rawMembers.map((m) => ({
+		...m,
+		image: m.image ?? undefined,
+	}));
 	return {
-		members: memberData.success ? (memberData.body as MemberForSelect[]) : [],
+		members,
 		events: eventData.body as EventQueryResult,
 	};
 }
@@ -108,6 +97,36 @@ export async function action({ request }: Route.ActionArgs) {
 	return Response.json(
 		{ success: false, message: "Invalid request" },
 		{ status: 400 },
+	);
+}
+
+export function HydrateFallback() {
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Events
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						See past, upcoming and ongoing events.
+					</p>
+				</div>
+				<div className="flex justify-between items-center gap-4">
+					<Search
+						id="search-events"
+						placeholder="Search events..."
+						classname="w-fit"
+					/>
+					<div className="flex items-center gap-2">
+						<Filter />
+					</div>
+				</div>
+			</PageSection>
+			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+				<EventsSkeleton />
+			</PageSection>
+		</PageWrapper>
 	);
 }
 
@@ -144,22 +163,14 @@ export default function Events({ loaderData }: Route.ComponentProps) {
 						</div>
 					</PageSection>
 					<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-						<Suspense fallback={<EventsSkeleton />}>
-							<Await resolve={events} errorElement={<DataError />}>
-								{(resolvedEvents) => (
-									<>
-										{resolvedEvents?.events.length === 0 ? (
-											<NotFound
-												title="No events found"
-												message="Events have not been added yet. Come back later."
-											/>
-										) : (
-											<EventsList events={resolvedEvents} />
-										)}
-									</>
-								)}
-							</Await>
-						</Suspense>
+						{events?.events.length === 0 ? (
+							<NotFound
+								title="No events found"
+								message="Events have not been added yet. Come back later."
+							/>
+						) : (
+							<EventsList events={events} />
+						)}
 					</PageSection>
 				</>
 			) : (

@@ -1,20 +1,15 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
 import {
-	Await,
 	Outlet,
 	useLocation,
 	useNavigate,
 	useOutletContext,
 } from "react-router";
-import { getUpcomingEvents } from "~/.server/actions/event-data";
 import {
 	cancelSubscription,
 	initializePayment,
 	verifyPayment,
 } from "~/.server/actions/payment";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import {
@@ -24,10 +19,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
-import { getUserPaymentsQuery } from "~/queries/payments";
 import type { PaymentQueryResult } from "~/queries/payments";
 import type {
 	CancelSubscriptionSchemaType,
@@ -56,17 +49,6 @@ export const clientMiddleware = [clientAuthenticatedMiddleware];
 
 type PaymentEvents = EventData[];
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const eventsRes = await getUpcomingEvents(request);
-	const eventsData = await eventsRes.json().catch(() => ({}));
-	const queryClient = getQueryClientRsc();
-	const payments = queryClient.ensureQueryData(getUserPaymentsQuery(request));
-	return {
-		events: eventsData.success ? eventsData.body : [],
-		dehydratedState: dehydrate(queryClient),
-		payments,
-	};
-}
 
 export async function action({ request }: Route.ActionArgs) {
 	if (request.method !== "POST") {
@@ -128,6 +110,26 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 	const payments: PaymentQueryResult = await paymentsRes.json();
 
 	return { events, payments };
+}
+
+export function HydrateFallback() {
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Payments
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						View your payment history and manage your payments.
+					</p>
+				</div>
+			</PageSection>
+			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+				<PaymentsSkeleton />
+			</PageSection>
+		</PageWrapper>
+	);
 }
 
 export default function Payments({ loaderData }: Route.ComponentProps) {
@@ -195,22 +197,14 @@ export default function Payments({ loaderData }: Route.ComponentProps) {
 			</PageSection>
 			{currentPage ? (
 				<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-					<Suspense fallback={<PaymentsSkeleton />}>
-						<Await resolve={payments} errorElement={<DataError />}>
-							{(resolvedPayments) => (
-								<>
-									{resolvedPayments?.payments.length === 0 ? (
-										<NotFound
-											title="No payments found"
-											message="Payments have not been made yet. Come back later."
-										/>
-									) : (
-										<PaymentsList payments={resolvedPayments} />
-									)}
-								</>
-							)}
-						</Await>
-					</Suspense>
+					{payments?.payments.length === 0 ? (
+						<NotFound
+							title="No payments found"
+							message="Payments have not been made yet. Come back later."
+						/>
+					) : (
+						<PaymentsList payments={payments} />
+					)}
 				</PageSection>
 			) : (
 				<Outlet context={{ user }} />

@@ -1,21 +1,15 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
 import {
-	Await,
 	Outlet,
 	useLocation,
 	useNavigate,
 	useOutletContext,
 } from "react-router";
-import { getMembersForSelect } from "~/.server/actions/member";
 import {
 	finalizeTransfer,
-	getAvailableBalance,
 	initiateTransfer,
 	retryTransfer,
 } from "~/.server/actions/transfer";
 import { PageSection, PageWrapper } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
 import Search from "~/components/ui/search";
 import {
@@ -29,10 +23,8 @@ import Filter from "~/features/transfers/filter";
 import InitiateTransfer from "~/features/transfers/initiate-transfer";
 import TransferList from "~/features/transfers/transfer-list";
 import TransferSkeleton from "~/features/transfers/transfer-skeleton";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
 import { clientAuthenticatedMiddleware } from "~/middleware/client-auth";
-import { getUserTransfersQuery } from "~/queries/transfers";
 import type { TransferQueryResult } from "~/queries/transfers";
 import type {
 	CreateTransferSchemaType,
@@ -62,31 +54,6 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const [membersRes, balanceRes] = await Promise.all([
-		getMembersForSelect(request),
-		getAvailableBalance(request),
-	]);
-	const [membersData, balanceData] = await Promise.all([
-		membersRes.json().catch(() => ({})),
-		balanceRes.json().catch(() => ({})),
-	]);
-	const queryClient = getQueryClientRsc();
-	const transfers = queryClient.ensureQueryData(getUserTransfersQuery(request));
-	return {
-		members: membersData.success ? membersData.body : [],
-		balance: balanceData.success
-			? (balanceData.body as {
-					total: number;
-					pending: number;
-					balance: number;
-					currency: string;
-				})
-			: { total: 0, pending: 0, balance: 0, currency: "NGN" },
-		dehydratedState: dehydrate(queryClient),
-		transfers,
-	};
-}
 
 export async function action({ request }: Route.ActionArgs) {
 	if (request.method !== "POST") {
@@ -163,6 +130,26 @@ export async function clientLoader({
 	};
 }
 
+export function HydrateFallback() {
+	return (
+		<PageWrapper>
+			<PageSection index={0} className="space-y-8 px-4 xl:px-8">
+				<div className="space-y-2">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Transfers
+					</h1>
+					<p className="leading-snug text-sm text-mainGray dark:text-muted-foreground">
+						Payment transfers to member accounts
+					</p>
+				</div>
+			</PageSection>
+			<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+				<TransferSkeleton />
+			</PageSection>
+		</PageWrapper>
+	);
+}
+
 export default function Transfers({ loaderData }: Route.ComponentProps) {
 	const { members, transfers, balance } = loaderData;
 	const { user } = useOutletContext() as { user: SessionUser };
@@ -234,22 +221,14 @@ export default function Transfers({ loaderData }: Route.ComponentProps) {
 			</PageSection>
 			{currentPage ? (
 				<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-					<Suspense fallback={<TransferSkeleton />}>
-						<Await resolve={transfers} errorElement={<DataError />}>
-							{(resolvedTransfers) => (
-								<>
-									{resolvedTransfers?.transfers.length === 0 ? (
-										<NotFound
-											title="No transfers found"
-											message="Your account has not received any transfers yet. Come back later."
-										/>
-									) : (
-										<TransferList transfers={resolvedTransfers} />
-									)}
-								</>
-							)}
-						</Await>
-					</Suspense>
+					{transfers?.transfers.length === 0 ? (
+						<NotFound
+							title="No transfers found"
+							message="Your account has not received any transfers yet. Come back later."
+						/>
+					) : (
+						<TransferList transfers={transfers} />
+					)}
 				</PageSection>
 			) : (
 				<Outlet context={{ user }} />
