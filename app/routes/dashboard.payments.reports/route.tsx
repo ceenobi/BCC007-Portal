@@ -1,18 +1,15 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { Await, useSearchParams } from "react-router";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
 import { PageSection } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
-import { userContext } from "~/middleware/auth.middleware";
 import { getAuthCache } from "~/middleware/client-auth";
 import {
-	getGroupPaymentReportsQuery,
-	getUserPaymentReportsQuery,
-} from "~/queries/payments";
-import type { PaymentReportData } from "~/queries/payments";
+	getPaymentsGroupReportsQuery,
+	getPaymentsUserReportsQuery,
+} from "~/queries/client-payments";
+import type { PaymentReportData } from "~/queries/client-payments";
 import ReportsSkeleton from "../../features/reports/reports-skeleton";
 import ReportsView from "../../features/reports/reports-view";
 import type { Route } from "./+types/route";
@@ -38,30 +35,6 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export async function loader({ request, context }: Route.LoaderArgs) {
-	const user = context.get(userContext);
-	if (!user) {
-		throw Response.json(
-			{ success: false, message: "Unauthorized" },
-			{ status: 401 },
-		);
-	}
-	const isAdmin = hasPermission(user.role, "MANAGE_PAYMENTS");
-	const queryClient = getQueryClientRsc();
-	const userReport = queryClient.ensureQueryData(
-		getUserPaymentReportsQuery(request),
-	);
-	const groupReport = isAdmin
-		? queryClient.ensureQueryData(getGroupPaymentReportsQuery(request))
-		: null;
-	return {
-		userReport,
-		groupReport,
-		isAdmin,
-		dehydratedState: dehydrate(queryClient),
-	};
-}
-
 export async function clientLoader({
 	request,
 }: Route.ClientLoaderArgs): Promise<{
@@ -71,37 +44,41 @@ export async function clientLoader({
 }> {
 	const user = getAuthCache();
 	const isAdmin = user != null && hasPermission(user.role, "MANAGE_PAYMENTS");
-	const url = new URL(request.url);
-	const params = url.searchParams.toString();
-	const [userRes, groupRes] = await Promise.all([
-		fetch(`/api/payment/user/report/get?${params}`, {
-			headers: { Accept: "application/json" },
-		}),
+	const searchParams = new URLSearchParams(new URL(request.url).search);
+	const queryClient = getQueryClient();
+	await Promise.all([
+		queryClient.prefetchQuery(getPaymentsUserReportsQuery(searchParams)),
 		isAdmin
-			? fetch(`/api/payment/group/report/get?${params}`, {
-					headers: { Accept: "application/json" },
-				})
-			: Promise.resolve<Response | null>(null),
+			? queryClient.prefetchQuery(getPaymentsGroupReportsQuery(searchParams))
+			: Promise.resolve(),
 	]);
-	if (!userRes.ok) {
-		throw new Response("Failed to load payment reports", {
-			status: userRes.status,
-		});
-	}
-	const [userData, groupData] = await Promise.all([
-		userRes.json(),
-		groupRes !== null
-			? groupRes.json().catch(() => ({}))
-			: Promise.resolve({}),
-	]);
-	return {
-		userReport: userData.body as PaymentReportData,
-		groupReport:
-			groupRes !== null && groupData.success
-				? (groupData.body as PaymentReportData)
-				: null,
-		isAdmin,
-	};
+	const userReport = queryClient.getQueryData(
+		getPaymentsUserReportsQuery(searchParams).queryKey,
+	) as PaymentReportData;
+	const groupReport = isAdmin
+		? (queryClient.getQueryData(
+				getPaymentsGroupReportsQuery(searchParams).queryKey,
+			) as PaymentReportData)
+		: null;
+	return { userReport, groupReport, isAdmin };
+}
+
+export function HydrateFallback() {
+	return (
+		<PageSection index={1} className="mt-4 space-y-6 px-4 xl:px-8">
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<div className="space-y-0.5">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Reports
+					</h1>
+					<p className="text-sm text-muted-foreground">
+						Overview of revenue, payment flows and membership dues.
+					</p>
+				</div>
+			</div>
+			<ReportsSkeleton />
+		</PageSection>
+	);
 }
 
 export default function PaymentReports({ loaderData }: Route.ComponentProps) {
@@ -171,11 +148,7 @@ export default function PaymentReports({ loaderData }: Route.ComponentProps) {
 				</div>
 			</div>
 
-			<Suspense fallback={<ReportsSkeleton />}>
-				<Await resolve={activeReport} errorElement={<DataError />}>
-					{(resolved) => <ReportsView report={resolved} />}
-				</Await>
-			</Suspense>
+			<ReportsView report={activeReport} />
 		</PageSection>
 	);
 }

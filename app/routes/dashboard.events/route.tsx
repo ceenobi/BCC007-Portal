@@ -12,9 +12,9 @@ import {
 } from "~/middleware/client-auth";
 import {
 	type EventQueryResult,
-	type MemberForSelect,
 	getEventsQuery,
 	getMembersSelectQuery,
+	type MemberForSelect,
 } from "~/queries/client-events";
 import type { CreateEventSchemaType, SessionUser } from "~/types";
 import CreateEvent from "../../features/events/create-event";
@@ -34,7 +34,6 @@ export function meta(_args: Route.MetaArgs) {
 		},
 	];
 }
-
 
 export const clientMiddleware = [
 	clientAuthenticatedMiddleware,
@@ -56,9 +55,8 @@ export async function clientLoader({
 	const events = queryClient.getQueryData(
 		getEventsQuery(url.searchParams).queryKey,
 	) as EventQueryResult;
-	const members = (queryClient.getQueryData(
-		getMembersSelectQuery().queryKey,
-	) ?? []) as MemberForSelect[];
+	const members = (queryClient.getQueryData(getMembersSelectQuery().queryKey) ??
+		[]) as MemberForSelect[];
 	return { members, events };
 }
 

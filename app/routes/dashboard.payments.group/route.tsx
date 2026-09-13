@@ -1,14 +1,10 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { Await } from "react-router";
 import { PageSection } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import NotFound from "~/components/ui/not-found";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { requirePermission } from "~/middleware/auth.middleware";
 import { clientRequirePermission } from "~/middleware/client-auth";
-import { getGroupPaymentsQuery } from "~/queries/payments";
-import type { PaymentQueryResult } from "~/queries/payments";
+import { getPaymentsGroupQuery } from "~/queries/client-payments";
+import type { PaymentQueryResult } from "~/queries/client-payments";
 import PaymentsList from "../../features/payments/payment-list";
 import PaymentsSkeleton from "../../features/payments/payments-skeleton";
 import type { Route } from "./+types/route";
@@ -27,53 +23,36 @@ export function meta(_args: Route.MetaArgs) {
 
 export const clientMiddleware = [clientRequirePermission("MANAGE_PAYMENTS")];
 
-export async function loader({ request }: Route.LoaderArgs) {
-	const queryClient = getQueryClientRsc();
-	const payments = queryClient.ensureQueryData(getGroupPaymentsQuery(request));
-	return {
-		dehydratedState: dehydrate(queryClient),
-		payments,
-	};
-}
-
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 	const searchParams = new URLSearchParams(new URL(request.url).search);
-	const res = await fetch(
-		`/api/payment/group/get?${searchParams.toString()}`,
-		{
-			headers: { Accept: "application/json" },
-		},
-	);
-	if (!res.ok) {
-		throw new Response("Failed to load group payments", {
-			status: res.status,
-		});
-	}
-	const payments: PaymentQueryResult = await res.json();
-
+	const queryClient = getQueryClient();
+	await queryClient.prefetchQuery(getPaymentsGroupQuery(searchParams));
+	const payments = queryClient.getQueryData(
+		getPaymentsGroupQuery(searchParams).queryKey,
+	) as PaymentQueryResult;
 	return { payments };
+}
+
+export function HydrateFallback() {
+	return (
+		<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
+			<PaymentsSkeleton />
+		</PageSection>
+	);
 }
 
 export default function GroupPayment({ loaderData }: Route.ComponentProps) {
 	const { payments } = loaderData;
 	return (
 		<PageSection index={1} className="mt-4 space-y-4 px-4 xl:px-8">
-			<Suspense fallback={<PaymentsSkeleton />}>
-				<Await resolve={payments} errorElement={<DataError />}>
-					{(resolvedPayments) => (
-						<>
-							{resolvedPayments?.payments.length === 0 ? (
-								<NotFound
-									title="No payments found"
-									message="Payments have not been made yet. Come back later."
-								/>
-							) : (
-								<PaymentsList payments={resolvedPayments} />
-							)}
-						</>
-					)}
-				</Await>
-			</Suspense>
+			{payments?.payments.length === 0 ? (
+				<NotFound
+					title="No payments found"
+					message="Payments have not been made yet. Come back later."
+				/>
+			) : (
+				<PaymentsList payments={payments} />
+			)}
 		</PageSection>
 	);
 }
