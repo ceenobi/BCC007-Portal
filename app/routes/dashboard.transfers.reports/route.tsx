@@ -1,21 +1,15 @@
-import { dehydrate } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { Await, useSearchParams } from "react-router";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
 import { PageSection } from "~/components/provider/page-wrapper";
-import DataError from "~/components/ui/data-error";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { getQueryClientRsc } from "~/lib/getQueryClient";
+import { getQueryClient } from "~/lib/getQueryClient";
 import { hasPermission } from "~/lib/rbac";
-import { userContext } from "~/middleware/auth.middleware";
+import { getAuthCache } from "~/middleware/client-auth";
 import {
-	clientAuthenticatedMiddleware,
-	getAuthCache,
-} from "~/middleware/client-auth";
-import {
-	getGroupTransferReportsQuery,
-	getUserTransferReportsQuery,
-} from "~/queries/transfers";
-import type { TransferReportData } from "~/queries/transfers";
+	getTransfersGroupReportsQuery,
+	getTransfersUserReportsQuery,
+} from "~/queries/client-transfers";
+import type { TransferReportData } from "~/queries/client-transfers";
 import ReportsSkeleton from "../../features/reports/reports-skeleton";
 import TransferReportsView from "../../features/reports/transfer-reports-view";
 import type { Route } from "./+types/route";
@@ -41,31 +35,7 @@ export function meta(_args: Route.MetaArgs) {
 	];
 }
 
-export const clientMiddleware = [clientAuthenticatedMiddleware];
-
-export async function loader({ request, context }: Route.LoaderArgs) {
-	const user = context.get(userContext);
-	if (!user) {
-		throw Response.json(
-			{ success: false, message: "Unauthorized" },
-			{ status: 401 },
-		);
-	}
-	const isAdmin = hasPermission(user.role, "MANAGE_TRANSFERS");
-	const queryClient = getQueryClientRsc();
-	const userReport = queryClient.ensureQueryData(
-		getUserTransferReportsQuery(request),
-	);
-	const groupReport = isAdmin
-		? queryClient.ensureQueryData(getGroupTransferReportsQuery(request))
-		: null;
-	return {
-		userReport,
-		groupReport,
-		isAdmin,
-		dehydratedState: dehydrate(queryClient),
-	};
-}
+export const clientMiddleware = [];
 
 export async function clientLoader({
 	request,
@@ -74,50 +44,43 @@ export async function clientLoader({
 	groupReport: TransferReportData | null;
 	isAdmin: boolean;
 }> {
-	const url = new URL(request.url);
-	const params = url.searchParams.toString();
 	const user = getAuthCache();
 	const isAdmin = user ? hasPermission(user.role, "MANAGE_TRANSFERS") : false;
+	const searchParams = new URLSearchParams(new URL(request.url).search);
+	const queryClient = getQueryClient();
+	await Promise.all([
+		queryClient.prefetchQuery(getTransfersUserReportsQuery(searchParams)),
+		isAdmin
+			? queryClient.prefetchQuery(getTransfersGroupReportsQuery(searchParams))
+			: Promise.resolve(),
+	]);
+	const userReport = queryClient.getQueryData(
+		getTransfersUserReportsQuery(searchParams).queryKey,
+	) as TransferReportData;
+	const groupReport = isAdmin
+		? (queryClient.getQueryData(
+				getTransfersGroupReportsQuery(searchParams).queryKey,
+			) as TransferReportData)
+		: null;
+	return { userReport, groupReport, isAdmin };
+}
 
-	const userReportResponse = await fetch(
-		`/api/transfer/user/report/get?${params}`,
-		{ headers: { Accept: "application/json" } },
+export function HydrateFallback() {
+	return (
+		<PageSection index={1} className="mt-4 space-y-6 px-4 xl:px-8">
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<div className="space-y-0.5">
+					<h1 className="text-xl font-semibold tracking-tight leading-tight text-foreground">
+						Reports
+					</h1>
+					<p className="text-sm text-muted-foreground">
+						Overview of transfer amounts, statuses and monthly flows.
+					</p>
+				</div>
+			</div>
+			<ReportsSkeleton />
+		</PageSection>
 	);
-	if (!userReportResponse.ok) {
-		throw new Response("Failed to load transfer report", {
-			status: userReportResponse.status,
-		});
-	}
-	const userReportData = (await userReportResponse.json()) as {
-		body: TransferReportData;
-	};
-
-	if (!isAdmin) {
-		return {
-			userReport: userReportData.body,
-			groupReport: null,
-			isAdmin,
-		};
-	}
-
-	const groupReportResponse = await fetch(
-		`/api/transfer/group/report/get?${params}`,
-		{ headers: { Accept: "application/json" } },
-	);
-	if (!groupReportResponse.ok) {
-		throw new Response("Failed to load group transfer report", {
-			status: groupReportResponse.status,
-		});
-	}
-	const groupReportData = (await groupReportResponse.json()) as {
-		body: TransferReportData;
-	};
-
-	return {
-		userReport: userReportData.body,
-		groupReport: groupReportData.body,
-		isAdmin,
-	};
 }
 
 export default function TransfersReports({ loaderData }: Route.ComponentProps) {
@@ -187,11 +150,7 @@ export default function TransfersReports({ loaderData }: Route.ComponentProps) {
 				</div>
 			</div>
 
-			<Suspense fallback={<ReportsSkeleton />}>
-				<Await resolve={activeReport} errorElement={<DataError />}>
-					{(resolved) => <TransferReportsView report={resolved} />}
-				</Await>
-			</Suspense>
+			<TransferReportsView report={activeReport} />
 		</PageSection>
 	);
 }
